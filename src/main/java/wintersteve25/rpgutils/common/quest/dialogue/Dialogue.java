@@ -4,8 +4,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.util.Tuple;
-import wintersteve25.rpgutils.common.quest.dialogue.actions.DialogueActionTypes;
-import wintersteve25.rpgutils.common.quest.dialogue.actions.IDialogueAction;
+import wintersteve25.rpgutils.common.quest.dialogue.actions.base.DialogueActionTypes;
+import wintersteve25.rpgutils.common.quest.dialogue.actions.base.IDialogueAction;
 
 import java.util.*;
 

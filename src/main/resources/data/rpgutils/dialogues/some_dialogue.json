@@ -5,7 +5,15 @@
       "action": {
         "text": "some_dialogue.line1",
         "audio": "geckolib3:jack_music",
+        "waitForInput": false,
         "type": "speak"
+      }
+    },
+    {
+      "speaker": "4298bc77-e4f1-4d90-906e-2b37f738c3a5",
+      "action": {
+        "time": 2.5,
+        "type": "pause"
       }
     },
     {
@@ -13,6 +21,12 @@
       "action": {
         "text": "some_dialogue.line2",
         "type": "speak"
+      }
+    },
+    {
+      "speaker": "4298bc77-e4f1-4d90-906e-2b37f738c3a5",
+      "action": {
+        "type": "clear"
       }
     },
     {

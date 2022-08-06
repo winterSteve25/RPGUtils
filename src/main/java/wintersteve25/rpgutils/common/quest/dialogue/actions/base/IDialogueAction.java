@@ -1,4 +1,4 @@
-package wintersteve25.rpgutils.common.quest.dialogue.actions;
+package wintersteve25.rpgutils.common.quest.dialogue.actions.base;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.Minecraft;
@@ -21,7 +21,8 @@ public interface IDialogueAction {
      *                     
      * Should be used to render used in the action
      */
-    void render(IAnimatedEntity<?> speaker, DialogueUI dialogueUI, MatrixStack matrixStack, Minecraft minecraft, int windowWidth, int windowHeight, int speakerNameX, int speakerNameY, int mouseX, int mouseY);
+    default void render(IAnimatedEntity<?> speaker, DialogueUI dialogueUI, MatrixStack matrixStack, Minecraft minecraft, int windowWidth, int windowHeight, int speakerNameX, int speakerNameY, int mouseX, int mouseY) {
+    }
 
     /**
      * @param speaker The speaker
@@ -38,10 +39,12 @@ public interface IDialogueAction {
     /**
      * Called when player presses the skip dialogue line button
      */
-    void skip();
+    default void skip() {
+    }
 
     /**
      * Will be called when the action is executed the first time. Can be used to initialize data or play audio.
      */
-    void initialize(IAnimatedEntity<?> speaker, DialogueUI dialogueUI, Minecraft minecraft);
+    default void initialize(IAnimatedEntity<?> speaker, DialogueUI dialogueUI, Minecraft minecraft) {
+    }
 }

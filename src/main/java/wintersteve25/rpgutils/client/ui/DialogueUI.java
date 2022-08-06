@@ -2,7 +2,6 @@ package wintersteve25.rpgutils.client.ui;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.entity.Entity;
@@ -16,7 +15,7 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
 import wintersteve25.rpgutils.client.animation.IAnimatedEntity;
 import wintersteve25.rpgutils.common.quest.dialogue.Dialogue;
-import wintersteve25.rpgutils.common.quest.dialogue.actions.IDialogueAction;
+import wintersteve25.rpgutils.common.quest.dialogue.actions.base.IDialogueAction;
 
 import java.util.List;
 import java.util.Optional;
@@ -36,6 +35,8 @@ public class DialogueUI extends Screen {
     private boolean requireInitialization;
     private IDialogueAction currentAction;
     
+    public String displayingDialogueText;
+    
     public DialogueUI() {
         super(StringTextComponent.EMPTY);
         this.minecraft = Minecraft.getInstance();
@@ -46,6 +47,7 @@ public class DialogueUI extends Screen {
         this.currentIndex = 0;
         this.requireInitialization = true;
         this.currentAction = null;
+        this.displayingDialogueText = "";
     }
 
     @Override
@@ -102,6 +104,8 @@ public class DialogueUI extends Screen {
         int speakerY = 20;//height - 200;
 
         drawString(pMatrixStack, fontRenderer, speakerName, speakerX, speakerY, 16777215);
+        drawString(pMatrixStack, minecraft.font, displayingDialogueText, speakerX, speakerY + 10, 16777215);
+        
         currentAction.render(speakerEntity, this, pMatrixStack, minecraft, width, height, speakerX, speakerY, pMouseX, pMouseY);
 
         if (!minecraft.isPaused()) {
