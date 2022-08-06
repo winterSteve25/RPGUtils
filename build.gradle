@@ -123,7 +123,7 @@ dependencies {
 jar {
     manifest {
         attributes([
-            "Specification-Title": "PrimitiveUtils",
+            "Specification-Title": "RPGUtils",
             "Specification-Vendor": "rpgutilssareus",
             "Specification-Version": "${version}", // We are version 1 of ourselves
             "Implementation-Title": project.name,
