@@ -1,0 +1,11 @@
+[
+  {
+    "weight": 0.9,
+    "dialogue": "rpgutils:some_dialogue",
+    "interruptable": false
+  },
+  {
+    "weight": 0.7,
+    "dialogue": "rpgutils:other_dialogue"
+  }
+]

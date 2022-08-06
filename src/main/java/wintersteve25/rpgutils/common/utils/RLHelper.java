@@ -1,0 +1,18 @@
+package wintersteve25.rpgutils.common.utils;
+
+import net.minecraft.util.ResourceLocation;
+import wintersteve25.rpgutils.RPGUtils;
+
+public class RLHelper {
+    public static ResourceLocation geoModel(String name) {
+        return new ResourceLocation(RPGUtils.MOD_ID, "geo/" + name + ".geo.json");
+    }
+    
+    public static ResourceLocation geoAnim(String name) {
+        return new ResourceLocation(RPGUtils.MOD_ID, "animations/" + name + ".animation.json");
+    }
+    
+    public static ResourceLocation texture(String name) {
+        return new ResourceLocation(RPGUtils.MOD_ID, "textures/" + name + ".png");
+    }
+}

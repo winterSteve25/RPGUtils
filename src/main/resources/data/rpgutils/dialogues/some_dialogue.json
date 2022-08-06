@@ -1,0 +1,26 @@
+{
+  "lines": [
+    {
+      "speaker": "4298bc77-e4f1-4d90-906e-2b37f738c3a5",
+      "action": {
+        "text": "some_dialogue.line1",
+        "audio": "geckolib3:jack_music",
+        "type": "speak"
+      }
+    },
+    {
+      "speaker": "4298bc77-e4f1-4d90-906e-2b37f738c3a5",
+      "action": {
+        "text": "some_dialogue.line2",
+        "type": "speak"
+      }
+    },
+    {
+      "speaker": "PLAYER",
+      "action": {
+        "text": "some_dialogue.line3",
+        "type": "speak"
+      }
+    }
+  ]
+}

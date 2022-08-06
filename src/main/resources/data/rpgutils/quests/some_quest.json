@@ -1,0 +1,10 @@
+{
+  "rewards": [
+    {
+      "type": "item",
+      "item": {
+        "item": "minecraft:iron_ingot"
+      }
+    }
+  ]
+}
