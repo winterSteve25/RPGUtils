@@ -2,6 +2,7 @@ package wintersteve25.rpgutils.common.quest.dialogue.actions;
 
 import com.google.gson.JsonObject;
 import com.mojang.blaze3d.matrix.MatrixStack;
+import jdk.nashorn.internal.runtime.regexp.joni.Regex;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.resources.I18n;
@@ -15,6 +16,8 @@ import wintersteve25.rpgutils.client.animation.IAnimatedEntity;
 import wintersteve25.rpgutils.client.ui.DialogueUI;
 import wintersteve25.rpgutils.common.utils.ISerializer;
 import wintersteve25.rpgutils.common.utils.JsonUtilities;
+
+import java.util.regex.Pattern;
 
 public class SpeakAction implements IDialogueAction {
     private final String text;
@@ -32,6 +35,9 @@ public class SpeakAction implements IDialogueAction {
 
     private int lastSkipCount;
     private int skipCount;
+    
+    private long startPauseMills;
+    private float pause;
     
     public SpeakAction(String text, SoundEvent audio, int typeSpeed) {
         this.text = text;
@@ -52,10 +58,40 @@ public class SpeakAction implements IDialogueAction {
             return true;
         }
 
+        if (pause > 0) {
+            float timeElapsed = (System.currentTimeMillis() - startPauseMills) / 1000f;
+            
+            System.out.println(timeElapsed);
+            
+            if (timeElapsed >= pause) {
+                pause = 0;
+                startPauseMills = 0;
+            }
+            return false;
+        }
+        
         characterTimer++;
         
         if (characterTimer % typeSpeed == 0) {
             displayText += formattedText.charAt(displayIndex);
+
+            if (peek(1) == '<') {
+                int offset = 2;
+
+                while (peek(offset) != '>' && peek(offset) != '\n') {
+                    offset++;
+                }
+
+                String tag = formattedText.substring(displayIndex + 2, displayIndex + offset);
+                if (Pattern.matches("pause=\\d+", tag)) {
+                    pause = Float.parseFloat(tag.substring(6));
+                    startPauseMills = System.currentTimeMillis();
+                    displayIndex = displayIndex + offset + 1;
+                    lastSkipCount = skipCount;
+                    return false;
+                }
+            }
+            
             displayIndex++;
         }
         
@@ -77,7 +113,7 @@ public class SpeakAction implements IDialogueAction {
     }
 
     @Override
-    public void initialize(IAnimatedEntity<?> speaker, Minecraft minecraft) {
+    public void initialize(IAnimatedEntity<?> speaker, DialogueUI dialogueUI, Minecraft minecraft) {
         initialized = true;
         
         String speakerNameFormatted = getContentOrTranslation(speaker.getSelf().getName());
@@ -93,6 +129,11 @@ public class SpeakAction implements IDialogueAction {
         if (audio == null) return;
         sound = new SpeakTickableSound(audio, SoundCategory.VOICE, speaker.getSelf());
         minecraft.getSoundManager().play(sound);
+    }
+    
+    private char peek(int offset) {
+        if (displayIndex + offset >= formattedText.length()) return '\n';
+        return formattedText.charAt(displayIndex + offset);
     }
     
     private static String getContentOrTranslation(ITextComponent text) {

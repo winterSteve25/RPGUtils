@@ -1,5 +1,5 @@
 {
-  "some_dialogue.line1": "Good Morning §3%2$s! LONGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG DIALOGUE",
+  "some_dialogue.line1": "Good Morning<pause=2> §3%2$s! LONGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG DIALOGUE",
   "some_dialogue.line2": "Hope you are doing well.",
   "some_dialogue.line3": "Hello to you to Cow!",
   "rpgutils.keys.category.npc": "RPGUtils: NPCs",

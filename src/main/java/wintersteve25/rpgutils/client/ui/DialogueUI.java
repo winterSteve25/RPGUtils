@@ -88,7 +88,7 @@ public class DialogueUI extends Screen {
         currentAction = entry.getB();
 
         if (requireInitialization) {
-            currentAction.initialize(speakerEntity, minecraft);
+            currentAction.initialize(speakerEntity, this, minecraft);
             requireInitialization = false;
         }
 

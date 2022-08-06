@@ -43,5 +43,5 @@ public interface IDialogueAction {
     /**
      * Will be called when the action is executed the first time. Can be used to initialize data or play audio.
      */
-    void initialize(IAnimatedEntity<?> speaker, Minecraft minecraft);
+    void initialize(IAnimatedEntity<?> speaker, DialogueUI dialogueUI, Minecraft minecraft);
 }
