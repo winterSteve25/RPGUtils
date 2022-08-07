@@ -1,4 +1,4 @@
-package wintersteve25.rpgutils.common.quest.dialogue.actions;
+package wintersteve25.rpgutils.common.quest.dialogue.actions.speak;
 
 import net.minecraft.client.audio.TickableSound;
 import net.minecraft.entity.Entity;
