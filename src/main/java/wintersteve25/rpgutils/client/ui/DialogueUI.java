@@ -12,6 +12,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import wintersteve25.rpgutils.client.animation.IAnimatedEntity;
 import wintersteve25.rpgutils.common.quest.dialogue.Dialogue;
@@ -97,14 +98,14 @@ public class DialogueUI extends Screen {
         ITextComponent speakerName = speakerEntity.getSelf().getName();
         FontRenderer fontRenderer = minecraft.font;
 
-        int width = minecraft.getWindow().getWidth();
-        int height = minecraft.getWindow().getHeight();
+        int width = minecraft.getWindow().getGuiScaledWidth();
+        int height = minecraft.getWindow().getGuiScaledHeight();
         int speakerNameWidth = fontRenderer.width(speakerName);
-        int speakerX = 20;// (width-speakerNameWidth)/2;
-        int speakerY = 20;//height - 200;
+        int speakerX = (width-speakerNameWidth)/2;
+        int speakerY = height - 200;
 
-        drawString(pMatrixStack, fontRenderer, speakerName, speakerX, speakerY, 16777215);
-        drawString(pMatrixStack, minecraft.font, displayingDialogueText, speakerX, speakerY + 10, 16777215);
+        drawString(pMatrixStack, fontRenderer, speakerName, speakerX, speakerY, TextFormatting.WHITE.getColor());
+        drawString(pMatrixStack, minecraft.font, displayingDialogueText, speakerX, speakerY + 10, TextFormatting.WHITE.getColor());
         
         currentAction.render(speakerEntity, this, pMatrixStack, minecraft, width, height, speakerX, speakerY, pMouseX, pMouseY);
 

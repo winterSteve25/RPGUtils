@@ -1,14 +1,10 @@
 package wintersteve25.rpgutils.common.network;
 
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.network.NetworkEvent;
-import wintersteve25.rpgutils.client.ui.DialogueCreatorUI;
-import wintersteve25.rpgutils.client.ui.DialogueUI;
+import wintersteve25.rpgutils.client.ui.dialogue_creator.DialogueCreatorUI;
 import wintersteve25.rpgutils.common.items.DialogueCreator;
-import wintersteve25.rpgutils.common.quest.dialogue.DialogueManager;
 import wintersteve25.rpgutils.common.utils.ModConstants;
 
 import java.util.function.Supplier;
@@ -37,8 +33,7 @@ public class PacketDialogueCreate {
         ctx.get().enqueueWork(() -> {
             switch (type) {
                 case ModConstants.PacketTypes.OPEN_GUI: 
-//                    DialogueCreatorUI.open(data);
-                    DialogueUI.show(DialogueManager.INSTANCE.getDialogues().get(new ResourceLocation("rpgutils", "some_dialogue")));
+                    DialogueCreatorUI.open(data);
                     break;
                 case ModConstants.PacketTypes.SET_DATA: 
                     DialogueCreator.setDataToItemstack(ctx.get().getSender(), data);

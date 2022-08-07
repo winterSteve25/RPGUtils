@@ -27,7 +27,7 @@ public class DialogueManager extends JsonReloadListener {
     public Map<ResourceLocation, Dialogue> getDialogues() {
         return dialogues;
     }
-
+    
     @Override
     protected void apply(Map<ResourceLocation, JsonElement> pObject, IResourceManager pResourceManager, IProfiler pProfiler) {
         dialogues.clear();
