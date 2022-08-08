@@ -24,6 +24,7 @@ public class SelectEntity extends AbstractSelectionUI<EntityOption> {
         BlockPos posEnd = player.blockPosition().offset(16, 16, 16);
 
         List<Entity> entitiesInRange = player.getCommandSenderWorld().getEntities(player, new AxisAlignedBB(posStart, posEnd));
+
         for (int i = 0; i < entitiesInRange.size(); i++) {
             list.add(new EntityOption(this.x + 10, this.y + 40 + i * 12, entitiesInRange.get(i), this, i));
         }

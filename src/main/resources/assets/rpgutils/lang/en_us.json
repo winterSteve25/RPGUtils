@@ -9,7 +9,7 @@
   "rpgutils.gui.select_entity.search": "Search with name",
   "rpgutils.gui.select_entity.confirm": "Confirm",
   
-  "rpgutils.gui.dialogue_editor.title": "Dialogue Creator",
+  "rpgutils.gui.dialogue_editor.title": "Edit Dialogue",
   "rpgutils.gui.dialogue_editor.save": "Save",
   "rpgutils.gui.dialogue_editor.line_input": "Dialogue content",
   "rpgutils.gui.dialogue_editor.pause_duration": "Pause duration (s)",
@@ -18,6 +18,8 @@
   "rpgutils.gui.dialogue_editor.select_sound": "Sound",
   "rpgutils.gui.dialogue_editor.wait_for_input": "Wait for input at end",
   "rpgutils.gui.dialogue_editor.type_speed": "Type speed",
+  
+  "rpgutils.gui.dialogue_creator.dialogues": "Dialogues",
   
   "rpgutils.dialogues.action_types.speak": "Speak",
   "rpgutils.dialogues.action_types.clear": "Clear",

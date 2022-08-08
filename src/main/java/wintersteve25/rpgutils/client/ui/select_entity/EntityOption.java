@@ -3,11 +3,13 @@ package wintersteve25.rpgutils.client.ui.select_entity;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import wintersteve25.rpgutils.client.ui.components.selection.SelectionOption;
 
+import java.rmi.server.UID;
 import java.util.UUID;
 
-public class EntityOption extends SelectionOption {
+public class EntityOption extends SelectionOption<EntityOption> {
     private final ITextComponent textComponent;
     private final UUID represents;
 

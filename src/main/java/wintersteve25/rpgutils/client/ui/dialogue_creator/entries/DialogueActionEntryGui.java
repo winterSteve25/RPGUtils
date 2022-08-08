@@ -13,6 +13,7 @@ import wintersteve25.rpgutils.client.ui.components.BaseUI;
 import wintersteve25.rpgutils.client.ui.components.buttons.ToggleButton;
 import wintersteve25.rpgutils.client.ui.components.dropdown.Dropdown;
 import wintersteve25.rpgutils.client.ui.components.dropdown.EnumDropdownOption;
+import wintersteve25.rpgutils.client.ui.components.list.AbstractListEntryWidget;
 import wintersteve25.rpgutils.client.ui.dialogue_creator.action_types.DialogueActionType;
 import wintersteve25.rpgutils.client.ui.dialogue_creator.action_types.IDialogueActionTypeGui;
 import wintersteve25.rpgutils.client.ui.select_entity.EntityOption;
@@ -24,35 +25,24 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class DialogueActionEntryGui extends Widget {
+public class DialogueActionEntryGui extends AbstractListEntryWidget {
     private static final TranslationTextComponent SELECT_ENTITY = RLHelper.dialogueEditorComponent("select_entity");
     private static final TranslationTextComponent UUID = RLHelper.dialogueEditorComponent("selected_uuid");
-
-    private int index;
     
     private UUID selectedEntity;
     private ITextComponent selectedName;
 
     private Button selectEntity;
-    private ToggleButton toggleButton;
     private Dropdown<EnumDropdownOption<DialogueActionType>> dropdown;
     private IDialogueActionTypeGui actionTypeGui;
     
     public DialogueActionEntryGui(int index) {
-        super(0, 0, 225, 25, StringTextComponent.EMPTY);
-        this.index = index;
+        super(225, 25, StringTextComponent.EMPTY, index);
     }
-    
-    public void init(int parentX, int parentY, BaseUI parent) {
-        remove(parent);
-        
-        this.x = parentX + 5;
-        this.y = parentY + 35 + 30 * index;
 
-        boolean initialState = toggleButton != null && toggleButton.isStateTriggered();
-        toggleButton = new ToggleButton(this.x, this.y + 8, 12, 12, initialState, btn -> btn.setStateTriggered(!btn.isStateTriggered()));
-        toggleButton.initTextureValues(7, 208, 15, 15, ModConstants.Resources.BLANK_SCREEN);
-        parent.addButton(toggleButton);
+    @Override
+    public void init(int parentX, int parentY, BaseUI parent) {
+        super.init(parentX, parentY, parent);
         
         selectEntity = new Button(this.x + 25, this.y + 5, 60, 20, selectedName == null ? SELECT_ENTITY : selectedName, btn -> {
             Minecraft.getInstance().setScreen(new SelectEntity(false, selected -> {
@@ -103,40 +93,31 @@ public class DialogueActionEntryGui extends Widget {
             parent.addButton(this);
         });
     }
-    
+
+    @Override
     public void tick() {
         actionTypeGui.tick();
+    }
+
+    @Override
+    public void remove(BaseUI parent) {
+        super.remove(parent);
+        
+        parent.removeButton(selectEntity);
+        parent.removeButton(dropdown);
+
+        if (actionTypeGui != null) {
+            actionTypeGui.remove(parent);
+        }
+
+        parent.removeButton(this);
     }
 
     @Override
     public void renderButton(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         actionTypeGui.render(matrixStack, x, y, mouseX, mouseY, partialTicks);
     }
-
-    public int getIndex() {
-        return index;
-    }
-
-    public void setIndex(int index) {
-        this.index = index;
-    }
-
-    public boolean isSelected() {
-        return toggleButton.isStateTriggered();
-    }
-
-    public void remove(BaseUI parent) {
-        parent.removeButton(selectEntity);
-        parent.removeButton(toggleButton);
-        parent.removeButton(dropdown);
-
-        if (actionTypeGui != null) {
-            actionTypeGui.remove(parent);
-        }
-        
-        parent.removeButton(this);
-    }
-
+    
     public UUID getSelectedEntity() {
         return selectedEntity;
     }

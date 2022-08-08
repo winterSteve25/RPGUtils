@@ -8,15 +8,15 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import wintersteve25.rpgutils.common.utils.ModConstants;
 
-public class SelectionOption extends Widget {
+public class SelectionOption<T extends SelectionOption<T>> extends Widget {
     
     private final String text;
-    private final AbstractSelectionUI parent;
+    private final AbstractSelectionUI<T> parent;
     private final int index;
 
     private boolean selected = false;
     
-    public SelectionOption(int x, int y, String text, AbstractSelectionUI parent, int index) {
+    public SelectionOption(int x, int y, String text, AbstractSelectionUI<T> parent, int index) {
         super(x, y, 155, 12, StringTextComponent.EMPTY);
         
         this.text = text;
@@ -50,7 +50,7 @@ public class SelectionOption extends Widget {
         return index;
     }
 
-    protected AbstractSelectionUI getParent() {
+    protected AbstractSelectionUI<T> getParent() {
         return parent;
     }
 

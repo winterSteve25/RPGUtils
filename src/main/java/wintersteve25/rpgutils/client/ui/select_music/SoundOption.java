@@ -3,7 +3,7 @@ package wintersteve25.rpgutils.client.ui.select_music;
 import net.minecraft.util.SoundEvent;
 import wintersteve25.rpgutils.client.ui.components.selection.SelectionOption;
 
-public class SoundOption extends SelectionOption {
+public class SoundOption extends SelectionOption<SoundOption> {
     private final SoundEvent soundEvent;
     
     public SoundOption(int x, int y, SelectSound parent, int index, SoundEvent soundEvent) {

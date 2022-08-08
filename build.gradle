@@ -104,17 +104,17 @@ dependencies {
     minecraft 'net.minecraftforge:forge:1.16.5-36.2.34'
 
     // top
-    implementation fg.deobf("mcjty.theoneprobe:TheOneProbe-1.16:1.16-3.1.4-22")
+    implementation fg.deobf("mcjty.theoneprobe:TheOneProbe-${top_version}")
 
     // ct
-    implementation fg.deobf("com.blamejared.crafttweaker:CraftTweaker-1.16.5:7.1.2.455")
+    implementation fg.deobf("com.blamejared.crafttweaker:CraftTweaker-${ct_version}")
 
     // jei
     implementation fg.deobf("mezz.jei:jei-${jei_version}")
     compileOnly fg.deobf("mezz.jei:jei-${jei_version}:api")
 
     // geckolib
-    implementation fg.deobf('software.bernie.geckolib:geckolib-forge-1.16.5:3.0.84')
+    implementation fg.deobf("software.bernie.geckolib:geckolib-forge-${geckolib_version}")
     
     annotationProcessor ("org.spongepowered:mixin:0.8.5:processor")
 }
