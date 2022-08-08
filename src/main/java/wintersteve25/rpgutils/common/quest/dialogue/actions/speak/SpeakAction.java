@@ -12,7 +12,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import wintersteve25.rpgutils.client.animation.IAnimatedEntity;
 import wintersteve25.rpgutils.client.ui.DialogueUI;
 import wintersteve25.rpgutils.common.quest.dialogue.actions.base.IDialogueAction;
-import wintersteve25.rpgutils.common.utils.ISerializer;
+import wintersteve25.rpgutils.common.utils.IDeserializer;
 import wintersteve25.rpgutils.common.utils.JsonUtilities;
 
 public class SpeakAction implements IDialogueAction {
@@ -86,6 +86,17 @@ public class SpeakAction implements IDialogueAction {
         minecraft.getSoundManager().play(sound);
     }
 
+    @Override
+    public JsonObject toJson() {
+        JsonObject object = new JsonObject();
+        object.addProperty("type", "speak");
+        if (audio != null) object.addProperty("audio", audio.getLocation().toString());
+        object.addProperty("text", text);
+        object.addProperty("speed", initialTypeSpeed);
+        object.addProperty("waitForInput", waitForInput);
+        return object;
+    }
+
     private static String getContentOrTranslation(ITextComponent text) {
         if (text instanceof TranslationTextComponent) {
             return I18n.get(((TranslationTextComponent) text).getKey());
@@ -94,13 +105,13 @@ public class SpeakAction implements IDialogueAction {
         return text.getContents();
     }
 
-    public static class Serializer implements ISerializer<IDialogueAction> {
+    public static class Deserializer implements IDeserializer<IDialogueAction> {
         @Override
         public IDialogueAction fromJson(JsonObject jsonObject) {
             return new SpeakAction(
                     jsonObject.get("text").getAsString(),
                     jsonObject.has("audio") ? ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(jsonObject.get("audio").getAsString())) : null,
-                    JsonUtilities.getOrDefault(jsonObject, "speed", 8),
+                    JsonUtilities.getOrDefault(jsonObject, "speed", 10),
                     JsonUtilities.getOrDefault(jsonObject, "waitForInput", true)
             );
         }

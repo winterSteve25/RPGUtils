@@ -1,30 +1,32 @@
 package wintersteve25.rpgutils.client.ui.dialogue_creator;
 
-import com.google.common.collect.Lists;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fml.client.gui.GuiUtils;
 import wintersteve25.rpgutils.client.ui.components.BaseUI;
 import wintersteve25.rpgutils.client.ui.components.buttons.ToggleButton;
+import wintersteve25.rpgutils.client.ui.components.dropdown.Dropdown;
+import wintersteve25.rpgutils.client.ui.components.dropdown.EnumDropdownOption;
+import wintersteve25.rpgutils.client.ui.dialogue_creator.action_types.DialogueActionType;
+import wintersteve25.rpgutils.client.ui.dialogue_creator.action_types.IDialogueActionTypeGui;
 import wintersteve25.rpgutils.client.ui.select_entity.EntityOption;
 import wintersteve25.rpgutils.client.ui.select_entity.SelectEntity;
+import wintersteve25.rpgutils.common.utils.ModConstants;
+import wintersteve25.rpgutils.common.utils.RLHelper;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 public class DialogueActionGui extends Widget {
-    private static final TranslationTextComponent DIALOGUE_HINT = new TranslationTextComponent("rpgutils.gui.dialogue_creator.line_input");
-    private static final TranslationTextComponent SELECT_ENTITY = new TranslationTextComponent("rpgutils.gui.dialogue_creator.select_entity");
-    private static final TranslationTextComponent UUID = new TranslationTextComponent("rpgutils.gui.dialogue_creator.selected_uuid");
+    private static final TranslationTextComponent SELECT_ENTITY = RLHelper.dialogueEditorComponent("select_entity");
+    private static final TranslationTextComponent UUID = RLHelper.dialogueEditorComponent("selected_uuid");
 
     private int index;
     
@@ -32,10 +34,9 @@ public class DialogueActionGui extends Widget {
     private ITextComponent selectedName;
 
     private Button selectEntity;
-    private TextFieldWidget input;
     private ToggleButton toggleButton;
-    
-    
+    private Dropdown<EnumDropdownOption<DialogueActionType>> dropdown;
+    private IDialogueActionTypeGui actionTypeGui;
     
     public DialogueActionGui(int index) {
         super(0, 0, 225, 25, StringTextComponent.EMPTY);
@@ -47,6 +48,11 @@ public class DialogueActionGui extends Widget {
         
         this.x = parentX + 5;
         this.y = parentY + 35 + 30 * index;
+
+        boolean initialState = toggleButton != null && toggleButton.isStateTriggered();
+        toggleButton = new ToggleButton(this.x, this.y + 8, 12, 12, initialState, btn -> btn.setStateTriggered(!btn.isStateTriggered()));
+        toggleButton.initTextureValues(7, 208, 15, 15, ModConstants.Resources.BLANK_SCREEN);
+        parent.addButton(toggleButton);
         
         selectEntity = new Button(this.x + 25, this.y + 5, 60, 20, selectedName == null ? SELECT_ENTITY : selectedName, btn -> {
             Minecraft.getInstance().setScreen(new SelectEntity(false, selected -> {
@@ -67,32 +73,44 @@ public class DialogueActionGui extends Widget {
             }
             GuiUtils.drawHoveringText(matrix, lines, x, y, window.getGuiScaledWidth(), window.getGuiScaledHeight(), 999, minecraft.font);
         });
+    
+        Dropdown<EnumDropdownOption<DialogueActionType>> dropdownNew = new Dropdown<>(x + 100, y + 5, 60, StringTextComponent.EMPTY, EnumDropdownOption.populate(DialogueActionType.class));
+        if (dropdown == null) {
+            dropdownNew.select(0);
+        } else {
+            dropdownNew.select(dropdown.getSelectedIndex());
+        }
+        
+        dropdown = dropdownNew;
+        parent.addButton(dropdown);
+
+        if (actionTypeGui == null) actionTypeGui = dropdownNew.getSelected().getValue().getGuiCreator().get();
+        actionTypeGui.remove(parent);
+        actionTypeGui.init(parentX, parentY, x, y, parent, this);
         parent.addButton(selectEntity);
-        
-        String value = input == null ? "" : input.getValue();
-        input = new TextFieldWidget(Minecraft.getInstance().font, this.x + 100, this.y + 5, 150, 20, DIALOGUE_HINT);
-        input.setMaxLength(50);
-        input.setVisible(true);
-        input.setTextColor(16777215);
-        input.setValue(value);
-        parent.addButton(input);
-        
-        boolean initialState = toggleButton != null && toggleButton.isStateTriggered();
-        toggleButton = new ToggleButton(this.x, this.y + 8, 12, 12, initialState, btn -> btn.setStateTriggered(!btn.isStateTriggered()));
-        toggleButton.initTextureValues(7, 208, 15, 15, SelectEntity.BG);
-        parent.addButton(toggleButton);
         parent.addButton(this);
+        
+        dropdownNew.setOnChanged(action -> {
+            if (actionTypeGui != null) {
+                actionTypeGui.remove(parent);
+            }
+            actionTypeGui = action.getValue().getGuiCreator().get();
+            parent.removeButton(this);
+            parent.removeButton(selectEntity);
+            actionTypeGui.remove(parent);
+            actionTypeGui.init(parentX, parentY, x, y, parent, this);
+            parent.addButton(selectEntity);
+            parent.addButton(this);
+        });
     }
     
     public void tick() {
-        input.tick();
+        actionTypeGui.tick();
     }
 
     @Override
     public void renderButton(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-        if (!input.isFocused() && input.getValue().isEmpty()) {
-            drawString(matrixStack, Minecraft.getInstance().font, DIALOGUE_HINT, input.x + 5, input.y + 6, TextFormatting.GRAY.getColor());
-        }
+        actionTypeGui.render(matrixStack, x, y, mouseX, mouseY, partialTicks);
     }
 
     public int getIndex() {
@@ -109,8 +127,21 @@ public class DialogueActionGui extends Widget {
 
     public void remove(BaseUI parent) {
         parent.removeButton(selectEntity);
-        parent.removeButton(input);
         parent.removeButton(toggleButton);
+        parent.removeButton(dropdown);
+
+        if (actionTypeGui != null) {
+            actionTypeGui.remove(parent);
+        }
+        
         parent.removeButton(this);
+    }
+
+    public java.util.UUID getSelectedEntity() {
+        return selectedEntity;
+    }
+
+    public IDialogueActionTypeGui getActionTypeGui() {
+        return actionTypeGui;
     }
 }

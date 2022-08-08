@@ -1,6 +1,7 @@
 package wintersteve25.rpgutils.common.utils;
 
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TranslationTextComponent;
 import wintersteve25.rpgutils.RPGUtils;
 
 public class RLHelper {
@@ -14,5 +15,13 @@ public class RLHelper {
     
     public static ResourceLocation texture(String name) {
         return new ResourceLocation(RPGUtils.MOD_ID, "textures/" + name + ".png");
+    }
+
+    public static TranslationTextComponent dialogueEditorComponent(String path, Object... args) {
+        return base("rpgutils.gui.dialogue_editor.", path, args);
+    }
+    
+    private static TranslationTextComponent base(String base, String path, Object... args) {
+        return new TranslationTextComponent(base + path, args);
     }
 }

@@ -16,6 +16,6 @@ public class TextDropdownOption implements IDropdownOption {
 
     @Override
     public void render(MatrixStack matrixStack, int x, int y, int mouseX, int mouseY) {
-        AbstractGui.drawString(matrixStack, Minecraft.getInstance().font, text, x, y, TextFormatting.WHITE.getColor());
+        AbstractGui.drawCenteredString(matrixStack, Minecraft.getInstance().font, text, x, y, TextFormatting.WHITE.getColor());
     }
 }

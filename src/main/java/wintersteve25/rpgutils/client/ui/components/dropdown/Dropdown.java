@@ -8,14 +8,17 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 
 import java.util.List;
+import java.util.function.Consumer;
 
-public class Dropdown extends Widget {
+public class Dropdown<T extends IDropdownOption> extends Widget {
     
-    private final List<IDropdownOption> options;
+    private final List<T> options;
     private boolean focused;
     private int selectedIndex;
     
-    public Dropdown(int x, int y, int width, ITextComponent text, List<IDropdownOption> options) {
+    private Consumer<T> onChanged;
+    
+    public Dropdown(int x, int y, int width, ITextComponent text, List<T> options) {
         super(x, y, width, 20, text);
         this.options = options;
         this.focused = false;
@@ -35,19 +38,18 @@ public class Dropdown extends Widget {
         int j = getFGColor();
 
         if (selectedIndex == -1) {
-            drawString(pMatrixStack, fontrenderer, this.getMessage(), this.x + this.width / 16, this.y + (20 - 8) / 2, j | MathHelper.ceil(this.alpha * 255.0F) << 24);
+            drawCenteredString(pMatrixStack, fontrenderer, this.getMessage(), this.x + this.width / 2, this.y + (20 - 8) / 2, j | MathHelper.ceil(this.alpha * 255.0F) << 24);
         } else if (selectedIndex >= 0 && selectedIndex < options.size()) {
-            options.get(selectedIndex).render(pMatrixStack, this.x + this.width / 16, this.y + (20 - 8) / 2, pMouseX, pMouseY);
+            options.get(selectedIndex).render(pMatrixStack, this.x + this.width / 2, this.y + (20 - 8) / 2, pMouseX, pMouseY);
         }
         
         if (focused) {
             int y = this.y + 20;
             
-            for (IDropdownOption option : options) {
+            for (T option : options) {
                 minecraft.getTextureManager().bind(WIDGETS_LOCATION);
                 pMatrixStack.pushPose();
-                pMatrixStack.translate(0, 0, 200);
-                
+
                 int i2 = 1;
                 
                 if (pMouseX > this.x && pMouseX < this.x + this.width && pMouseY > y && pMouseY < y + 20) {
@@ -57,7 +59,7 @@ public class Dropdown extends Widget {
                 this.blit(pMatrixStack, this.x, y, 0, 46 + i2 * 20, this.width / 2, 20);
                 this.blit(pMatrixStack, this.x + this.width / 2, y, 200 - this.width / 2, 46 + i2 * 20, this.width / 2, 20);
                 
-                option.render(pMatrixStack, this.x + this.width / 16, y + (20 - 8) / 2, pMouseX, pMouseY);
+                option.render(pMatrixStack, this.x + this.width / 2, y + (20 - 8) / 2, pMouseX, pMouseY);
                 pMatrixStack.popPose();
                 y += 20;
             }
@@ -84,5 +86,19 @@ public class Dropdown extends Widget {
     
     public void select(int index) {
         selectedIndex = index;
+        if (onChanged == null) return;
+        onChanged.accept(getSelected());
+    }
+    
+    public T getSelected() {
+        return options.get(selectedIndex);
+    }
+
+    public int getSelectedIndex() {
+        return selectedIndex;
+    }
+
+    public void setOnChanged(Consumer<T> onChanged) {
+        this.onChanged = onChanged;
     }
 }

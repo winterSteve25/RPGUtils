@@ -2,13 +2,10 @@ package wintersteve25.rpgutils.common.quest.dialogue.actions;
 
 import com.google.gson.JsonObject;
 import net.minecraft.client.Minecraft;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.registries.ForgeRegistries;
 import wintersteve25.rpgutils.client.animation.IAnimatedEntity;
 import wintersteve25.rpgutils.client.ui.DialogueUI;
 import wintersteve25.rpgutils.common.quest.dialogue.actions.base.IDialogueAction;
-import wintersteve25.rpgutils.common.quest.dialogue.actions.speak.SpeakAction;
-import wintersteve25.rpgutils.common.utils.ISerializer;
+import wintersteve25.rpgutils.common.utils.IDeserializer;
 import wintersteve25.rpgutils.common.utils.JsonUtilities;
 
 public class PauseAction implements IDialogueAction {
@@ -42,7 +39,16 @@ public class PauseAction implements IDialogueAction {
         skip = false;
     }
 
-    public static class Serializer implements ISerializer<IDialogueAction> {
+    @Override
+    public JsonObject toJson() {
+        JsonObject object = new JsonObject();
+        object.addProperty("type", "pause");
+        object.addProperty("time", pause);
+        object.addProperty("skippable", skippable);
+        return object;
+    }
+
+    public static class Deserializer implements IDeserializer<IDialogueAction> {
         @Override
         public IDialogueAction fromJson(JsonObject jsonObject) {
             return new PauseAction(

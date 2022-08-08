@@ -1,5 +1,6 @@
 package wintersteve25.rpgutils.common.quest.dialogue.actions.base;
 
+import com.google.gson.JsonObject;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.Minecraft;
 import wintersteve25.rpgutils.client.animation.IAnimatedEntity;
@@ -47,4 +48,6 @@ public interface IDialogueAction {
      */
     default void initialize(IAnimatedEntity<?> speaker, DialogueUI dialogueUI, Minecraft minecraft) {
     }
+    
+    JsonObject toJson();
 }

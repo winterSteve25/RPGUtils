@@ -25,10 +25,10 @@ public class ModNetworking {
     }
 
     public static void registerMessages() {
-        INSTANCE.messageBuilder(PacketDialogueCreate.class, nextID())
-                .encoder(PacketDialogueCreate::encode)
-                .decoder(PacketDialogueCreate::new)
-                .consumer(PacketDialogueCreate::handle)
+        INSTANCE.messageBuilder(PacketOpenDialogueCreator.class, nextID())
+                .encoder(PacketOpenDialogueCreator::encode)
+                .decoder(PacketOpenDialogueCreator::new)
+                .consumer(PacketOpenDialogueCreator::handle)
                 .add();
 
         INSTANCE.messageBuilder(PacketPlaySound.class, nextID())

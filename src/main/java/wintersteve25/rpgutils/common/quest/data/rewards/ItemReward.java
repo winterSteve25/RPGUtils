@@ -4,7 +4,7 @@ import com.google.gson.JsonObject;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.ShapedRecipe;
-import wintersteve25.rpgutils.common.utils.ISerializer;
+import wintersteve25.rpgutils.common.utils.IDeserializer;
 
 public class ItemReward implements IReward {
     
@@ -19,7 +19,7 @@ public class ItemReward implements IReward {
         player.addItem(item);
     }
 
-    public static class Serializer implements ISerializer<IReward> {
+    public static class Deserializer implements IDeserializer<IReward> {
         @Override
         public IReward fromJson(JsonObject jsonObject) {
             return new ItemReward(ShapedRecipe.itemFromJson(jsonObject.getAsJsonObject("item")));

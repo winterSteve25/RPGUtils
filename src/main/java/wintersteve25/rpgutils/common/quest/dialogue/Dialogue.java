@@ -1,6 +1,5 @@
 package wintersteve25.rpgutils.common.quest.dialogue;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.util.Tuple;
@@ -26,8 +25,7 @@ public class Dialogue {
     public static Dialogue fromJson(JsonObject jsonObject) {
         List<Tuple<Optional<UUID>, IDialogueAction>> lines = new ArrayList<>();
         
-        JsonArray map = jsonObject.getAsJsonArray("lines");
-        for (JsonElement l : map) {
+        for (JsonElement l : jsonObject.getAsJsonArray()) {
             JsonObject line = l.getAsJsonObject();
             JsonObject action = line.get("action").getAsJsonObject();
             
