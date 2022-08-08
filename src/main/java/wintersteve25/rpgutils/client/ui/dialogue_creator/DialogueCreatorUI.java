@@ -1,6 +1,7 @@
 package wintersteve25.rpgutils.client.ui.dialogue_creator;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
 import wintersteve25.rpgutils.RPGUtils;
 import wintersteve25.rpgutils.client.ui.components.BaseUI;
@@ -12,6 +13,8 @@ public class DialogueCreatorUI extends BaseUI {
     private static final int WIDTH = 400;
     private static final int HEIGHT = 240;
     
+    
+    
     protected DialogueCreatorUI() {
         super(BG, WIDTH, HEIGHT);
     }
@@ -21,5 +24,11 @@ public class DialogueCreatorUI extends BaseUI {
         super.renderBackground(matrixStack);
         this.renderBackgroundTexture(matrixStack);
         super.render(matrixStack, mouseX, mouseY, partialTicks);
+    }
+
+    public static void open() {
+        //TODO
+        Minecraft.getInstance().setScreen(null);
+        Minecraft.getInstance().setScreen(new DialogueEditorUI());
     }
 }

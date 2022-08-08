@@ -1,4 +1,4 @@
-package wintersteve25.rpgutils.client.ui.dialogue_creator;
+package wintersteve25.rpgutils.client.ui.dialogue_creator.entries;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.MainWindow;
@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class DialogueActionGui extends Widget {
+public class DialogueActionEntryGui extends Widget {
     private static final TranslationTextComponent SELECT_ENTITY = RLHelper.dialogueEditorComponent("select_entity");
     private static final TranslationTextComponent UUID = RLHelper.dialogueEditorComponent("selected_uuid");
 
@@ -38,7 +38,7 @@ public class DialogueActionGui extends Widget {
     private Dropdown<EnumDropdownOption<DialogueActionType>> dropdown;
     private IDialogueActionTypeGui actionTypeGui;
     
-    public DialogueActionGui(int index) {
+    public DialogueActionEntryGui(int index) {
         super(0, 0, 225, 25, StringTextComponent.EMPTY);
         this.index = index;
     }
@@ -137,7 +137,7 @@ public class DialogueActionGui extends Widget {
         parent.removeButton(this);
     }
 
-    public java.util.UUID getSelectedEntity() {
+    public UUID getSelectedEntity() {
         return selectedEntity;
     }
 

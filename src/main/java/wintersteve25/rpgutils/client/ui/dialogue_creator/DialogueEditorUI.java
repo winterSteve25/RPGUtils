@@ -11,6 +11,7 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import wintersteve25.rpgutils.RPGUtils;
 import wintersteve25.rpgutils.client.ui.components.BaseUI;
+import wintersteve25.rpgutils.client.ui.dialogue_creator.entries.DialogueActionEntryGui;
 import wintersteve25.rpgutils.common.utils.JsonUtilities;
 import wintersteve25.rpgutils.common.utils.RLHelper;
 
@@ -27,7 +28,7 @@ public class DialogueEditorUI extends BaseUI {
     private static final int WIDTH = 400;
     private static final int HEIGHT = 240;
     
-    private final List<DialogueActionGui> actions;
+    private final List<DialogueActionEntryGui> actions;
 
     protected DialogueEditorUI() {
         super(BG, WIDTH, HEIGHT);
@@ -41,22 +42,22 @@ public class DialogueEditorUI extends BaseUI {
         int rightX = this.x + texWidth;
 
         Button addNewButton = new Button(rightX - 95, this.y + 5, 20, 20, new StringTextComponent("+"), btn -> {
-            DialogueActionGui actionGui = new DialogueActionGui(actions.size());
+            DialogueActionEntryGui actionGui = new DialogueActionEntryGui(actions.size());
             actionGui.init(this.x + 15, this.y, this);
             actions.add(actionGui);
         });
 
         Button removeButton = new Button(rightX - 70, this.y + 5, 20, 20, new StringTextComponent("-"), btn -> {
-            List<DialogueActionGui> matches = actions.stream().filter(DialogueActionGui::isSelected).collect(Collectors.toList());
+            List<DialogueActionEntryGui> matches = actions.stream().filter(DialogueActionEntryGui::isSelected).collect(Collectors.toList());
 
-            for (DialogueActionGui widget : matches) {
+            for (DialogueActionEntryGui widget : matches) {
                 widget.remove(this);
                 actions.remove(widget);
             }
 
             // update the remaining ones' index
             for (int i = 0; i < actions.size(); i++) {
-                DialogueActionGui actionGui = actions.get(i);
+                DialogueActionEntryGui actionGui = actions.get(i);
                 // does not require update
                 if (actionGui.getIndex() == i) continue;
                 actionGui.setIndex(i);
@@ -67,7 +68,7 @@ public class DialogueEditorUI extends BaseUI {
         Button saveButton = new Button(rightX - 45, this.y + 5, 40, 20, SAVE, btn -> {
             JsonArray lines = new JsonArray();
 
-            for (DialogueActionGui actionGui : actions) {
+            for (DialogueActionEntryGui actionGui : actions) {
                 JsonObject line = new JsonObject();
                 if (actionGui.getSelectedEntity() != null) line.addProperty("speaker", actionGui.getSelectedEntity().toString());
                 line.add("action", actionGui.getActionTypeGui().save().toJson());
@@ -77,7 +78,7 @@ public class DialogueEditorUI extends BaseUI {
             JsonUtilities.saveDialogue(lines);
         });
 
-        for (DialogueActionGui actionGui : actions) {
+        for (DialogueActionEntryGui actionGui : actions) {
             actionGui.init(this.x + 15, this.y, this);
         }
 
@@ -106,13 +107,8 @@ public class DialogueEditorUI extends BaseUI {
 
     @Override
     public void tick() {
-        for (DialogueActionGui actionGui : actions) {
+        for (DialogueActionEntryGui actionGui : actions) {
             actionGui.tick();
         }
-    }
-    
-    public static void open() {
-        Minecraft.getInstance().setScreen(null);
-        Minecraft.getInstance().setScreen(new DialogueEditorUI());
     }
 }
