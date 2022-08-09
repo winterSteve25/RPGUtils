@@ -8,5 +8,5 @@ public class DialogueRuleEntryGui extends AbstractListEntryWidget {
         super(225, 25, StringTextComponent.EMPTY, index);
     }
 
-
+    
 }

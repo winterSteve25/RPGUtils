@@ -18,8 +18,10 @@
   "rpgutils.gui.dialogue_editor.select_sound": "Sound",
   "rpgutils.gui.dialogue_editor.wait_for_input": "Wait for input at end",
   "rpgutils.gui.dialogue_editor.type_speed": "Type speed",
+  "rpgutils.gui.dialogue_editor.skippable": "Skippable",
   
   "rpgutils.gui.dialogue_creator.dialogues": "Dialogues",
+  "rpgutils.gui.dialogue_creator.pool_name": "Pool Location",
   
   "rpgutils.dialogues.action_types.speak": "Speak",
   "rpgutils.dialogues.action_types.clear": "Clear",

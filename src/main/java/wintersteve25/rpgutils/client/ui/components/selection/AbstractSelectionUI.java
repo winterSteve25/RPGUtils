@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-public abstract class AbstractSelectionUI<T extends SelectionOption> extends BaseUI {
+public abstract class AbstractSelectionUI<T extends SelectionOption<T>> extends BaseUI {
     private static final ResourceLocation RECIPE_BOOK_LOCATION = new ResourceLocation("textures/gui/recipe_book.png");
     
     private static final int ITEMS_EACH_PAGE = 8;

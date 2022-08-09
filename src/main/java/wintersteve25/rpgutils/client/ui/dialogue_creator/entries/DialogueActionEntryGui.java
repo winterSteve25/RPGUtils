@@ -3,14 +3,12 @@ package wintersteve25.rpgutils.client.ui.dialogue_creator.entries;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fml.client.gui.GuiUtils;
 import wintersteve25.rpgutils.client.ui.components.BaseUI;
-import wintersteve25.rpgutils.client.ui.components.buttons.ToggleButton;
 import wintersteve25.rpgutils.client.ui.components.dropdown.Dropdown;
 import wintersteve25.rpgutils.client.ui.components.dropdown.EnumDropdownOption;
 import wintersteve25.rpgutils.client.ui.components.list.AbstractListEntryWidget;
@@ -18,7 +16,6 @@ import wintersteve25.rpgutils.client.ui.dialogue_creator.action_types.DialogueAc
 import wintersteve25.rpgutils.client.ui.dialogue_creator.action_types.IDialogueActionTypeGui;
 import wintersteve25.rpgutils.client.ui.select_entity.EntityOption;
 import wintersteve25.rpgutils.client.ui.select_entity.SelectEntity;
-import wintersteve25.rpgutils.common.utils.ModConstants;
 import wintersteve25.rpgutils.common.utils.RLHelper;
 
 import java.util.ArrayList;

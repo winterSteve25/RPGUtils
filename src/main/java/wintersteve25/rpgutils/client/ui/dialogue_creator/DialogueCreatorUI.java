@@ -32,11 +32,9 @@ public class DialogueCreatorUI extends EditableListUI<DialoguePoolEntryGui> {
 
     @Override
     protected void save(List<DialoguePoolEntryGui> data) {
-
     }
 
     public static void open() {
-        //TODO
         Minecraft.getInstance().setScreen(null);
         Minecraft.getInstance().setScreen(new DialogueCreatorUI());
     }

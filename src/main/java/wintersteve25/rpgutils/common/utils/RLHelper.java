@@ -24,7 +24,7 @@ public class RLHelper {
     }
     
     public static TranslationTextComponent dialogueCreatorComponent(String path, Object... args) {
-        return base("rpgutils.gui.dialogue_creator", path, args);
+        return base("rpgutils.gui.dialogue_creator.", path, args);
     }
     
     private static TranslationTextComponent base(String base, String path, Object... args) {
