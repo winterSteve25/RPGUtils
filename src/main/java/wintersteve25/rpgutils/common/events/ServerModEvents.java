@@ -1,9 +1,6 @@
 package wintersteve25.rpgutils.common.events;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import wintersteve25.rpgutils.RPGUtils;

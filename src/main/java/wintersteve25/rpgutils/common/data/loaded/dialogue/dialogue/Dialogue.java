@@ -10,10 +10,10 @@ import wintersteve25.rpgutils.common.data.loaded.dialogue.dialogue.actions.base.
 import java.util.*;
 
 public class Dialogue {
-    private final List<Tuple<Optional<UUID>, IDialogueAction>> lines;
+    private final List<Tuple<DynamicUUID, IDialogueAction>> lines;
     private final ResourceLocation resourceLocation;
     
-    public Dialogue(ResourceLocation resourceLocation, List<Tuple<Optional<UUID>, IDialogueAction>> lines) {
+    public Dialogue(ResourceLocation resourceLocation, List<Tuple<DynamicUUID, IDialogueAction>> lines) {
         this.lines = lines;
         this.resourceLocation = resourceLocation;
     }
@@ -21,7 +21,7 @@ public class Dialogue {
     /**
      * @return All the lines in the dialogue. If UUID is not present it means it is the player's line. 
      */
-    public List<Tuple<Optional<UUID>, IDialogueAction>> getLines() {
+    public List<Tuple<DynamicUUID, IDialogueAction>> getLines() {
         return lines;
     }
 
@@ -30,22 +30,27 @@ public class Dialogue {
     }
 
     public static Dialogue fromJson(ResourceLocation resourceLocation, JsonElement jsonObject) {
-        List<Tuple<Optional<UUID>, IDialogueAction>> lines = new ArrayList<>();
+        List<Tuple<DynamicUUID, IDialogueAction>> lines = new ArrayList<>();
         
         for (JsonElement l : jsonObject.getAsJsonArray()) {
             JsonObject line = l.getAsJsonObject();
             JsonObject action = line.get("action").getAsJsonObject();
             
             String speakerString = line.get("speaker").getAsString();
-            UUID uuid;
+            DynamicUUID uuid;
             
-            if (speakerString.equals("PLAYER")) {
-                uuid = null;
+            if (line.has("speaker")) {
+                if (speakerString.equals("PLAYER")) {
+                    uuid = new DynamicUUID(DynamicUUID.DynamicType.PLAYER);
+                } else {
+                    uuid = new DynamicUUID(DynamicUUID.DynamicType.FIXED);
+                    uuid.setUuid(UUID.fromString(speakerString));
+                }
             } else {
-                uuid = UUID.fromString(speakerString);
+                uuid = new DynamicUUID(DynamicUUID.DynamicType.DYNAMIC);
             }
             
-            lines.add(new Tuple<>(Optional.ofNullable(uuid), DialogueActionTypes.SERIALIZERS.get(action.get("type").getAsString()).fromJson(action)));
+            lines.add(new Tuple<>(uuid, DialogueActionTypes.SERIALIZERS.get(action.get("type").getAsString()).fromJson(action)));
         }
         
         return new Dialogue(resourceLocation, lines);

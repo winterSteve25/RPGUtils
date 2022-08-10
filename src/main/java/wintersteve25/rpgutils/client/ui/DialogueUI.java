@@ -16,6 +16,7 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import wintersteve25.rpgutils.client.animation.IAnimatedEntity;
 import wintersteve25.rpgutils.common.data.loaded.dialogue.dialogue.Dialogue;
+import wintersteve25.rpgutils.common.data.loaded.dialogue.dialogue.DynamicUUID;
 import wintersteve25.rpgutils.common.data.loaded.dialogue.dialogue.actions.base.IDialogueAction;
 
 import java.util.List;
@@ -29,7 +30,7 @@ public class DialogueUI extends Screen {
     
     private final Minecraft minecraft;
 
-    private List<Tuple<Optional<UUID>, IDialogueAction>> entries;
+    private List<Tuple<DynamicUUID, IDialogueAction>> entries;
     private int currentIndex;
     private boolean active;
     private boolean interruptable;
@@ -60,33 +61,37 @@ public class DialogueUI extends Screen {
         
         pMatrixStack.pushPose();
 
-        Tuple<Optional<UUID>,IDialogueAction> entry = entries.get(currentIndex);
-        Optional<UUID> speaker = entry.getA();
+        Tuple<DynamicUUID, IDialogueAction> entry = entries.get(currentIndex);
+        DynamicUUID speaker = entry.getA();
         PlayerEntity player = minecraft.player;
         World world = player.level;
         BlockPos posStart = player.blockPosition().offset(-16, -16, -16);
         BlockPos posEnd = player.blockPosition().offset(16, 16, 16);
 
         IAnimatedEntity<?> speakerEntity;
+        
+        switch (speaker.getType()) {
+            default:
+            case FIXED:
+                List<Entity> matchingEntities = world.getEntities(player, new AxisAlignedBB(posStart, posEnd)).stream().filter(entity -> entity.getUUID().equals(speaker.getUuid())).collect(Collectors.toList());
 
-        if (speaker.isPresent()) {
-            List<Entity> matchingEntities = world.getEntities(player, new AxisAlignedBB(posStart, posEnd)).stream().filter(entity -> entity.getUUID().equals(speaker.get())).collect(Collectors.toList());
+                if (matchingEntities.isEmpty()) {
+                    pMatrixStack.popPose();
+                    return;
+                }
 
-            if (matchingEntities.isEmpty()) {
-                pMatrixStack.popPose();
-                return;
-            }
+                Entity entity = matchingEntities.get(0);
 
-            Entity entity = matchingEntities.get(0);
+                if (!(entity instanceof LivingEntity)) {
+                    pMatrixStack.popPose();
+                    return;
+                }
 
-            if (!(entity instanceof LivingEntity)) {
-                pMatrixStack.popPose();
-                return;
-            }
-
-            speakerEntity = IAnimatedEntity.getOrCreate((LivingEntity) entity);
-        } else {
-            speakerEntity = IAnimatedEntity.getOrCreate(player);
+                speakerEntity = IAnimatedEntity.getOrCreate((LivingEntity) entity);
+                break;
+            case PLAYER:
+                speakerEntity = IAnimatedEntity.getOrCreate(player);
+                break;
         }
 
         currentAction = entry.getB();
