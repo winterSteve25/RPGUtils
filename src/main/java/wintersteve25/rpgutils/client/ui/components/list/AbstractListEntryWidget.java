@@ -19,7 +19,7 @@ public abstract class AbstractListEntryWidget extends Widget {
     public void init(int parentX, int parentY, BaseUI parent) {
         remove(parent);
         this.x = parentX + 5;
-        this.y = parentY + 35 + 30 * index;
+        this.y = parentY + 35 + 30 * (index % EditableListUI.ITEMS_EACH_PAGE);
 
         boolean initialState = toggleButton != null && toggleButton.isStateTriggered();
         toggleButton = new ToggleButton(this.x, this.y + 8, 12, 12, initialState, btn -> btn.setStateTriggered(!btn.isStateTriggered()));

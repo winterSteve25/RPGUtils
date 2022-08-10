@@ -20,14 +20,18 @@ public class RLHelper {
     }
 
     public static TranslationTextComponent dialogueEditorComponent(String path, Object... args) {
-        return base("rpgutils.gui.dialogue_editor.", path, args);
+        return base("rpgutils.gui.dialogue_editor", path, args);
     }
     
     public static TranslationTextComponent dialogueCreatorComponent(String path, Object... args) {
-        return base("rpgutils.gui.dialogue_creator.", path, args);
+        return base("rpgutils.gui.dialogue_creator", path, args);
+    }
+    
+    public static TranslationTextComponent uiComponent(String path, Object... args) {
+        return base("rpgutils.gui", path, args);
     }
     
     private static TranslationTextComponent base(String base, String path, Object... args) {
-        return new TranslationTextComponent(base + path, args);
+        return new TranslationTextComponent(base + "." + path, args);
     }
 }

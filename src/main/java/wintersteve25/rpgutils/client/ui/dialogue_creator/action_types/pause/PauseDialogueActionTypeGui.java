@@ -2,28 +2,21 @@ package wintersteve25.rpgutils.client.ui.dialogue_creator.action_types.pause;
 
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.matrix.MatrixStack;
-import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.Widget;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraftforge.fml.client.gui.GuiUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import wintersteve25.rpgutils.client.ui.UIUtilities;
 import wintersteve25.rpgutils.client.ui.components.BaseUI;
 import wintersteve25.rpgutils.client.ui.components.buttons.ToggleButton;
 import wintersteve25.rpgutils.client.ui.dialogue_creator.action_types.IDialogueActionTypeGui;
-import wintersteve25.rpgutils.common.quest.dialogue.actions.PauseAction;
-import wintersteve25.rpgutils.common.quest.dialogue.actions.base.IDialogueAction;
+import wintersteve25.rpgutils.common.data.loaded.dialogue.dialogue.actions.PauseAction;
+import wintersteve25.rpgutils.common.data.loaded.dialogue.dialogue.actions.base.IDialogueAction;
 import wintersteve25.rpgutils.common.utils.ModConstants;
 import wintersteve25.rpgutils.common.utils.RLHelper;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class PauseDialogueActionTypeGui implements IDialogueActionTypeGui {
     private static final TranslationTextComponent HINT = RLHelper.dialogueEditorComponent("pause_duration");
@@ -53,9 +46,7 @@ public class PauseDialogueActionTypeGui implements IDialogueActionTypeGui {
     public void render(MatrixStack matrixStack, int x, int y, int mouseX, int mouseY, float partialTicks) {
         UIUtilities.tooltipWhenOver(matrixStack, skippableToggle, mouseX, mouseY, Lists.newArrayList(SKIPPABLE));
         if (input == null) return;
-        if (!input.isFocused() && input.getValue().isEmpty()) {
-            AbstractGui.drawString(matrixStack, Minecraft.getInstance().font, HINT, input.x + 5, input.y + 6, TextFormatting.GRAY.getColor());
-        }
+        UIUtilities.textFieldHint(matrixStack, HINT, input);
     }
 
     @Override

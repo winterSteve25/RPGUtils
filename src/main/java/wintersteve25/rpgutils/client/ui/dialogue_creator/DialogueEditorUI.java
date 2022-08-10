@@ -3,22 +3,25 @@ package wintersteve25.rpgutils.client.ui.dialogue_creator;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import net.minecraft.util.ResourceLocation;
-import wintersteve25.rpgutils.RPGUtils;
+import net.minecraft.util.text.TranslationTextComponent;
 import wintersteve25.rpgutils.client.ui.components.list.EditableListUI;
 import wintersteve25.rpgutils.client.ui.dialogue_creator.entries.DialogueActionEntryGui;
 import wintersteve25.rpgutils.common.utils.JsonUtilities;
+import wintersteve25.rpgutils.common.utils.RLHelper;
 
 import java.util.List;
 import java.util.UUID;
 
 public class DialogueEditorUI extends EditableListUI<DialogueActionEntryGui> {
+    private static final TranslationTextComponent TITLE = RLHelper.dialogueEditorComponent("title");
 
-    private static final ResourceLocation BG = new ResourceLocation(RPGUtils.MOD_ID, "textures/gui/dialogue_editor.png");
-    private static final int WIDTH = 400;
-    private static final int HEIGHT = 240;
-
-    protected DialogueEditorUI() {
-        super(BG, WIDTH, HEIGHT);
+    private final Runnable onSubmit;
+    private final ResourceLocation id;
+    
+    public DialogueEditorUI(Runnable onSubmit, ResourceLocation id) {
+        super(TITLE);
+        this.onSubmit = onSubmit;
+        this.id = id;
     }
 
     @Override
@@ -38,6 +41,8 @@ public class DialogueEditorUI extends EditableListUI<DialogueActionEntryGui> {
             lines.add(line);
         }
 
-        JsonUtilities.saveDialogue(lines);
+        JsonUtilities.saveDialogue(id, lines);
+        
+        onSubmit.run();
     }
 }

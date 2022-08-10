@@ -14,8 +14,8 @@ import wintersteve25.rpgutils.client.ui.components.dropdown.EnumDropdownOption;
 import wintersteve25.rpgutils.client.ui.components.list.AbstractListEntryWidget;
 import wintersteve25.rpgutils.client.ui.dialogue_creator.action_types.DialogueActionType;
 import wintersteve25.rpgutils.client.ui.dialogue_creator.action_types.IDialogueActionTypeGui;
-import wintersteve25.rpgutils.client.ui.select_entity.EntityOption;
-import wintersteve25.rpgutils.client.ui.select_entity.SelectEntity;
+import wintersteve25.rpgutils.client.ui.selections.select_entity.EntityOption;
+import wintersteve25.rpgutils.client.ui.selections.select_entity.SelectEntity;
 import wintersteve25.rpgutils.common.utils.RLHelper;
 
 import java.util.ArrayList;

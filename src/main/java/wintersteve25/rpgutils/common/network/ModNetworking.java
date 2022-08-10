@@ -26,8 +26,8 @@ public class ModNetworking {
 
     public static void registerMessages() {
         INSTANCE.messageBuilder(PacketOpenDialogueCreator.class, nextID())
-                .encoder(PacketOpenDialogueCreator::encode)
-                .decoder(PacketOpenDialogueCreator::new)
+                .encoder((data, buffer) -> {})
+                .decoder(buffer -> new PacketOpenDialogueCreator())
                 .consumer(PacketOpenDialogueCreator::handle)
                 .add();
 
@@ -35,6 +35,18 @@ public class ModNetworking {
                 .encoder(PacketPlaySound::encode)
                 .decoder(PacketPlaySound::new)
                 .consumer(PacketPlaySound::handle)
+                .add();
+
+        INSTANCE.messageBuilder(PacketLoadData.class, nextID())
+                .encoder((data, buffer) -> {})
+                .decoder(buffer -> new PacketLoadData())
+                .consumer(PacketLoadData::handle)
+                .add();
+
+        INSTANCE.messageBuilder(PacketPlayDialogue.class, nextID())
+                .encoder(PacketPlayDialogue::encode)
+                .decoder(PacketPlayDialogue::new)
+                .consumer(PacketPlayDialogue::handle)
                 .add();
     }
 

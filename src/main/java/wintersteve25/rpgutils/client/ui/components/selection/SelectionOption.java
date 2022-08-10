@@ -23,6 +23,13 @@ public class SelectionOption<T extends SelectionOption<T>> extends Widget {
         this.parent = parent;
         this.index = index;
     }
+    
+    public SelectionOption(T copyFrom) {
+        super(copyFrom.x, copyFrom.y, copyFrom.width, copyFrom.height, copyFrom.getMessage());
+        this.text = copyFrom.getText();
+        this.parent = copyFrom.getParent();
+        this.index = copyFrom.getIndex();
+    }
 
     @Override
     public void renderButton(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {

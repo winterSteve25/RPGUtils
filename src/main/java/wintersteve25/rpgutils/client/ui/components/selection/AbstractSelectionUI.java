@@ -10,9 +10,11 @@ import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
+import wintersteve25.rpgutils.client.ui.UIUtilities;
 import wintersteve25.rpgutils.client.ui.components.BaseUI;
 import wintersteve25.rpgutils.client.ui.components.buttons.ToggleButton;
 import wintersteve25.rpgutils.common.utils.ModConstants;
+import wintersteve25.rpgutils.common.utils.RLHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,8 +27,8 @@ public abstract class AbstractSelectionUI<T extends SelectionOption<T>> extends 
     private static final int ITEMS_EACH_PAGE = 8;
     public static final int WIDTH = 176;
     public static final int HEIGHT = 171;
-    private static final TranslationTextComponent SEARCH_HINT = new TranslationTextComponent("rpgutils.gui.select_entity.search");
-    public static final TranslationTextComponent CONFIRM_TEXT = new TranslationTextComponent("rpgutils.gui.select_entity.confirm");
+    private static final TranslationTextComponent SEARCH_HINT = RLHelper.uiComponent("select_entity.search");
+    public static final TranslationTextComponent CONFIRM_TEXT = RLHelper.uiComponent("select_entity.confirm");
     
     private final boolean allowMultiple;
     private final List<Integer> selectedIndices;
@@ -101,10 +103,7 @@ public abstract class AbstractSelectionUI<T extends SelectionOption<T>> extends 
         // background
         renderBackgroundTexture(matrixStack);
         super.render(matrixStack, mouseX, mouseY, partialTicks);
-
-        if (!searchBar.isFocused() && searchBar.getValue().isEmpty()) {
-            drawString(matrixStack, minecraft.font, SEARCH_HINT, this.x + 14, this.y + 16, TextFormatting.GRAY.getColor());
-        }
+        UIUtilities.textFieldHint(matrixStack, SEARCH_HINT, searchBar);
     }
 
     @Override
@@ -142,7 +141,7 @@ public abstract class AbstractSelectionUI<T extends SelectionOption<T>> extends 
         populateOptions(totalOptions);
         if (!initializeFilteredOptions) return; 
         this.filteredOptions = new ArrayList<>(totalOptions);
-        this.totalPages = filteredOptions.size() / 10;
+        this.totalPages = filteredOptions.size() / ITEMS_EACH_PAGE;
     }
 
     private void updateFilteredOptions() {

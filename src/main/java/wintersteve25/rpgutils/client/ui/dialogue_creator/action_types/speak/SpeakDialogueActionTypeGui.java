@@ -9,10 +9,11 @@ import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
+import wintersteve25.rpgutils.client.ui.UIUtilities;
 import wintersteve25.rpgutils.client.ui.components.BaseUI;
 import wintersteve25.rpgutils.client.ui.dialogue_creator.action_types.IDialogueActionTypeGui;
-import wintersteve25.rpgutils.common.quest.dialogue.actions.base.IDialogueAction;
-import wintersteve25.rpgutils.common.quest.dialogue.actions.speak.SpeakAction;
+import wintersteve25.rpgutils.common.data.loaded.dialogue.dialogue.actions.base.IDialogueAction;
+import wintersteve25.rpgutils.common.data.loaded.dialogue.dialogue.actions.speak.SpeakAction;
 import wintersteve25.rpgutils.common.utils.RLHelper;
 
 public class SpeakDialogueActionTypeGui implements IDialogueActionTypeGui {
@@ -46,9 +47,7 @@ public class SpeakDialogueActionTypeGui implements IDialogueActionTypeGui {
     @Override
     public void render(MatrixStack matrixStack, int x, int y, int mouseX, int mouseY, float partialTicks) {
         if (input == null) return;
-        if (!input.isFocused() && input.getValue().isEmpty()) {
-            AbstractGui.drawString(matrixStack, Minecraft.getInstance().font, DIALOGUE_HINT, input.x + 5, input.y + 6, TextFormatting.GRAY.getColor());
-        }
+        UIUtilities.textFieldHint(matrixStack, DIALOGUE_HINT, input);
     }
 
     @Override

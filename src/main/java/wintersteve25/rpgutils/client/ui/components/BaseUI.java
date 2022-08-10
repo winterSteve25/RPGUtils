@@ -8,7 +8,7 @@ import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.StringTextComponent;
 
-public class BaseUI extends Screen {
+public abstract class BaseUI extends Screen {
     
     protected final ResourceLocation bg;
     protected final int texWidth;

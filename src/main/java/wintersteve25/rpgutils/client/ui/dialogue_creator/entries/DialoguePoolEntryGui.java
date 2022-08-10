@@ -4,15 +4,19 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Tuple;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
+import wintersteve25.rpgutils.client.ui.UIUtilities;
 import wintersteve25.rpgutils.client.ui.components.BaseUI;
 import wintersteve25.rpgutils.client.ui.components.list.AbstractListEntryWidget;
 import wintersteve25.rpgutils.client.ui.dialogue_creator.DialoguePoolUI;
-import wintersteve25.rpgutils.common.quest.dialogue_pool.DialogueRule;
+import wintersteve25.rpgutils.common.data.loaded.dialogue.dialogue_pool.DialogueRule;
 import wintersteve25.rpgutils.common.utils.RLHelper;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class DialoguePoolEntryGui extends AbstractListEntryWidget {
@@ -61,14 +65,20 @@ public class DialoguePoolEntryGui extends AbstractListEntryWidget {
 
     @Override
     public void renderButton(MatrixStack pMatrixStack, int pMouseX, int pMouseY, float pPartialTicks) {
-        if (!poolName.isFocused() && poolName.getValue().isEmpty()) {
-            drawString(pMatrixStack, Minecraft.getInstance().font, POOL_NAME, poolName.x + 5, poolName.y + 6, TextFormatting.GRAY.getColor());
-        }
+        UIUtilities.textFieldHint(pMatrixStack, POOL_NAME, poolName);
     }
 
     @Override
     public void tick() {
         super.tick();
         poolName.tick();
+    }
+    
+    public Tuple<ResourceLocation, List<DialogueRule>> create() {
+        return new Tuple<>(new ResourceLocation(poolName.getValue()), poolData == null ? new ArrayList<>() : poolData);
+    }
+    
+    public boolean isPoolnameEmpty() {
+        return poolName.getValue().isEmpty();
     }
 }

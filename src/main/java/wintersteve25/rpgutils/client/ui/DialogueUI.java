@@ -15,8 +15,8 @@ import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import wintersteve25.rpgutils.client.animation.IAnimatedEntity;
-import wintersteve25.rpgutils.common.quest.dialogue.Dialogue;
-import wintersteve25.rpgutils.common.quest.dialogue.actions.base.IDialogueAction;
+import wintersteve25.rpgutils.common.data.loaded.dialogue.dialogue.Dialogue;
+import wintersteve25.rpgutils.common.data.loaded.dialogue.dialogue.actions.base.IDialogueAction;
 
 import java.util.List;
 import java.util.Optional;
@@ -32,6 +32,7 @@ public class DialogueUI extends Screen {
     private List<Tuple<Optional<UUID>, IDialogueAction>> entries;
     private int currentIndex;
     private boolean active;
+    private boolean interruptable;
 
     private boolean requireInitialization;
     private IDialogueAction currentAction;
@@ -131,6 +132,7 @@ public class DialogueUI extends Screen {
     }
 
     public void skip() {
+        if (!interruptable) return;
         if (currentAction == null) return;
         currentAction.skip();
     }
@@ -145,8 +147,9 @@ public class DialogueUI extends Screen {
         return false;
     }
 
-    public static void show(Dialogue dialogue) {
+    public static void show(Dialogue dialogue, boolean interruptable) {
         INSTANCE.setDialogue(dialogue);
+        INSTANCE.interruptable = interruptable;
         INSTANCE.active = true;
         Minecraft.getInstance().setScreen(null);
         Minecraft.getInstance().setScreen(INSTANCE);

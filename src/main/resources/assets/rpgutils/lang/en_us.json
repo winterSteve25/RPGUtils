@@ -8,6 +8,11 @@
   
   "rpgutils.gui.select_entity.search": "Search with name",
   "rpgutils.gui.select_entity.confirm": "Confirm",
+
+  "rpgutils.gui.confirmation.accept": "Confirm",
+  "rpgutils.gui.confirmation.decline": "Cancel",
+  
+  "rpgutils.gui.prompt.ok": "OK",
   
   "rpgutils.gui.dialogue_editor.title": "Edit Dialogue",
   "rpgutils.gui.dialogue_editor.save": "Save",
@@ -20,8 +25,17 @@
   "rpgutils.gui.dialogue_editor.type_speed": "Type speed",
   "rpgutils.gui.dialogue_editor.skippable": "Skippable",
   
+  "rpgutils.gui.dialogue_creator.title": "Edit Dialogue Pools",
+  "rpgutils.gui.dialogue_creator.empty_pool_name": "Are you sure? You have some pools with no names.",
+  "rpgutils.gui.dialogue_creator.edit_pool": "Edit Pool",
   "rpgutils.gui.dialogue_creator.dialogues": "Dialogues",
   "rpgutils.gui.dialogue_creator.pool_name": "Pool Location",
+  "rpgutils.gui.dialogue_creator.select_dialogue": "Select Dialogue",
+  "rpgutils.gui.dialogue_creator.dialogue_weight": "Dialogue Weight",
+  "rpgutils.gui.dialogue_creator.interruptable": "Interruptable",
+  "rpgutils.gui.dialogue_creator.no_dialogue": "Dialogues can not be empty",
+  "rpgutils.gui.dialogue_creator.create_dialogue": "Create Dialogue",
+  "rpgutils.gui.dialogue_creator.create_dialogue_name": "Dialogue path",
   
   "rpgutils.dialogues.action_types.speak": "Speak",
   "rpgutils.dialogues.action_types.clear": "Clear",

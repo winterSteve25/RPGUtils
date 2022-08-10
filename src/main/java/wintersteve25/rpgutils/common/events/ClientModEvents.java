@@ -8,15 +8,16 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import wintersteve25.rpgutils.RPGUtils;
 import wintersteve25.rpgutils.client.renderers.NPCModel;
 import wintersteve25.rpgutils.client.renderers.base.GeckolibEntityRendererBase;
+import wintersteve25.rpgutils.common.data.loaded.storage.ClientOnlyLoadedData;
 import wintersteve25.rpgutils.common.registry.ModEntities;
 import wintersteve25.rpgutils.common.registry.ModKeybinds;
 
 @Mod.EventBusSubscriber(modid = RPGUtils.MOD_ID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ClientModEvents {
-
     @SubscribeEvent
-    public static void registerRenderers(FMLClientSetupEvent event) {
+    public static void clientSetup(FMLClientSetupEvent event) {
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.NPC_ENTITY.get(), (manager) -> new GeckolibEntityRendererBase<>(manager, new NPCModel()));
         ModKeybinds.register();
+        event.enqueueWork(ClientOnlyLoadedData::reloadAll);
     }
 }

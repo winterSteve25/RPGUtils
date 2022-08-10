@@ -11,16 +11,16 @@ import net.minecraft.util.text.TranslationTextComponent;
 import org.apache.commons.lang3.math.NumberUtils;
 import wintersteve25.rpgutils.client.ui.components.BaseUI;
 import wintersteve25.rpgutils.client.ui.components.buttons.ToggleButton;
-import wintersteve25.rpgutils.client.ui.select_entity.SelectEntity;
-import wintersteve25.rpgutils.client.ui.select_music.SelectSound;
-import wintersteve25.rpgutils.client.ui.select_music.SoundOption;
+import wintersteve25.rpgutils.client.ui.selections.select_entity.SelectEntity;
+import wintersteve25.rpgutils.client.ui.selections.select_music.SelectSound;
+import wintersteve25.rpgutils.client.ui.selections.select_music.SoundOption;
 import wintersteve25.rpgutils.common.utils.ModConstants;
 import wintersteve25.rpgutils.common.utils.RLHelper;
 
 import java.util.function.Consumer;
 
-import static wintersteve25.rpgutils.client.ui.select_entity.SelectEntity.CONFIRM_TEXT;
-import static wintersteve25.rpgutils.client.ui.select_entity.SelectEntity.WIDTH;
+import static wintersteve25.rpgutils.client.ui.selections.select_entity.SelectEntity.CONFIRM_TEXT;
+import static wintersteve25.rpgutils.client.ui.selections.select_entity.SelectEntity.WIDTH;
 
 public class SpeakMetadataUI extends BaseUI {
     

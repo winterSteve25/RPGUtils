@@ -4,7 +4,9 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.loading.FMLPaths;
+import wintersteve25.rpgutils.common.data.loaded.storage.ClientOnlyLoadedData;
 
 import java.io.*;
 import java.nio.file.Path;
@@ -38,15 +40,41 @@ public class JsonUtilities {
     }
     
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
-    private static final Path generatedPath = FMLPaths.getOrCreateGameRelativePath(Paths.get("rpgutils/generated/dialogues/"), "");
-    
-    public static void saveDialogue(Object jsonObject) {
+    public static final Path rpgutilsPath = FMLPaths.getOrCreateGameRelativePath(Paths.get("rpgutils/"), "");
+
+    public static void saveDialogue(ResourceLocation resourceLocation, Object jsonObject) {
         try {
-            FileWriter fileWriter = new FileWriter(generatedPath + "/test.json");
+            FileWriter fileWriter = new FileWriter(getGeneratedPath(resourceLocation, "/dialogues/"));
             fileWriter.write(gson.toJson(jsonObject));
             fileWriter.close();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
+        ClientOnlyLoadedData.reloadAll();
+    }
+
+    public static void saveDialoguePool(ResourceLocation resourceLocation, Object jsonObject) {
+        try {
+            FileWriter fileWriter = new FileWriter(getGeneratedPath(resourceLocation, "/dialogue_pools/"));
+            fileWriter.write(gson.toJson(jsonObject));
+            fileWriter.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        ClientOnlyLoadedData.reloadAll();
+    }
+    
+    private static String getGeneratedPath(ResourceLocation resourceLocation, String subdirectory) {
+        String rlPath = resourceLocation.getPath();
+        int lastDir = rlPath.lastIndexOf('/');
+        String path;
+
+        Path path1 = Paths.get(rpgutilsPath + subdirectory);
+        if (lastDir == -1) path = FMLPaths.getOrCreateGameRelativePath(path1, "").toString() + "/" + rlPath + ".json";
+        else path = FMLPaths.getOrCreateGameRelativePath(Paths.get(path1 + "/" + rlPath.substring(0, lastDir)), "") + "/" + rlPath.substring(lastDir, rlPath.length() - 1) + ".json";
+        
+        return path;
     }
 }

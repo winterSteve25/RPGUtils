@@ -3,8 +3,8 @@ package wintersteve25.rpgutils.client.ui.dialogue_creator.action_types;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.gui.widget.Widget;
 import wintersteve25.rpgutils.client.ui.components.BaseUI;
-import wintersteve25.rpgutils.common.quest.dialogue.actions.ClearAction;
-import wintersteve25.rpgutils.common.quest.dialogue.actions.base.IDialogueAction;
+import wintersteve25.rpgutils.common.data.loaded.dialogue.dialogue.actions.ClearAction;
+import wintersteve25.rpgutils.common.data.loaded.dialogue.dialogue.actions.base.IDialogueAction;
 
 public class ClearDialogueActionTypeGui implements IDialogueActionTypeGui {
     @Override
