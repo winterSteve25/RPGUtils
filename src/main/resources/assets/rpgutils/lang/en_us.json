@@ -24,6 +24,8 @@
   "rpgutils.gui.dialogue_editor.wait_for_input": "Wait for input at end",
   "rpgutils.gui.dialogue_editor.type_speed": "Type speed",
   "rpgutils.gui.dialogue_editor.skippable": "Skippable",
+  "rpgutils.gui.dialogue_editor.entity_to_spawn": "Entity type",
+  "rpgutils.gui.dialogue_editor.no_entity_selected": "An entity type must be selected",
   
   "rpgutils.gui.dialogue_creator.title": "Edit Dialogue Pools",
   "rpgutils.gui.dialogue_creator.empty_pool_name": "Are you sure? You have some pools with no names.",
@@ -36,6 +38,7 @@
   "rpgutils.gui.dialogue_creator.no_dialogue": "Dialogues can not be empty",
   "rpgutils.gui.dialogue_creator.create_dialogue": "Create Dialogue",
   "rpgutils.gui.dialogue_creator.create_dialogue_name": "Dialogue path",
+  "rpgutils.gui.dialogue_creator.empty_text": "Field can not be empty",
   
   "rpgutils.dialogues.action_types.speak": "Speak",
   "rpgutils.dialogues.action_types.clear": "Clear",

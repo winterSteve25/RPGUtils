@@ -105,9 +105,9 @@ public class SpeakAction implements IDialogueAction {
         return text.getContents();
     }
 
-    public static class Deserializer implements IDeserializer<IDialogueAction> {
+    public static class Deserializer implements IDeserializer<SpeakAction> {
         @Override
-        public IDialogueAction fromJson(JsonObject jsonObject) {
+        public SpeakAction fromJson(JsonObject jsonObject) {
             return new SpeakAction(
                     jsonObject.get("text").getAsString(),
                     jsonObject.has("audio") ? ForgeRegistries.SOUND_EVENTS.getValue(new ResourceLocation(jsonObject.get("audio").getAsString())) : null,

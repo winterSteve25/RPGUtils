@@ -8,14 +8,16 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fml.client.gui.GuiUtils;
+import wintersteve25.rpgutils.client.ui.DynamicUUIDUI;
 import wintersteve25.rpgutils.client.ui.components.BaseUI;
 import wintersteve25.rpgutils.client.ui.components.dropdown.Dropdown;
 import wintersteve25.rpgutils.client.ui.components.dropdown.EnumDropdownOption;
 import wintersteve25.rpgutils.client.ui.components.list.AbstractListEntryWidget;
 import wintersteve25.rpgutils.client.ui.dialogue_creator.action_types.DialogueActionType;
 import wintersteve25.rpgutils.client.ui.dialogue_creator.action_types.IDialogueActionTypeGui;
-import wintersteve25.rpgutils.client.ui.selections.select_entity.EntityOption;
-import wintersteve25.rpgutils.client.ui.selections.select_entity.SelectEntity;
+import wintersteve25.rpgutils.client.ui.selections.nearby_entities.NearbyEntityOption;
+import wintersteve25.rpgutils.client.ui.selections.nearby_entities.SelectNearbyEntity;
+import wintersteve25.rpgutils.common.data.loaded.dialogue.dialogue.DynamicUUID;
 import wintersteve25.rpgutils.common.utils.RLHelper;
 
 import java.util.ArrayList;
@@ -26,7 +28,8 @@ public class DialogueActionEntryGui extends AbstractListEntryWidget {
     private static final TranslationTextComponent SELECT_ENTITY = RLHelper.dialogueEditorComponent("select_entity");
     private static final TranslationTextComponent UUID = RLHelper.dialogueEditorComponent("selected_uuid");
     
-    private UUID selectedEntity;
+    // TODO: make sure this is not null and add in the ui that allow you to create this
+    private DynamicUUID selectedEntity;
     private ITextComponent selectedName;
 
     private Button selectEntity;
@@ -42,13 +45,7 @@ public class DialogueActionEntryGui extends AbstractListEntryWidget {
         super.init(parentX, parentY, parent);
         
         selectEntity = new Button(this.x + 25, this.y + 5, 60, 20, selectedName == null ? SELECT_ENTITY : selectedName, btn -> {
-            Minecraft.getInstance().setScreen(new SelectEntity(false, selected -> {
-                Minecraft.getInstance().setScreen(parent);
-                EntityOption option = selected.get(0);
-                selectedEntity = option.getRepresents();
-                selectedName = option.getTextComponent();
-                selectEntity.setMessage(selectedName);
-            }));
+            Minecraft.getInstance().setScreen(new DynamicUUIDUI());
         }, (btn, matrix, x, y) -> {
             Minecraft minecraft = Minecraft.getInstance();
             MainWindow window = minecraft.getWindow();
@@ -115,7 +112,7 @@ public class DialogueActionEntryGui extends AbstractListEntryWidget {
         actionTypeGui.render(matrixStack, x, y, mouseX, mouseY, partialTicks);
     }
     
-    public UUID getSelectedEntity() {
+    public DynamicUUID getSelectedEntity() {
         return selectedEntity;
     }
 

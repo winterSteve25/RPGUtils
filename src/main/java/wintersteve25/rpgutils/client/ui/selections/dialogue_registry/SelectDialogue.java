@@ -1,4 +1,4 @@
-package wintersteve25.rpgutils.client.ui.selections.select_dialogue;
+package wintersteve25.rpgutils.client.ui.selections.dialogue_registry;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.IGuiEventListener;

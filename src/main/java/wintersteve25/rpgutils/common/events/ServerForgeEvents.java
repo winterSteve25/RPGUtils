@@ -2,8 +2,10 @@ package wintersteve25.rpgutils.common.events;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.RegisterCommandsEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -11,6 +13,7 @@ import net.minecraftforge.fml.event.server.FMLServerAboutToStartEvent;
 import wintersteve25.rpgutils.RPGUtils;
 import wintersteve25.rpgutils.common.data.loaded.dialogue.dialogue_pool.DialoguePoolManager;
 import wintersteve25.rpgutils.common.data.loaded.storage.ServerOnlyLoadedData;
+import wintersteve25.rpgutils.common.data.saveddata.NpcIDMapping;
 import wintersteve25.rpgutils.common.registry.ModCommands;
 
 import java.util.UUID;
@@ -27,6 +30,13 @@ public class ServerForgeEvents {
         ServerOnlyLoadedData.reloadAll();
     }
 
+    @SubscribeEvent
+    public static void playerConnect(PlayerEvent.PlayerLoggedInEvent event) {
+        if (!event.getPlayer().getCommandSenderWorld().isClientSide()) {
+            NpcIDMapping.refreshClient((ServerPlayerEntity) event.getPlayer());
+        }
+    }
+    
 //    @SubscribeEvent
 //    public static void onPlayerInteract(PlayerInteractEvent.EntityInteractSpecific event) {
 //        PlayerEntity player = event.getPlayer();

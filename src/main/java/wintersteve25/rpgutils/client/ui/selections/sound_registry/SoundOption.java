@@ -1,4 +1,4 @@
-package wintersteve25.rpgutils.client.ui.selections.select_music;
+package wintersteve25.rpgutils.client.ui.selections.sound_registry;
 
 import net.minecraft.util.SoundEvent;
 import wintersteve25.rpgutils.client.ui.components.selection.SelectionOption;

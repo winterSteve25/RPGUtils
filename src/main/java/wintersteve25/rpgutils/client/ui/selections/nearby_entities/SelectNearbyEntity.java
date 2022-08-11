@@ -1,4 +1,4 @@
-package wintersteve25.rpgutils.client.ui.selections.select_entity;
+package wintersteve25.rpgutils.client.ui.selections.nearby_entities;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.IGuiEventListener;
@@ -11,32 +11,32 @@ import wintersteve25.rpgutils.client.ui.components.selection.AbstractSelectionUI
 import java.util.List;
 import java.util.function.Consumer;
 
-public class SelectEntity extends AbstractSelectionUI<EntityOption> {
-    public SelectEntity(boolean allowMultiple, Consumer<List<EntityOption>> onSubmit) {
+public class SelectNearbyEntity extends AbstractSelectionUI<NearbyEntityOption> {
+    public SelectNearbyEntity(boolean allowMultiple, Consumer<List<NearbyEntityOption>> onSubmit) {
         super(allowMultiple, onSubmit);
     }
 
     @Override
-    protected void populateOptions(List<EntityOption> list) {
+    protected void populateOptions(List<NearbyEntityOption> list) {
         PlayerEntity player = Minecraft.getInstance().player;
 
-        BlockPos posStart = player.blockPosition().offset(-16, -16, -16);
-        BlockPos posEnd = player.blockPosition().offset(16, 16, 16);
+        BlockPos posStart = player.blockPosition().offset(-24, -24, -24);
+        BlockPos posEnd = player.blockPosition().offset(24, 24, 24);
 
         List<Entity> entitiesInRange = player.getCommandSenderWorld().getEntities(player, new AxisAlignedBB(posStart, posEnd));
 
         for (int i = 0; i < entitiesInRange.size(); i++) {
-            list.add(new EntityOption(this.x + 10, this.y + 40 + i * 12, entitiesInRange.get(i), this, i));
+            list.add(new NearbyEntityOption(this.x + 10, this.y + 40 + i * 12, entitiesInRange.get(i), this, i));
         }
     }
 
     @Override
-    protected EntityOption copyFrom(EntityOption copyFrom) {
-        return new EntityOption(copyFrom);
+    protected NearbyEntityOption copyFrom(NearbyEntityOption copyFrom) {
+        return new NearbyEntityOption(copyFrom);
     }
 
     @Override
     protected boolean isSameType(IGuiEventListener listener) {
-        return listener instanceof EntityOption;
+        return listener instanceof NearbyEntityOption;
     }
 }

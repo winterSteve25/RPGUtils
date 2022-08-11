@@ -48,9 +48,9 @@ public class PauseAction implements IDialogueAction {
         return object;
     }
 
-    public static class Deserializer implements IDeserializer<IDialogueAction> {
+    public static class Deserializer implements IDeserializer<PauseAction> {
         @Override
-        public IDialogueAction fromJson(JsonObject jsonObject) {
+        public PauseAction fromJson(JsonObject jsonObject) {
             return new PauseAction(
                     JsonUtilities.getOrDefault(jsonObject, "time", 1f),
                     JsonUtilities.getOrDefault(jsonObject, "skippable", false)

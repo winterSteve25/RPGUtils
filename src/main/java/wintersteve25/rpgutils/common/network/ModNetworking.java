@@ -6,6 +6,9 @@ import net.minecraftforge.fml.network.NetworkDirection;
 import net.minecraftforge.fml.network.NetworkRegistry;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
 import wintersteve25.rpgutils.RPGUtils;
+import wintersteve25.rpgutils.common.network.npcid.PacketAddNpcIDMapping;
+import wintersteve25.rpgutils.common.network.npcid.PacketRemoveNpcIDMapping;
+import wintersteve25.rpgutils.common.network.npcid.PacketSyncNpcIDMapping;
 
 public class ModNetworking {
     private static final SimpleChannel INSTANCE;
@@ -47,6 +50,24 @@ public class ModNetworking {
                 .encoder(PacketPlayDialogue::encode)
                 .decoder(PacketPlayDialogue::new)
                 .consumer(PacketPlayDialogue::handle)
+                .add();
+
+        INSTANCE.messageBuilder(PacketSyncNpcIDMapping.class, nextID())
+                .encoder(PacketSyncNpcIDMapping::encode)
+                .decoder(PacketSyncNpcIDMapping::new)
+                .consumer(PacketSyncNpcIDMapping::handle)
+                .add();
+
+        INSTANCE.messageBuilder(PacketAddNpcIDMapping.class, nextID())
+                .encoder(PacketAddNpcIDMapping::encode)
+                .decoder(PacketAddNpcIDMapping::new)
+                .consumer(PacketAddNpcIDMapping::handle)
+                .add();
+
+        INSTANCE.messageBuilder(PacketRemoveNpcIDMapping.class, nextID())
+                .encoder(PacketRemoveNpcIDMapping::encode)
+                .decoder(PacketRemoveNpcIDMapping::new)
+                .consumer(PacketRemoveNpcIDMapping::handle)
                 .add();
     }
 

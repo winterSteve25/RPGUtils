@@ -11,16 +11,16 @@ import net.minecraft.util.text.TranslationTextComponent;
 import org.apache.commons.lang3.math.NumberUtils;
 import wintersteve25.rpgutils.client.ui.components.BaseUI;
 import wintersteve25.rpgutils.client.ui.components.buttons.ToggleButton;
-import wintersteve25.rpgutils.client.ui.selections.select_entity.SelectEntity;
-import wintersteve25.rpgutils.client.ui.selections.select_music.SelectSound;
-import wintersteve25.rpgutils.client.ui.selections.select_music.SoundOption;
+import wintersteve25.rpgutils.client.ui.selections.nearby_entities.SelectNearbyEntity;
+import wintersteve25.rpgutils.client.ui.selections.sound_registry.SelectSound;
+import wintersteve25.rpgutils.client.ui.selections.sound_registry.SoundOption;
 import wintersteve25.rpgutils.common.utils.ModConstants;
 import wintersteve25.rpgutils.common.utils.RLHelper;
 
 import java.util.function.Consumer;
 
-import static wintersteve25.rpgutils.client.ui.selections.select_entity.SelectEntity.CONFIRM_TEXT;
-import static wintersteve25.rpgutils.client.ui.selections.select_entity.SelectEntity.WIDTH;
+import static wintersteve25.rpgutils.client.ui.selections.nearby_entities.SelectNearbyEntity.CONFIRM_TEXT;
+import static wintersteve25.rpgutils.client.ui.selections.nearby_entities.SelectNearbyEntity.WIDTH;
 
 public class SpeakMetadataUI extends BaseUI {
     
@@ -37,7 +37,7 @@ public class SpeakMetadataUI extends BaseUI {
     private TextFieldWidget typespeed;
 
     protected SpeakMetadataUI(Consumer<SpeakMetadata> onSubmit) {
-        super(ModConstants.Resources.BLANK_SCREEN, WIDTH, SelectEntity.HEIGHT);
+        super(ModConstants.Resources.BLANK_SCREEN, WIDTH, SelectNearbyEntity.HEIGHT);
         this.onSubmit = onSubmit;
     }
     

@@ -35,22 +35,9 @@ public class Dialogue {
         for (JsonElement l : jsonObject.getAsJsonArray()) {
             JsonObject line = l.getAsJsonObject();
             JsonObject action = line.get("action").getAsJsonObject();
+            DynamicUUID uuid = DynamicUUID.fromJson(line.getAsJsonObject("speaker"));
             
-            String speakerString = line.get("speaker").getAsString();
-            DynamicUUID uuid;
-            
-            if (line.has("speaker")) {
-                if (speakerString.equals("PLAYER")) {
-                    uuid = new DynamicUUID(DynamicUUID.DynamicType.PLAYER);
-                } else {
-                    uuid = new DynamicUUID(DynamicUUID.DynamicType.FIXED);
-                    uuid.setUuid(UUID.fromString(speakerString));
-                }
-            } else {
-                uuid = new DynamicUUID(DynamicUUID.DynamicType.DYNAMIC);
-            }
-            
-            lines.add(new Tuple<>(uuid, DialogueActionTypes.SERIALIZERS.get(action.get("type").getAsString()).fromJson(action)));
+            lines.add(new Tuple<>(uuid, DialogueActionTypes.DESERIALIZERS.get(action.get("type").getAsString()).fromJson(action)));
         }
         
         return new Dialogue(resourceLocation, lines);

@@ -6,6 +6,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TranslationTextComponent;
 import wintersteve25.rpgutils.client.ui.components.list.EditableListUI;
 import wintersteve25.rpgutils.client.ui.dialogue_creator.entries.DialogueActionEntryGui;
+import wintersteve25.rpgutils.common.data.loaded.dialogue.dialogue.DynamicUUID;
 import wintersteve25.rpgutils.common.utils.JsonUtilities;
 import wintersteve25.rpgutils.common.utils.RLHelper;
 
@@ -35,8 +36,8 @@ public class DialogueEditorUI extends EditableListUI<DialogueActionEntryGui> {
 
         for (DialogueActionEntryGui actionGui : data) {
             JsonObject line = new JsonObject();
-            UUID selectedEntity = actionGui.getSelectedEntity();
-            line.addProperty("speaker", selectedEntity == null ? "PLAYER" : selectedEntity.toString());
+            DynamicUUID selectedEntity = actionGui.getSelectedEntity();
+            line.add("speaker", selectedEntity.toJson());
             line.add("action", actionGui.getActionTypeGui().save().toJson());
             lines.add(line);
         }
