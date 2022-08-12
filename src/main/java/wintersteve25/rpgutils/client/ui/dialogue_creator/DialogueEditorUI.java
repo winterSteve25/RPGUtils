@@ -32,6 +32,7 @@ public class DialogueEditorUI extends EditableListUI<DialogueActionEntryGui> {
 
     @Override
     protected void save(List<DialogueActionEntryGui> data) {
+        JsonObject object = new JsonObject();
         JsonArray lines = new JsonArray();
 
         for (DialogueActionEntryGui actionGui : data) {
@@ -43,7 +44,8 @@ public class DialogueEditorUI extends EditableListUI<DialogueActionEntryGui> {
             lines.add(line);
         }
 
-        JsonUtilities.saveDialogue(id, lines);
+        object.add("lines", lines);
+        JsonUtilities.saveDialogue(id, object);
         
         onSubmit.run();
     }
