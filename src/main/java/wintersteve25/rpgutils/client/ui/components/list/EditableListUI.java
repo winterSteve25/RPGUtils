@@ -68,6 +68,7 @@ public abstract class EditableListUI<T extends AbstractListEntryWidget> extends 
             for (T widget : matches) {
                 widget.remove(this);
                 listEntries.remove(widget);
+                onEntryRemoved(widget);
             }
 
             // update the remaining ones' index
@@ -164,5 +165,8 @@ public abstract class EditableListUI<T extends AbstractListEntryWidget> extends 
     protected abstract void save(List<T> data);
 
     protected void populateEntries() {
+    }
+    
+    protected void onEntryRemoved(T entry) {
     }
 }

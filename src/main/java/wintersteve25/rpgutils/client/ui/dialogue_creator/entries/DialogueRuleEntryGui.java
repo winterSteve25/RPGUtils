@@ -68,7 +68,11 @@ public class DialogueRuleEntryGui extends AbstractListEntryWidget {
         
         if (initialRule != null) {
             selectedDialogue = DialogueManager.INSTANCE.getDialogues().get(initialRule.getDialogue());
-            selectDialogue.setMessage(new StringTextComponent(selectedDialogue.getResourceLocation().toString()));
+            
+            if (selectedDialogue != null) {
+                selectDialogue.setMessage(new StringTextComponent(selectedDialogue.getResourceLocation().toString()));
+            }
+            
             dialogueWeight.setValue(String.valueOf(initialRule.getWeight()));
             interruptable.setStateTriggered(initialRule.isInterruptable());
             initialRule = null;

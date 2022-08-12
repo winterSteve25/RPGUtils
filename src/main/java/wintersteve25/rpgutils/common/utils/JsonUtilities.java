@@ -70,6 +70,11 @@ public class JsonUtilities {
         File file = new File(getGeneratedPath(resourceLocation, "/dialogues/"));
         file.delete();
     }
+
+    public static void deleteDialoguePool(ResourceLocation resourceLocation) {
+        File file = new File(getGeneratedPath(resourceLocation, "/dialogue_pools/"));
+        file.delete();
+    }
     
     private static String getGeneratedPath(ResourceLocation resourceLocation, String subdirectory) {
         String rlPath = resourceLocation.getPath();

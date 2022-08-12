@@ -7,15 +7,18 @@ import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Tuple;
 import net.minecraft.util.text.TranslationTextComponent;
+import software.bernie.geckolib3.util.json.JsonUtil;
 import wintersteve25.rpgutils.client.ui.components.BaseUI;
 import wintersteve25.rpgutils.client.ui.components.prompt.ConfirmationUI;
 import wintersteve25.rpgutils.client.ui.components.list.EditableListUI;
 import wintersteve25.rpgutils.client.ui.dialogue_creator.entries.DialoguePoolEntryGui;
 import wintersteve25.rpgutils.common.data.loaded.dialogue.dialogue_pool.DialoguePoolManager;
 import wintersteve25.rpgutils.common.data.loaded.dialogue.dialogue_pool.DialogueRule;
+import wintersteve25.rpgutils.common.data.loaded.storage.ClientOnlyLoadedData;
 import wintersteve25.rpgutils.common.utils.JsonUtilities;
 import wintersteve25.rpgutils.common.utils.RLHelper;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -23,8 +26,11 @@ public class DialogueCreatorUI extends EditableListUI<DialoguePoolEntryGui> {
     private static final TranslationTextComponent TITLE = RLHelper.dialogueCreatorComponent("title");
     private static final TranslationTextComponent EMPTY_POOL_NAME = RLHelper.dialogueCreatorComponent("empty_pool_name");
 
+    private final List<ResourceLocation> toRemoves;
+    
     protected DialogueCreatorUI() {
         super(TITLE);
+        toRemoves = new ArrayList<>();
     }
 
     @Override
@@ -69,7 +75,12 @@ public class DialogueCreatorUI extends EditableListUI<DialoguePoolEntryGui> {
 
             JsonUtilities.saveDialoguePool(pool.getA(), dialogues);
         }
-        
+
+        for (ResourceLocation pool : toRemoves) {
+            JsonUtilities.deleteDialoguePool(pool);
+        }
+
+        ClientOnlyLoadedData.reloadAll();
         Minecraft.getInstance().setScreen(null);
     }
 
@@ -85,5 +96,10 @@ public class DialogueCreatorUI extends EditableListUI<DialoguePoolEntryGui> {
     public static void open() {
         Minecraft.getInstance().setScreen(null);
         Minecraft.getInstance().setScreen(new DialogueCreatorUI());
+    }
+
+    @Override
+    protected void onEntryRemoved(DialoguePoolEntryGui entry) {
+        toRemoves.add(entry.create().getA());
     }
 }
