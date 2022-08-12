@@ -34,13 +34,15 @@ public class Dialogue {
     }
 
     public boolean isValid() {
-        return predicate.test();
+        return predicate == null || predicate.test();
     }
 
     public static Dialogue fromJson(ResourceLocation resourceLocation, JsonElement jsonObject) {
         List<Tuple<DynamicUUID, IDialogueAction>> lines = new ArrayList<>();
 
-        JsonArray array = jsonObject.getAsJsonObject().get("lines").getAsJsonArray();
+        JsonObject object = jsonObject.getAsJsonObject();
+        
+        JsonArray array = object.get("lines").getAsJsonArray();
         for (JsonElement l : array) {
             JsonObject line = l.getAsJsonObject();
             JsonObject action = line.get("action").getAsJsonObject();
@@ -49,10 +51,14 @@ public class Dialogue {
             lines.add(new Tuple<>(uuid, DialogueActionTypes.DESERIALIZERS.get(action.get("type").getAsString()).fromJson(action)));
         }
 
-        JsonObject predicateJson = jsonObject.getAsJsonObject().getAsJsonObject("predicate");
-        String predicateName = predicateJson.get("name").getAsString();
-        DialoguePredicate predicate = DialoguePredicate.create(predicateName, predicateJson);
-
+        DialoguePredicate predicate = null;
+        
+        if (object.has("predicates")) {
+            JsonObject predicateJson = object.getAsJsonObject("predicate");
+            String predicateName = predicateJson.get("name").getAsString();
+            predicate = DialoguePredicate.create(predicateName, predicateJson);
+        }
+        
         return new Dialogue(resourceLocation, lines, predicate);
     }
 }

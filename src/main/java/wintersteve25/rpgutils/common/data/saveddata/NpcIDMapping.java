@@ -11,10 +11,12 @@ import wintersteve25.rpgutils.common.network.ModNetworking;
 import wintersteve25.rpgutils.common.network.npcid.PacketAddNpcIDMapping;
 import wintersteve25.rpgutils.common.network.npcid.PacketRemoveNpcIDMapping;
 import wintersteve25.rpgutils.common.network.npcid.PacketSyncNpcIDMapping;
+import wintersteve25.rpgutils.common.utils.ModConstants;
 
 import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 public class NpcIDMapping extends WorldSavedData {
@@ -116,7 +118,11 @@ public class NpcIDMapping extends WorldSavedData {
     }
     
     public boolean has(String npcID) {
-        return mapping.containsKey(npcID);
+        return mapping.containsKey(npcID) && mapping.get(npcID) != ModConstants.INVALID_UUID;
+    }
+    
+    public Set<String> getAllIDs() {
+        return mapping.keySet();
     }
     
     public static void refreshClient(ServerPlayerEntity player) {

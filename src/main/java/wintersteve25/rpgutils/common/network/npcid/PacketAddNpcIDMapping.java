@@ -1,6 +1,5 @@
 package wintersteve25.rpgutils.common.network.npcid;
 
-import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fml.LogicalSide;

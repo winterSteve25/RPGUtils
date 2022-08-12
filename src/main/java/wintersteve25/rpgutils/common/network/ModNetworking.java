@@ -69,6 +69,12 @@ public class ModNetworking {
                 .decoder(PacketRemoveNpcIDMapping::new)
                 .consumer(PacketRemoveNpcIDMapping::handle)
                 .add();
+
+        INSTANCE.messageBuilder(PacketSpawnEntity.class, nextID())
+                .encoder(PacketSpawnEntity::encode)
+                .decoder(PacketSpawnEntity::new)
+                .consumer(PacketSpawnEntity::handle)
+                .add();
     }
 
     public static SimpleChannel getInstance() {

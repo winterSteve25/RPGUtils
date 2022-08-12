@@ -22,6 +22,15 @@ public abstract class DialoguePredicate {
         switch (name) {
             case "localPlayerHealth": {
                 predicate = new LocalPlayerHealthPredicate(jsonObject);
+                break;
+            }
+            case "and": {
+                predicate = new AndPredicate(jsonObject);
+                break;
+            }
+            case "or": {
+                predicate = new OrPredicate(jsonObject);
+                break;
             }
         }
         return predicate;

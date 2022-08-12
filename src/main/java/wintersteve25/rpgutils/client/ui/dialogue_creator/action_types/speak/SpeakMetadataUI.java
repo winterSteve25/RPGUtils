@@ -29,6 +29,7 @@ public class SpeakMetadataUI extends BaseUI {
     private static final TranslationTextComponent WAIT_FOR_INPUT = RLHelper.dialogueEditorComponent("wait_for_input");
 
     private final Consumer<SpeakMetadata> onSubmit;
+    private SpeakMetadata initialData;
     
     private SoundEvent soundEvent;
     
@@ -36,9 +37,10 @@ public class SpeakMetadataUI extends BaseUI {
     private ToggleButton toggleButton;
     private TextFieldWidget typespeed;
 
-    protected SpeakMetadataUI(Consumer<SpeakMetadata> onSubmit) {
+    protected SpeakMetadataUI(Consumer<SpeakMetadata> onSubmit, SpeakMetadata initialData) {
         super(ModConstants.Resources.BLANK_SCREEN, WIDTH, SelectNearbyEntity.HEIGHT);
         this.onSubmit = onSubmit;
+        this.initialData = initialData;
     }
     
     @Override
@@ -73,6 +75,14 @@ public class SpeakMetadataUI extends BaseUI {
         typespeed.setValue(value);
         typespeed.setFilter(NumberUtils::isCreatable);
         addButton(typespeed);
+        
+        if (initialData != null) {
+            soundEvent = initialData.getAudio();
+            selectedSound.setMessage(new StringTextComponent(soundEvent == null ? "none" : soundEvent.getLocation().toString()));
+            toggleButton.setStateTriggered(initialData.isWaitForInput());
+            typespeed.setValue(String.valueOf(initialData.getInitialTypeSpeed()));
+            initialData = null;
+        }
     }
 
     @Override

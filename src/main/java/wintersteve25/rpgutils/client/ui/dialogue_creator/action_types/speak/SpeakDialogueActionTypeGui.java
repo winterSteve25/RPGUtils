@@ -36,7 +36,7 @@ public class SpeakDialogueActionTypeGui implements IDialogueActionTypeGui {
             SpeakMetadataUI ui = new SpeakMetadataUI(metadata -> {
                 speakMetadata = metadata;
                 Minecraft.getInstance().setScreen(parent);
-            });
+            }, speakMetadata);
             Minecraft.getInstance().setScreen(ui);
         });
         parent.addButton(metadata);

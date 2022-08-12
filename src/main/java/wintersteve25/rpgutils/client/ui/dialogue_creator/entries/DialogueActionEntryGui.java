@@ -43,7 +43,7 @@ public class DialogueActionEntryGui extends AbstractListEntryWidget {
             Minecraft.getInstance().setScreen(new DynamicUUIDUI(uuid -> {
                 Minecraft.getInstance().setScreen(parent);
                 selectedEntity = uuid;
-            }));
+            }, selectedEntity));
         }, (btn, matrix, x, y) -> {
             Minecraft minecraft = Minecraft.getInstance();
             MainWindow window = minecraft.getWindow();
@@ -62,7 +62,6 @@ public class DialogueActionEntryGui extends AbstractListEntryWidget {
         } else {
             dropdownNew.select(dropdown.getSelectedIndex());
         }
-
         dropdown = dropdownNew;
         parent.addButton(dropdown);
 
@@ -97,7 +96,7 @@ public class DialogueActionEntryGui extends AbstractListEntryWidget {
         
         parent.removeButton(selectEntity);
         parent.removeButton(dropdown);
-
+        
         if (actionTypeGui != null) {
             actionTypeGui.remove(parent);
         }

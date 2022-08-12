@@ -27,6 +27,12 @@
   "rpgutils.gui.dialogue_editor.entity_to_spawn": "Entity type",
   "rpgutils.gui.dialogue_editor.no_entity_selected": "An entity type must be selected",
   
+  "rpgutils.gui.dialogue_editor.spawn.pos_x": "X Pos",
+  "rpgutils.gui.dialogue_editor.spawn.pos_y": "Y Pos",
+  "rpgutils.gui.dialogue_editor.spawn.pos_z": "Z Pos",
+  "rpgutils.gui.dialogue_editor.spawn.npc_id": "Npc ID",
+  "rpgutils.gui.dialogue_editor.spawn.confirm": "Confirm",
+  
   "rpgutils.gui.dialogue_creator.title": "Edit Dialogue Pools",
   "rpgutils.gui.dialogue_creator.empty_pool_name": "Are you sure? You have some pools with no names.",
   "rpgutils.gui.dialogue_creator.edit_pool": "Edit Pool",
@@ -43,6 +49,9 @@
   "rpgutils.gui.dialogue_creator.dynamic_uuid.npc_id": "Npc ID",
   "rpgutils.gui.dialogue_creator.dynamic_uuid.empty_id": "Npc ID can not be empty!",
   "rpgutils.gui.dialogue_creator.dynamic_uuid.empty_uuid": "You must select an entity!",
+
+  "rpgutils.gui.dialogue_creator.select_npc_id.title": "Enter Npc ID",
+  "rpgutils.gui.dialogue_creator.select_npc_id.hint": "Npc ID",
   
   "rpgutils.dialogues.action_types.speak": "Speak",
   "rpgutils.dialogues.action_types.clear": "Clear",

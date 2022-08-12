@@ -24,14 +24,18 @@ public class DynamicUUID {
     public UUID getUuid() {
         if (uuid == null) {
             if (type == DynamicType.FIXED) {
-                throw new RuntimeException("Dynamic UUID with type FIXED does not have a fixed uuid assigned!");
+                RPGUtils.LOGGER.warn("Dynamic UUID with type FIXED does not have a fixed uuid assigned!");
+                return null;
             } else {
                 setup();
                 if (type == DynamicType.DYNAMIC) {
-                    if (!NpcIDMapping.clientInstance.has(dynamicNpcID))
-                        throw new RuntimeException("Using a Dynamic DynamicUUID with npcID: " + dynamicNpcID + " but no UUID mapped to the npcID");
+                    if (!NpcIDMapping.clientInstance.has(dynamicNpcID)) {
+                        RPGUtils.LOGGER.warn("Using a Dynamic DynamicUUID with npcID: {} but no UUID mapped to the npcID", dynamicNpcID);
+                        return null;
+                    }
                 } else {
-                    throw new RuntimeException("Local player not found");
+                    RPGUtils.LOGGER.warn("Local player not found");
+                    return null;
                 }
             }
         }
@@ -107,6 +111,10 @@ public class DynamicUUID {
         }
         
         return type + " - " + uuid;
+    }
+
+    public String getDynamicNpcID() {
+        return dynamicNpcID;
     }
 
     public enum DynamicType {

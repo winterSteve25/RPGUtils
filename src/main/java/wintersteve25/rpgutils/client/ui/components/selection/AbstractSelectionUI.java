@@ -86,7 +86,7 @@ public abstract class AbstractSelectionUI<T extends SelectionOption<T>> extends 
         
         //int pX, int pY, int pWidth, int pHeight, ITextComponent pMessage, Button.IPressable pOnPress
         confirm = new Button(this.x + (WIDTH - 70) / 2, this.y + 145, 70, 20, CONFIRM_TEXT, btn -> {
-            onSubmit.accept(selectedIndices.stream().map(index -> totalOptions.get(index)).collect(Collectors.toList()));
+            onSubmit.accept(getSelected());
         });
         addButton(confirm);
 
@@ -174,6 +174,10 @@ public abstract class AbstractSelectionUI<T extends SelectionOption<T>> extends 
         updatePageFlipButtons();
     }
 
+    public List<T> getSelected() {
+        return selectedIndices.stream().map(index -> totalOptions.get(index)).collect(Collectors.toList());
+    }
+    
     private void updateConfirmButton() {
         confirm.active = !selectedIndices.isEmpty();
     }

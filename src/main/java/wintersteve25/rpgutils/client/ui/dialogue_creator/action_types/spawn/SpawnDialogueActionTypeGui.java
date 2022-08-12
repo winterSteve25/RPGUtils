@@ -28,11 +28,14 @@ public class SpawnDialogueActionTypeGui implements IDialogueActionTypeGui {
     private BaseUI parent;
     private Button selectEntity;
     private EntityType<?> entityType;
+    private Button metadataButton;
+    private SpawnMetadata spawnMetadata;
     
     @Override
     public void init(int parentX, int parentY, int x, int y, BaseUI parent, Widget parentWidget) {
         this.parent = parent;
-        selectEntity = new Button(x + 180, y + 5, 60, 20, ENTITY_TO_SPAWN, btn -> {
+        
+        selectEntity = new Button(x + 180, y + 5, 155, 20, selectEntity == null ? ENTITY_TO_SPAWN : selectEntity.getMessage(), btn -> {
             Minecraft.getInstance().setScreen(new SelectEntity(false, data -> {
                 Minecraft.getInstance().setScreen(parent);
                 entityType = data.get(0).getType();
@@ -40,6 +43,15 @@ public class SpawnDialogueActionTypeGui implements IDialogueActionTypeGui {
             }));
         });
         parent.addButton(selectEntity);
+    
+        metadataButton = new Button(x + 350, y + 5, 20, 20, new StringTextComponent("M"), btn -> {
+            SpawnMetadataUI ui = new SpawnMetadataUI(metadata -> {
+                spawnMetadata = metadata;
+                Minecraft.getInstance().setScreen(parent);
+            }, spawnMetadata);
+            Minecraft.getInstance().setScreen(ui);
+        });
+        parent.addButton(metadataButton);
     }
 
     @Override
@@ -62,6 +74,6 @@ public class SpawnDialogueActionTypeGui implements IDialogueActionTypeGui {
             });
             return null;
         }
-        return new SpawnAction(entityType.getRegistryName(), BlockPos.ZERO, "test");
+        return new SpawnAction(entityType.getRegistryName(), spawnMetadata.getPos(), spawnMetadata.getNpcID());
     }
 }

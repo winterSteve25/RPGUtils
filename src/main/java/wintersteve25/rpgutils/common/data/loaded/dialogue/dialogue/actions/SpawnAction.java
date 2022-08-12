@@ -3,11 +3,15 @@ package wintersteve25.rpgutils.common.data.loaded.dialogue.dialogue.actions;
 import com.google.gson.JsonObject;
 import com.mojang.serialization.JsonOps;
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.EntityType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.registries.ForgeRegistries;
 import wintersteve25.rpgutils.client.animation.IAnimatedEntity;
 import wintersteve25.rpgutils.client.ui.DialogueUI;
 import wintersteve25.rpgutils.common.data.loaded.dialogue.dialogue.actions.base.IDialogueAction;
+import wintersteve25.rpgutils.common.network.ModNetworking;
+import wintersteve25.rpgutils.common.network.PacketSpawnEntity;
 import wintersteve25.rpgutils.common.utils.IDeserializer;
 
 public class SpawnAction implements IDialogueAction {
@@ -24,6 +28,7 @@ public class SpawnAction implements IDialogueAction {
 
     @Override
     public boolean act(IAnimatedEntity<?> speaker, DialogueUI dialogueUI, Minecraft minecraft, int mouseX, int mouseY) {
+        ModNetworking.sendToServer(new PacketSpawnEntity(entityType, posToSpawn, npcID));
         return true;
     }
 

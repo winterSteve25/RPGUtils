@@ -14,16 +14,18 @@ import wintersteve25.rpgutils.common.utils.RLHelper;
 import java.util.function.Consumer;
 
 public class EnterTextConfirmationUI extends ConfirmationUI {
-    private static final TranslationTextComponent TITLE = RLHelper.dialogueCreatorComponent("create_dialogue");
-    private static final TranslationTextComponent NAME_HINT = RLHelper.dialogueCreatorComponent("create_dialogue_name");
     private static final TranslationTextComponent EMPTY = RLHelper.dialogueCreatorComponent("empty_text");
-    
+
+    private final TranslationTextComponent title; 
+    private final TranslationTextComponent hint; 
     private final Consumer<String> onCreate;
     private final Runnable onCancel;
     private TextFieldWidget nameInput;
     
-    public EnterTextConfirmationUI(Consumer<String> onCreate, Runnable onCancel) {
-        super(TITLE, 200, 80);
+    public EnterTextConfirmationUI(TranslationTextComponent title, TranslationTextComponent hint, Consumer<String> onCreate, Runnable onCancel) {
+        super(title, 200, 80);
+        this.title = title;
+        this.hint = hint;
         this.onCreate = onCreate;
         this.onCancel = onCancel;
     }
@@ -33,7 +35,7 @@ public class EnterTextConfirmationUI extends ConfirmationUI {
         super.init();
 
         String value = nameInput == null ? "" : nameInput.getValue();
-        nameInput = new TextFieldWidget(Minecraft.getInstance().font, this.x + (texWidth - 155) / 2, this.y + 30, 155, 20, NAME_HINT);
+        nameInput = new TextFieldWidget(Minecraft.getInstance().font, this.x + (texWidth - 155) / 2, this.y + 30, 155, 20, hint);
         nameInput.setMaxLength(50);
         nameInput.setVisible(true);
         nameInput.setTextColor(16777215);
@@ -44,7 +46,7 @@ public class EnterTextConfirmationUI extends ConfirmationUI {
     @Override
     public void render(MatrixStack pMatrixStack, int pMouseX, int pMouseY, float pPartialTicks) {
         super.render(pMatrixStack, pMouseX, pMouseY, pPartialTicks);
-        UIUtilities.textFieldHint(pMatrixStack, NAME_HINT, nameInput);
+        UIUtilities.textFieldHint(pMatrixStack, hint, nameInput);
     }
 
     @Override
