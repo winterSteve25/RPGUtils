@@ -32,7 +32,9 @@ public class DialogueSystem {
         
         RandomCollection<DialogueRule> rules = new RandomCollection<>();
         for (DialogueRule rule : pool) {
-            rules.add(rule.getWeight(), rule);
+            if (DialogueManager.INSTANCE.getDialogues().get(rule.getDialogue()).isValid()) {
+                rules.add(rule.getWeight(), rule);
+            }
         }
         
         DialogueRule randomRule = rules.next();
