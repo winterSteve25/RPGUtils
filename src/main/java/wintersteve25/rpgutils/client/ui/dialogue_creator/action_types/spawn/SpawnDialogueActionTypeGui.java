@@ -36,6 +36,7 @@ public class SpawnDialogueActionTypeGui implements IDialogueActionTypeGui {
             Minecraft.getInstance().setScreen(new SelectEntity(false, data -> {
                 Minecraft.getInstance().setScreen(parent);
                 entityType = data.get(0).getType();
+                selectEntity.setMessage(new StringTextComponent(entityType.getRegistryName().toString()));
             }));
         });
         parent.addButton(selectEntity);
