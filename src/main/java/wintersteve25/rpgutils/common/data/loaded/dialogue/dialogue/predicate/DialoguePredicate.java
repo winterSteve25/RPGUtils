@@ -20,18 +20,15 @@ public abstract class DialoguePredicate {
     public static DialoguePredicate create(String name, JsonObject jsonObject) {
         DialoguePredicate predicate = null;
         switch (name) {
-            case "localPlayerHealth": {
+            case "localPlayerHealth":
                 predicate = new LocalPlayerHealthPredicate(jsonObject);
                 break;
-            }
-            case "and": {
+            case "and":
                 predicate = new AndPredicate(jsonObject);
                 break;
-            }
-            case "or": {
+            case "or":
                 predicate = new OrPredicate(jsonObject);
                 break;
-            }
         }
         return predicate;
     }

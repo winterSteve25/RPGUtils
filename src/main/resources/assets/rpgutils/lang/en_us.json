@@ -18,7 +18,7 @@
   "rpgutils.gui.dialogue_editor.save": "Save",
   "rpgutils.gui.dialogue_editor.line_input": "Dialogue content",
   "rpgutils.gui.dialogue_editor.pause_duration": "Pause duration (s)",
-  "rpgutils.gui.dialogue_editor.select_entity": "Speaker",
+  "rpgutils.gui.dialogue_editor.predicate": "Predicate",
   "rpgutils.gui.dialogue_editor.selected_uuid": "Click to select an entity as the speaker",
   "rpgutils.gui.dialogue_editor.select_sound": "Sound",
   "rpgutils.gui.dialogue_editor.wait_for_input": "Wait for input at end",

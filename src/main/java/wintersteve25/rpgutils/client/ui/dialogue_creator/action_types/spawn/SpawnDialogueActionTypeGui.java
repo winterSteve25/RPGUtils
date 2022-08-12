@@ -58,6 +58,7 @@ public class SpawnDialogueActionTypeGui implements IDialogueActionTypeGui {
     @Override
     public void remove(BaseUI parent) {
         parent.removeButton(selectEntity);
+        parent.removeButton(metadataButton);
     }
 
     @Override
