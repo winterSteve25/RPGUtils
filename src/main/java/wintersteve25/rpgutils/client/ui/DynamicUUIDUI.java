@@ -1,9 +1,7 @@
 package wintersteve25.rpgutils.client.ui;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.sun.security.auth.NTNumericCredential;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -13,7 +11,6 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import wintersteve25.rpgutils.client.ui.components.BaseUI;
-import wintersteve25.rpgutils.client.ui.components.UIUtilities;
 import wintersteve25.rpgutils.client.ui.components.dropdown.Dropdown;
 import wintersteve25.rpgutils.client.ui.components.dropdown.EnumDropdownOption;
 import wintersteve25.rpgutils.client.ui.components.prompt.TextPrompt;
@@ -24,12 +21,12 @@ import wintersteve25.rpgutils.common.data.loaded.dialogue.dialogue.DynamicUUID;
 import wintersteve25.rpgutils.common.utils.ModConstants;
 import wintersteve25.rpgutils.common.utils.RLHelper;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Consumer;
 
-import static wintersteve25.rpgutils.client.ui.components.selection.AbstractSelectionUI.*;
+import static wintersteve25.rpgutils.client.ui.components.selection.AbstractSelectionUI.CONFIRM_TEXT;
+import static wintersteve25.rpgutils.client.ui.components.selection.AbstractSelectionUI.WIDTH;
 
 public class DynamicUUIDUI extends BaseUI {
 

@@ -19,4 +19,14 @@ public class ClearAction implements IDialogueAction {
         object.addProperty("type", "clear");
         return object;
     }
+
+    @Override
+    public Object[] data() {
+        return new Object[0];
+    }
+
+    @Override
+    public int guiIndex() {
+        return 1;
+    }
 }

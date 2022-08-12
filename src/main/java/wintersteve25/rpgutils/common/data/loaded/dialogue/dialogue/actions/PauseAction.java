@@ -48,6 +48,16 @@ public class PauseAction implements IDialogueAction {
         return object;
     }
 
+    @Override
+    public Object[] data() {
+        return new Object[] {pause, skippable};
+    }
+
+    @Override
+    public int guiIndex() {
+        return 2;
+    }
+
     public static class Deserializer implements IDeserializer<PauseAction> {
         @Override
         public PauseAction fromJson(JsonObject jsonObject) {

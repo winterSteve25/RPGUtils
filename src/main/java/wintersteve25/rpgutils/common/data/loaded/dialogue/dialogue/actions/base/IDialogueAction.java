@@ -50,4 +50,18 @@ public interface IDialogueAction {
     }
     
     JsonObject toJson();
+
+    /**
+     * Used to communicate data to the IDialogueActionTypeGui corresponds to this IDialogueAction
+     *
+     * @return index
+     */
+    Object[] data();
+
+    /**
+     * Used to identify what IDialogueActionTypeGui this IDialogueAction corresponds to. Might be a better way of doing this but it will do for now.
+     * 
+     * @return index
+     */
+    int guiIndex();
 }

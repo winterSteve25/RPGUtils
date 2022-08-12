@@ -15,8 +15,8 @@ public class DialogueActionTypes {
     static {
         DESERIALIZERS = new HashMap<>();
         DESERIALIZERS.put("speak", new SpeakAction.Deserializer());
-        DESERIALIZERS.put("pause", new PauseAction.Deserializer());
         DESERIALIZERS.put("clear", json -> new ClearAction());
+        DESERIALIZERS.put("pause", new PauseAction.Deserializer());
         DESERIALIZERS.put("spawn", new SpawnAction.Deserializer());
     }
 }

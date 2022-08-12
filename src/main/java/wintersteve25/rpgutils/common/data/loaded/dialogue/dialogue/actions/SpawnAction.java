@@ -41,7 +41,17 @@ public class SpawnAction implements IDialogueAction {
         object.add("pos", BlockPos.CODEC.encodeStart(JsonOps.INSTANCE, posToSpawn).result().get());
         return object;
     }
-    
+
+    @Override
+    public Object[] data() {
+        return new Object[] {npcID, entityType, posToSpawn};
+    }
+
+    @Override
+    public int guiIndex() {
+        return 3;
+    }
+
     public static class Deserializer implements IDeserializer<SpawnAction> {
         @Override
         public SpawnAction fromJson(JsonObject jsonObject) {

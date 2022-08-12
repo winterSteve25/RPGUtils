@@ -6,6 +6,7 @@ import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.entity.EntityType;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -27,7 +28,7 @@ public class SpawnDialogueActionTypeGui implements IDialogueActionTypeGui {
 
     private BaseUI parent;
     private Button selectEntity;
-    private EntityType<?> entityType;
+    private ResourceLocation entityType;
     private Button metadataButton;
     private SpawnMetadata spawnMetadata;
     
@@ -38,8 +39,8 @@ public class SpawnDialogueActionTypeGui implements IDialogueActionTypeGui {
         selectEntity = new Button(x + 180, y + 5, 155, 20, selectEntity == null ? ENTITY_TO_SPAWN : selectEntity.getMessage(), btn -> {
             Minecraft.getInstance().setScreen(new SelectEntity(false, data -> {
                 Minecraft.getInstance().setScreen(parent);
-                entityType = data.get(0).getType();
-                selectEntity.setMessage(new StringTextComponent(entityType.getRegistryName().toString()));
+                entityType = data.get(0).getType().getRegistryName();
+                selectEntity.setMessage(new StringTextComponent(entityType.toString()));
             }));
         });
         parent.addButton(selectEntity);
@@ -74,6 +75,14 @@ public class SpawnDialogueActionTypeGui implements IDialogueActionTypeGui {
             });
             return null;
         }
-        return new SpawnAction(entityType.getRegistryName(), spawnMetadata.getPos(), spawnMetadata.getNpcID());
+        return new SpawnAction(entityType, spawnMetadata.getPos(), spawnMetadata.getNpcID());
+    }
+
+    @Override
+    public void load(Object[] data) {
+        spawnMetadata.setNpcID((String) data[0]);
+        entityType = (ResourceLocation) data[1];
+        selectEntity.setMessage(new StringTextComponent(entityType.toString()));
+        spawnMetadata.setPos((BlockPos) data[2]);
     }
 }

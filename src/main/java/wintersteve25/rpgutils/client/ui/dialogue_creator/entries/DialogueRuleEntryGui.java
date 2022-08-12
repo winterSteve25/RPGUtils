@@ -42,7 +42,7 @@ public class DialogueRuleEntryGui extends AbstractListEntryWidget {
         super.init(parentX, parentY, parent);        
         
         selectDialogue = new Button(this.x + 25, this.y + 5, 100, 20, selectDialogue == null ? SELECT_SOUND : selectDialogue.getMessage(), btn -> {
-            Minecraft.getInstance().setScreen(new SelectDialogue(false, selected -> {
+            Minecraft.getInstance().setScreen(new SelectDialogue(true, selected -> {
                 Minecraft.getInstance().setScreen(parent);
                 DialogueOption option = selected.get(0);
                 selectedDialogue = option.getDialogue();

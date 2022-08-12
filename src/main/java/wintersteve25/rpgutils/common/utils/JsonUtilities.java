@@ -66,6 +66,11 @@ public class JsonUtilities {
         ClientOnlyLoadedData.reloadAll();
     }
     
+    public static void deleteDialogue(ResourceLocation resourceLocation) {
+        File file = new File(getGeneratedPath(resourceLocation, "/dialogues/"));
+        file.delete();
+    }
+    
     private static String getGeneratedPath(ResourceLocation resourceLocation, String subdirectory) {
         String rlPath = resourceLocation.getPath();
         int lastDir = rlPath.lastIndexOf('/');

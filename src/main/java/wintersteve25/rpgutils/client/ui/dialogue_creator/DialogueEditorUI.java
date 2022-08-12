@@ -3,10 +3,14 @@ package wintersteve25.rpgutils.client.ui.dialogue_creator;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Tuple;
 import net.minecraft.util.text.TranslationTextComponent;
 import wintersteve25.rpgutils.client.ui.components.list.EditableListUI;
 import wintersteve25.rpgutils.client.ui.dialogue_creator.entries.DialogueActionEntryGui;
+import wintersteve25.rpgutils.client.ui.dialogue_creator.entries.DialoguePoolEntryGui;
+import wintersteve25.rpgutils.common.data.loaded.dialogue.dialogue.Dialogue;
 import wintersteve25.rpgutils.common.data.loaded.dialogue.dialogue.DynamicUUID;
+import wintersteve25.rpgutils.common.data.loaded.dialogue.dialogue.actions.base.IDialogueAction;
 import wintersteve25.rpgutils.common.utils.JsonUtilities;
 import wintersteve25.rpgutils.common.utils.RLHelper;
 
@@ -19,10 +23,19 @@ public class DialogueEditorUI extends EditableListUI<DialogueActionEntryGui> {
     private final Runnable onSubmit;
     private final ResourceLocation id;
     
+    private Dialogue initialData;
+    
     public DialogueEditorUI(Runnable onSubmit, ResourceLocation id) {
         super(TITLE);
         this.onSubmit = onSubmit;
         this.id = id;
+    }
+
+    public DialogueEditorUI(Runnable onSubmit, ResourceLocation id, Dialogue initialData) {
+        super(TITLE);
+        this.onSubmit = onSubmit;
+        this.id = id;
+        this.initialData = initialData;
     }
 
     @Override
@@ -48,5 +61,15 @@ public class DialogueEditorUI extends EditableListUI<DialogueActionEntryGui> {
         JsonUtilities.saveDialogue(id, object);
         
         onSubmit.run();
+    }
+
+    @Override
+    protected void populateEntries() {
+        if (initialData == null) return;
+        for (Tuple<DynamicUUID, IDialogueAction> entry : initialData.getLines()) {
+            DialogueActionEntryGui entryGui = createEntry();
+            entryGui.load(entry);
+            addEntry(entryGui);
+        }
     }
 }

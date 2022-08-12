@@ -4,6 +4,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.util.Tuple;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -15,10 +16,13 @@ import wintersteve25.rpgutils.client.ui.components.dropdown.EnumDropdownOption;
 import wintersteve25.rpgutils.client.ui.components.list.AbstractListEntryWidget;
 import wintersteve25.rpgutils.client.ui.dialogue_creator.action_types.DialogueActionType;
 import wintersteve25.rpgutils.client.ui.dialogue_creator.action_types.IDialogueActionTypeGui;
+import wintersteve25.rpgutils.common.data.loaded.dialogue.dialogue.Dialogue;
 import wintersteve25.rpgutils.common.data.loaded.dialogue.dialogue.DynamicUUID;
+import wintersteve25.rpgutils.common.data.loaded.dialogue.dialogue.actions.base.IDialogueAction;
 import wintersteve25.rpgutils.common.utils.RLHelper;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class DialogueActionEntryGui extends AbstractListEntryWidget {
@@ -30,6 +34,8 @@ public class DialogueActionEntryGui extends AbstractListEntryWidget {
     private Button selectEntity;
     private Dropdown<EnumDropdownOption<DialogueActionType>> dropdown;
     private IDialogueActionTypeGui actionTypeGui;
+    
+    private IDialogueAction initialData;
     
     public DialogueActionEntryGui(int index) {
         super(225, 25, StringTextComponent.EMPTY, index);
@@ -83,6 +89,12 @@ public class DialogueActionEntryGui extends AbstractListEntryWidget {
             parent.addButton(selectEntity);
             parent.addButton(this);
         });
+        
+        if (initialData != null) {
+            dropdown.select(initialData.guiIndex());
+            actionTypeGui.load(initialData.data());
+            initialData = null;
+        }
     }
 
     @Override
@@ -107,6 +119,11 @@ public class DialogueActionEntryGui extends AbstractListEntryWidget {
     @Override
     public void renderButton(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         actionTypeGui.render(matrixStack, x, y, mouseX, mouseY, partialTicks);
+    }
+    
+    public void load(Tuple<DynamicUUID, IDialogueAction> dialogue) {
+        selectedEntity = dialogue.getA();
+        initialData = dialogue.getB();
     }
     
     public DynamicUUID getSelectedEntity() {

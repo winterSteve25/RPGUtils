@@ -3,8 +3,8 @@ package wintersteve25.rpgutils.client.ui.dialogue_creator.action_types.spawn;
 import net.minecraft.util.math.BlockPos;
 
 public class SpawnMetadata {
-    private final BlockPos pos;
-    private final String NpcID;
+    private BlockPos pos;
+    private String NpcID;
 
     public SpawnMetadata(BlockPos pos, String npcID) {
         this.pos = pos;
@@ -17,5 +17,13 @@ public class SpawnMetadata {
 
     public String getNpcID() {
         return NpcID;
+    }
+
+    public void setPos(BlockPos pos) {
+        this.pos = pos;
+    }
+
+    public void setNpcID(String npcID) {
+        NpcID = npcID;
     }
 }

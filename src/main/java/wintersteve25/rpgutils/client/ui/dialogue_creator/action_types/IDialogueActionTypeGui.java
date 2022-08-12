@@ -16,4 +16,6 @@ public interface IDialogueActionTypeGui {
     }
     
     IDialogueAction save();
+    
+    void load(Object[] data);
 }

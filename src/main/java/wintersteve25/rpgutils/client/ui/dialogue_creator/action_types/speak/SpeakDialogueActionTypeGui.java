@@ -5,6 +5,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import wintersteve25.rpgutils.client.ui.components.UIUtilities;
@@ -21,6 +22,7 @@ public class SpeakDialogueActionTypeGui implements IDialogueActionTypeGui {
     private Button metadata;
     
     private SpeakMetadata speakMetadata;
+    private Object[] initialData;
     
     @Override
     public void init(int parentX, int parentY, int x, int y, BaseUI parent, Widget parentWidget) {
@@ -40,6 +42,15 @@ public class SpeakDialogueActionTypeGui implements IDialogueActionTypeGui {
             Minecraft.getInstance().setScreen(ui);
         });
         parent.addButton(metadata);
+        
+        if (initialData != null) {
+            if (speakMetadata == null) speakMetadata = new SpeakMetadata(null, 0, false);
+            speakMetadata.setAudio((SoundEvent) initialData[0]);
+            input.setValue((String) initialData[1]);
+            speakMetadata.setInitialTypeSpeed((int) initialData[2]);
+            speakMetadata.setWaitForInput((boolean) initialData[3]);
+            initialData = null;
+        }
     }
 
     @Override
@@ -63,5 +74,10 @@ public class SpeakDialogueActionTypeGui implements IDialogueActionTypeGui {
     public IDialogueAction save() {
         if (speakMetadata == null) speakMetadata = new SpeakMetadata(null, 10, true);
         return new SpeakAction(input.getValue(), speakMetadata.getAudio(), speakMetadata.getInitialTypeSpeed(), speakMetadata.isWaitForInput());
+    }
+
+    @Override
+    public void load(Object[] data) {
+        initialData = data;
     }
 }

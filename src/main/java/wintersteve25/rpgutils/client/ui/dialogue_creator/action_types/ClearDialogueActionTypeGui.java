@@ -23,4 +23,8 @@ public class ClearDialogueActionTypeGui implements IDialogueActionTypeGui {
     public IDialogueAction save() {
         return new ClearAction();
     }
+
+    @Override
+    public void load(Object[] data) {
+    }
 }

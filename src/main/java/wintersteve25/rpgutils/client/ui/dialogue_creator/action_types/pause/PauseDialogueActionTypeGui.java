@@ -62,4 +62,10 @@ public class PauseDialogueActionTypeGui implements IDialogueActionTypeGui {
     public IDialogueAction save() {
         return new PauseAction(Float.parseFloat(input.getValue()), skippableToggle.isStateTriggered());
     }
+
+    @Override
+    public void load(Object[] data) {
+        input.setValue(String.valueOf((float) data[0]));
+        skippableToggle.setStateTriggered((boolean) data[1]);
+    }
 }

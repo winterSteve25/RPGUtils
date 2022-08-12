@@ -12,7 +12,7 @@ public enum DialogueActionType {
     CLEAR("rpgutils.dialogues.action_types.clear", ClearDialogueActionTypeGui::new),
     PAUSE("rpgutils.dialogues.action_types.pause", PauseDialogueActionTypeGui::new),
     SPAWN("rpgutils.dialogues.action_types.spawn", SpawnDialogueActionTypeGui::new);
-    
+
     private final String id;
     private final Supplier<? extends IDialogueActionTypeGui> guiCreator;
 

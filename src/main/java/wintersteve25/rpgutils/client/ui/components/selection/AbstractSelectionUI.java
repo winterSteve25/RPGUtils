@@ -178,8 +178,8 @@ public abstract class AbstractSelectionUI<T extends SelectionOption<T>> extends 
         return selectedIndices.stream().map(index -> totalOptions.get(index)).collect(Collectors.toList());
     }
     
-    private void updateConfirmButton() {
-        confirm.active = !selectedIndices.isEmpty();
+    protected void updateConfirmButton() {
+        confirm.active = !selectedIndices.isEmpty() && !totalOptions.isEmpty();
     }
     
     protected abstract void populateOptions(List<T> list);

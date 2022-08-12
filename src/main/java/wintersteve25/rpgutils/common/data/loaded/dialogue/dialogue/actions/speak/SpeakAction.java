@@ -97,6 +97,16 @@ public class SpeakAction implements IDialogueAction {
         return object;
     }
 
+    @Override
+    public Object[] data() {
+        return new Object[] { audio, text, initialTypeSpeed, waitForInput };
+    }
+
+    @Override
+    public int guiIndex() {
+        return 0;
+    }
+
     private static String getContentOrTranslation(ITextComponent text) {
         if (text instanceof TranslationTextComponent) {
             return I18n.get(((TranslationTextComponent) text).getKey());
