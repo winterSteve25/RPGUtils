@@ -23,7 +23,7 @@ public abstract class DataLoader<T> {
 
     protected DataLoader(String subdirectory, String fileExtension) {
         this.subdirectory = subdirectory;
-        this.directory = FMLPaths.getOrCreateGameRelativePath(Paths.get(JsonUtilities.rpgutilsPath + "/" + subdirectory), "");
+        this.directory = FMLPaths.getOrCreateGameRelativePath(Paths.get(JsonUtilities.rpgutilsPath + "/" + subdirectory + "/"), "");
         this.fileExtension = fileExtension;
     }
 

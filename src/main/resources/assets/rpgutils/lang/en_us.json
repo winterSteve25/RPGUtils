@@ -39,6 +39,9 @@
   "rpgutils.gui.dialogue_creator.create_dialogue": "Create Dialogue",
   "rpgutils.gui.dialogue_creator.create_dialogue_name": "Dialogue path",
   "rpgutils.gui.dialogue_creator.empty_text": "Field can not be empty",
+
+  "rpgutils.gui.dialogue_creator.dynamic_uuid.npc_id": "Npc ID",
+  "rpgutils.gui.dialogue_creator.dynamic_uuid.empty_id": "Npc ID can not be empty!",
   
   "rpgutils.dialogues.action_types.speak": "Speak",
   "rpgutils.dialogues.action_types.clear": "Clear",

@@ -15,22 +15,17 @@ import wintersteve25.rpgutils.client.ui.components.dropdown.EnumDropdownOption;
 import wintersteve25.rpgutils.client.ui.components.list.AbstractListEntryWidget;
 import wintersteve25.rpgutils.client.ui.dialogue_creator.action_types.DialogueActionType;
 import wintersteve25.rpgutils.client.ui.dialogue_creator.action_types.IDialogueActionTypeGui;
-import wintersteve25.rpgutils.client.ui.selections.nearby_entities.NearbyEntityOption;
-import wintersteve25.rpgutils.client.ui.selections.nearby_entities.SelectNearbyEntity;
 import wintersteve25.rpgutils.common.data.loaded.dialogue.dialogue.DynamicUUID;
 import wintersteve25.rpgutils.common.utils.RLHelper;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 public class DialogueActionEntryGui extends AbstractListEntryWidget {
     private static final TranslationTextComponent SELECT_ENTITY = RLHelper.dialogueEditorComponent("select_entity");
     private static final TranslationTextComponent UUID = RLHelper.dialogueEditorComponent("selected_uuid");
     
-    // TODO: make sure this is not null and add in the ui that allow you to create this
     private DynamicUUID selectedEntity;
-    private ITextComponent selectedName;
 
     private Button selectEntity;
     private Dropdown<EnumDropdownOption<DialogueActionType>> dropdown;
@@ -44,8 +39,12 @@ public class DialogueActionEntryGui extends AbstractListEntryWidget {
     public void init(int parentX, int parentY, BaseUI parent) {
         super.init(parentX, parentY, parent);
         
-        selectEntity = new Button(this.x + 25, this.y + 5, 60, 20, selectedName == null ? SELECT_ENTITY : selectedName, btn -> {
-            Minecraft.getInstance().setScreen(new DynamicUUIDUI());
+        selectEntity = new Button(this.x + 25, this.y + 5, 60, 20, SELECT_ENTITY, btn -> {
+            Minecraft.getInstance().setScreen(new DynamicUUIDUI(uuid -> {
+                Minecraft.getInstance().setScreen(parent);
+                selectedEntity = uuid;
+                selectedEntity.setup();
+            }));
         }, (btn, matrix, x, y) -> {
             Minecraft minecraft = Minecraft.getInstance();
             MainWindow window = minecraft.getWindow();
@@ -64,7 +63,7 @@ public class DialogueActionEntryGui extends AbstractListEntryWidget {
         } else {
             dropdownNew.select(dropdown.getSelectedIndex());
         }
-        
+
         dropdown = dropdownNew;
         parent.addButton(dropdown);
 

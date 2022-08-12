@@ -23,7 +23,7 @@ public class UIUtilities {
     }
     
     public static void textFieldHint(MatrixStack pMatrixStack, ITextComponent hint, TextFieldWidget textField) {
-        if (!textField.isFocused() && textField.getValue().isEmpty()) {
+        if (textField.visible && !textField.isFocused() && textField.getValue().isEmpty()) {
             AbstractGui.drawString(pMatrixStack, Minecraft.getInstance().font, hint, textField.x + 5, textField.y + 6, TextFormatting.GRAY.getColor());
         }
     }

@@ -93,6 +93,11 @@ public class DynamicUUID {
         return uuid;
     }
 
+    @Override
+    public String toString() {
+        return type + " - " + uuid;
+    }
+
     public enum DynamicType {
         FIXED,
         PLAYER,
