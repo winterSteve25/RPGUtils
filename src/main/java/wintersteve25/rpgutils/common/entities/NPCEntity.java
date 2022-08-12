@@ -2,6 +2,7 @@ package wintersteve25.rpgutils.common.entities;
 
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
@@ -24,7 +25,7 @@ import wintersteve25.rpgutils.common.utils.RLHelper;
 
 import java.util.ArrayList;
 
-public class NPCEntity extends LivingEntity implements IAnimatedEntity<NPCEntity> {
+public class NPCEntity extends MobEntity implements IAnimatedEntity<NPCEntity> {
     private static final DataParameter<ResourceLocation> MODEL_LOC = EntityDataManager.defineId(NPCEntity.class, DataUtils.RESOURCE_LOCATION_SERIALIZER);
     private static final DataParameter<ResourceLocation> ANIM_LOC = EntityDataManager.defineId(NPCEntity.class, DataUtils.RESOURCE_LOCATION_SERIALIZER);
     private static final DataParameter<ResourceLocation> TEXTURE_LOC = EntityDataManager.defineId(NPCEntity.class, DataUtils.RESOURCE_LOCATION_SERIALIZER);
@@ -61,6 +62,11 @@ public class NPCEntity extends LivingEntity implements IAnimatedEntity<NPCEntity
         this.entityData.define(MODEL_LOC, RLHelper.geoModel("npc_default"));
         this.entityData.define(ANIM_LOC, RLHelper.geoAnim("npc_default"));
         this.entityData.define(TEXTURE_LOC, RLHelper.texture("npc_default"));
+    }
+
+    @Override
+    protected void registerGoals() {
+        
     }
 
     public ResourceLocation getModelLocation() {
@@ -123,7 +129,7 @@ public class NPCEntity extends LivingEntity implements IAnimatedEntity<NPCEntity
 
     @Override
     public void setAnimation(String controller, String animation) {
-
+        
     }
 
     @Override
