@@ -6,7 +6,7 @@ modId="rpgutils" #mandatory
 version="${file.jarVersion}" #mandatory
 displayName="RPG Utilities" #mandatory
 updateJSONURL="" #optional
-authors="winterSteve25" #optional
+authors="winterSteve25, Contrabass26" #optional
 description='''
 '''
 [[dependencies.rpgutils]] #optional
