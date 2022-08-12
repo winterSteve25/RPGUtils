@@ -15,6 +15,7 @@ import wintersteve25.rpgutils.client.ui.components.list.AbstractListEntryWidget;
 import wintersteve25.rpgutils.client.ui.selections.dialogue_registry.DialogueOption;
 import wintersteve25.rpgutils.client.ui.selections.dialogue_registry.SelectDialogue;
 import wintersteve25.rpgutils.common.data.loaded.dialogue.dialogue.Dialogue;
+import wintersteve25.rpgutils.common.data.loaded.dialogue.dialogue.DialogueManager;
 import wintersteve25.rpgutils.common.data.loaded.dialogue.dialogue_pool.DialogueRule;
 import wintersteve25.rpgutils.common.utils.ModConstants;
 import wintersteve25.rpgutils.common.utils.RLHelper;
@@ -30,6 +31,8 @@ public class DialogueRuleEntryGui extends AbstractListEntryWidget {
     private TextFieldWidget dialogueWeight;
     private ToggleButton interruptable;
     
+    private DialogueRule initialRule;
+
     public DialogueRuleEntryGui(int index) {
         super(225, 25, StringTextComponent.EMPTY, index);
     }
@@ -62,6 +65,14 @@ public class DialogueRuleEntryGui extends AbstractListEntryWidget {
         interruptable.initTextureValues(7, 208, 15, 15, ModConstants.Resources.BLANK_SCREEN);
         parent.addButton(interruptable);
         parent.addButton(this);
+        
+        if (initialRule != null) {
+            selectedDialogue = DialogueManager.INSTANCE.getDialogues().get(initialRule.getDialogue());
+            selectDialogue.setMessage(new StringTextComponent(selectedDialogue.getResourceLocation().toString()));
+            dialogueWeight.setValue(String.valueOf(initialRule.getWeight()));
+            interruptable.setStateTriggered(initialRule.isInterruptable());
+            initialRule = null;
+        }
     }
 
     @Override
@@ -85,5 +96,9 @@ public class DialogueRuleEntryGui extends AbstractListEntryWidget {
         }
         
         return new DialogueRule(Float.parseFloat(dialogueWeight.getValue()), interruptable.isStateTriggered(), selectedDialogue.getResourceLocation());
+    }
+    
+    public void load(DialogueRule rule) {
+        initialRule = rule;
     }
 }

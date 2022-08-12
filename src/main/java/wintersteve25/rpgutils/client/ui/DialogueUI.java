@@ -63,36 +63,29 @@ public class DialogueUI extends Screen {
 
         Tuple<DynamicUUID, IDialogueAction> entry = entries.get(currentIndex);
         DynamicUUID speaker = entry.getA();
+        speaker.setup();
         PlayerEntity player = minecraft.player;
         World world = player.level;
         BlockPos posStart = player.blockPosition().offset(-16, -16, -16);
         BlockPos posEnd = player.blockPosition().offset(16, 16, 16);
 
         IAnimatedEntity<?> speakerEntity;
-        
-        switch (speaker.getType()) {
-            default:
-            case FIXED:
-                List<Entity> matchingEntities = world.getEntities(player, new AxisAlignedBB(posStart, posEnd)).stream().filter(entity -> entity.getUUID().equals(speaker.getUuid())).collect(Collectors.toList());
 
-                if (matchingEntities.isEmpty()) {
-                    pMatrixStack.popPose();
-                    return;
-                }
+        List<Entity> matchingEntities = world.getEntities(null, new AxisAlignedBB(posStart, posEnd)).stream().filter(entity -> entity.getUUID().equals(speaker.getUuid())).collect(Collectors.toList());
 
-                Entity entity = matchingEntities.get(0);
-
-                if (!(entity instanceof LivingEntity)) {
-                    pMatrixStack.popPose();
-                    return;
-                }
-
-                speakerEntity = IAnimatedEntity.getOrCreate((LivingEntity) entity);
-                break;
-            case PLAYER:
-                speakerEntity = IAnimatedEntity.getOrCreate(player);
-                break;
+        if (matchingEntities.isEmpty()) {
+            pMatrixStack.popPose();
+            return;
         }
+
+        Entity entity = matchingEntities.get(0);
+
+        if (!(entity instanceof LivingEntity)) {
+            pMatrixStack.popPose();
+            return;
+        }
+
+        speakerEntity = IAnimatedEntity.getOrCreate((LivingEntity) entity);
 
         currentAction = entry.getB();
 

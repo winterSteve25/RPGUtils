@@ -43,7 +43,6 @@ public class DialogueActionEntryGui extends AbstractListEntryWidget {
             Minecraft.getInstance().setScreen(new DynamicUUIDUI(uuid -> {
                 Minecraft.getInstance().setScreen(parent);
                 selectedEntity = uuid;
-                selectedEntity.setup();
             }));
         }, (btn, matrix, x, y) -> {
             Minecraft minecraft = Minecraft.getInstance();

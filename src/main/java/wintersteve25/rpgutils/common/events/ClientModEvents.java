@@ -18,6 +18,6 @@ public class ClientModEvents {
     public static void clientSetup(FMLClientSetupEvent event) {
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.NPC_ENTITY.get(), (manager) -> new GeckolibEntityRendererBase<>(manager, new NPCModel()));
         ModKeybinds.register();
-        event.enqueueWork(ClientOnlyLoadedData::reloadAll);
+        ClientOnlyLoadedData.reloadAll();
     }
 }

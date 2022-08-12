@@ -15,7 +15,7 @@ public class SelectionOption<T extends SelectionOption<T>> extends Widget {
     private final int index;
 
     private boolean selected = false;
-    
+
     public SelectionOption(int x, int y, String text, AbstractSelectionUI<T> parent, int index) {
         super(x, y, 155, 12, StringTextComponent.EMPTY);
         

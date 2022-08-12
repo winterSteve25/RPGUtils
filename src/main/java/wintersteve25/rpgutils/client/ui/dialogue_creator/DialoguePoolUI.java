@@ -1,6 +1,5 @@
 package wintersteve25.rpgutils.client.ui.dialogue_creator;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.util.text.TranslationTextComponent;
 import wintersteve25.rpgutils.client.ui.components.BaseUI;
 import wintersteve25.rpgutils.client.ui.components.list.EditableListUI;
@@ -19,10 +18,12 @@ public class DialoguePoolUI extends EditableListUI<DialogueRuleEntryGui> {
     private static final TranslationTextComponent NO_DIALOGUE = RLHelper.dialogueCreatorComponent("no_dialogue");
 
     private final Consumer<List<DialogueRule>> onSubmit;
+    private final List<DialogueRule> initialData;
     
-    public DialoguePoolUI(Consumer<List<DialogueRule>> onSubmit) {
+    public DialoguePoolUI(Consumer<List<DialogueRule>> onSubmit, List<DialogueRule> initialData) {
         super(TITLE);
         this.onSubmit = onSubmit;
+        this.initialData = initialData;
     }
 
     @Override
@@ -54,5 +55,15 @@ public class DialoguePoolUI extends EditableListUI<DialogueRuleEntryGui> {
         }
         
         onSubmit.accept(rules);
+    }
+
+    @Override
+    protected void populateEntries() {
+        if (initialData == null || initialData.isEmpty()) return;
+        for (DialogueRule rule : initialData) {
+            DialogueRuleEntryGui entryGui = createEntry();
+            entryGui.load(rule);
+            addEntry(entryGui);
+        }
     }
 }

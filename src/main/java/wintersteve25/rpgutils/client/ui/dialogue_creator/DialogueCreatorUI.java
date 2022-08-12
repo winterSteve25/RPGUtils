@@ -7,14 +7,17 @@ import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Tuple;
 import net.minecraft.util.text.TranslationTextComponent;
+import wintersteve25.rpgutils.client.ui.components.BaseUI;
 import wintersteve25.rpgutils.client.ui.components.prompt.ConfirmationUI;
 import wintersteve25.rpgutils.client.ui.components.list.EditableListUI;
 import wintersteve25.rpgutils.client.ui.dialogue_creator.entries.DialoguePoolEntryGui;
+import wintersteve25.rpgutils.common.data.loaded.dialogue.dialogue_pool.DialoguePoolManager;
 import wintersteve25.rpgutils.common.data.loaded.dialogue.dialogue_pool.DialogueRule;
 import wintersteve25.rpgutils.common.utils.JsonUtilities;
 import wintersteve25.rpgutils.common.utils.RLHelper;
 
 import java.util.List;
+import java.util.Map;
 
 public class DialogueCreatorUI extends EditableListUI<DialoguePoolEntryGui> {
     private static final TranslationTextComponent TITLE = RLHelper.dialogueCreatorComponent("title");
@@ -35,6 +38,8 @@ public class DialogueCreatorUI extends EditableListUI<DialoguePoolEntryGui> {
             saveInternal(data);
             return;
         }
+
+        BaseUI thisUI = this;
         
         Minecraft.getInstance().setScreen(new ConfirmationUI(EMPTY_POOL_NAME, 200, 60) {
             @Override
@@ -44,7 +49,7 @@ public class DialogueCreatorUI extends EditableListUI<DialoguePoolEntryGui> {
 
             @Override
             protected void onDecline(Button button) {
-                Minecraft.getInstance().setScreen(this);
+                Minecraft.getInstance().setScreen(thisUI);
             }
         });
     }
@@ -66,6 +71,15 @@ public class DialogueCreatorUI extends EditableListUI<DialoguePoolEntryGui> {
         }
         
         Minecraft.getInstance().setScreen(null);
+    }
+
+    @Override
+    protected void populateEntries() {
+        for (Map.Entry<ResourceLocation, List<DialogueRule>> entry : DialoguePoolManager.INSTANCE.getPools().entrySet()) {
+            DialoguePoolEntryGui entryGui = createEntry();
+            entryGui.load(new Tuple<>(entry.getKey(), entry.getValue()));
+            addEntry(entryGui);
+        }
     }
 
     public static void open() {

@@ -42,8 +42,10 @@
 
   "rpgutils.gui.dialogue_creator.dynamic_uuid.npc_id": "Npc ID",
   "rpgutils.gui.dialogue_creator.dynamic_uuid.empty_id": "Npc ID can not be empty!",
+  "rpgutils.gui.dialogue_creator.dynamic_uuid.empty_uuid": "You must select an entity!",
   
   "rpgutils.dialogues.action_types.speak": "Speak",
   "rpgutils.dialogues.action_types.clear": "Clear",
-  "rpgutils.dialogues.action_types.pause": "Pause"
+  "rpgutils.dialogues.action_types.pause": "Pause",
+  "rpgutils.dialogues.action_types.spawn": "Spawn"
 }

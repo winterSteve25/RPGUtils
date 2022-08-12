@@ -37,6 +37,7 @@ public class DialogueEditorUI extends EditableListUI<DialogueActionEntryGui> {
         for (DialogueActionEntryGui actionGui : data) {
             JsonObject line = new JsonObject();
             DynamicUUID selectedEntity = actionGui.getSelectedEntity();
+            if (selectedEntity == null) selectedEntity = new DynamicUUID(DynamicUUID.DynamicType.PLAYER);
             line.add("speaker", selectedEntity.toJson());
             line.add("action", actionGui.getActionTypeGui().save().toJson());
             lines.add(line);

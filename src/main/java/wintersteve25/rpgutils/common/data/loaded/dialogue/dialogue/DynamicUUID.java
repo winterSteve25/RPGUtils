@@ -42,8 +42,7 @@ public class DynamicUUID {
     public void setup() {
         switch (type) {
             case FIXED:
-                RPGUtils.LOGGER.warn("Can not setup a DynamicUUID with type FIXED");
-                return;
+                break;
             case PLAYER:
                 uuid = Minecraft.getInstance().player.getUUID();
                 break;
@@ -88,13 +87,25 @@ public class DynamicUUID {
             uuid.setDynamicNpcID(jsonObject.get("npcID").getAsString());
         }
 
-        uuid.setup();
-
         return uuid;
     }
 
     @Override
     public String toString() {
+        String uuid;
+        
+        switch (type) {
+            case FIXED:
+                uuid = this.uuid.toString();
+                break;
+            case PLAYER:
+                uuid = "Local Player";
+                break;
+            default:
+                uuid = dynamicNpcID;
+                break;
+        }
+        
         return type + " - " + uuid;
     }
 

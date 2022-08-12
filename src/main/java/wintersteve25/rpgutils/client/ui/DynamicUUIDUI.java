@@ -24,6 +24,7 @@ public class DynamicUUIDUI extends BaseUI {
 
     private static final TranslationTextComponent NPC_ID_HINT = RLHelper.dialogueCreatorComponent("dynamic_uuid.npc_id");
     private static final TranslationTextComponent EMPTY_NPC_ID = RLHelper.dialogueCreatorComponent("dynamic_uuid.empty_id");
+    private static final TranslationTextComponent EMPTY_UUID = RLHelper.dialogueCreatorComponent("dynamic_uuid.empty_uuid");
     private static final TranslationTextComponent SELECT_ENTITY = RLHelper.dialogueEditorComponent("select_entity");
 
     private DynamicUUID uuid;
@@ -63,14 +64,23 @@ public class DynamicUUIDUI extends BaseUI {
         BaseUI thisUI = this;
         confirm = new Button(this.x + (WIDTH - 60) / 2, this.y + 35, 60, 20, CONFIRM_TEXT, btn -> {
             if (uuid.getType() == DynamicUUID.DynamicType.DYNAMIC && npcID.getValue().isEmpty()) {
-                Minecraft.getInstance().setScreen(new TextPrompt(EMPTY_NPC_ID) {
+                minecraft.setScreen(new TextPrompt(EMPTY_NPC_ID) {
                     @Override
                     protected void Ok() {
-                        Minecraft.getInstance().setScreen(thisUI);
+                        minecraft.setScreen(thisUI);
+                    }
+                });
+                return;
+            } else if (uuid.getType() == DynamicUUID.DynamicType.FIXED && uuid == null) {
+                minecraft.setScreen(new TextPrompt(EMPTY_UUID) {
+                    @Override
+                    protected void Ok() {
+                        minecraft.setScreen(thisUI);
                     }
                 });
                 return;
             }
+            
             onSubmit.accept(create());
         });
         addButton(confirm);

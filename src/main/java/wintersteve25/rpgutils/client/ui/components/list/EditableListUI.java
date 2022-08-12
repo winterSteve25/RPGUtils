@@ -32,6 +32,8 @@ public abstract class EditableListUI<T extends AbstractListEntryWidget> extends 
     private int totalPages;
     private int page;
     
+    private boolean populated;
+    
     protected EditableListUI(TranslationTextComponent title, int texWidth, int texHeight) {
         super(null, texWidth, texHeight);
         this.title = title;
@@ -45,19 +47,18 @@ public abstract class EditableListUI<T extends AbstractListEntryWidget> extends 
     @Override
     protected void init() {
         super.init();
+        
+        if (!populated) {
+            populateEntries();
+            populated = true;
+        }
+        
         this.y -= 20;
         int rightX = this.x + texWidth;
 
         Button addNewButton = new Button(rightX - 95, this.y + 5, 20, 20, new StringTextComponent("+"), btn -> {
-            T entry = createEntry(listEntries.size());
-            
-            if (listEntries.size() - totalPages * ITEMS_EACH_PAGE < ITEMS_EACH_PAGE) {
-                entry.init(this.x + 15, this.y, this);
-            }
-            
-            listEntries.add(entry);
-            totalPages = (int) Math.ceil(listEntries.size() / (float) ITEMS_EACH_PAGE);
-            updatePageFlipButtons();
+            T entry = createEntry();
+            addEntry(entry);
         });
         addButton(addNewButton);
 
@@ -136,11 +137,32 @@ public abstract class EditableListUI<T extends AbstractListEntryWidget> extends 
     }
 
     private void updatePageFlipButtons() {
-        this.forwardButton.visible = this.totalPages > 1 && this.page < this.totalPages - 1;
-        this.backButton.visible = this.totalPages > 1 && this.page > 0;
+        if (forwardButton != null) {
+            this.forwardButton.visible = this.totalPages > 1 && this.page < this.totalPages - 1;
+        }
+        if (backButton != null) {
+            this.backButton.visible = this.totalPages > 1 && this.page > 0;
+        }
+    }
+    
+    protected void addEntry(T entry) {
+        if (listEntries.size() - (totalPages == 0 ? 0 : totalPages - 1) * ITEMS_EACH_PAGE < ITEMS_EACH_PAGE) {
+            entry.init(this.x + 15, this.y, this);
+        }
+
+        listEntries.add(entry);
+        totalPages = (int) Math.ceil(listEntries.size() / (float) ITEMS_EACH_PAGE);
+        updatePageFlipButtons();
+    }
+    
+    protected T createEntry() {
+        return createEntry(listEntries.size());
     }
     
     protected abstract T createEntry(int index);
 
     protected abstract void save(List<T> data);
+
+    protected void populateEntries() {
+    }
 }

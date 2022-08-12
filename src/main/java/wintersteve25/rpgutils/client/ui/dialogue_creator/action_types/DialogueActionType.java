@@ -11,7 +11,7 @@ public enum DialogueActionType {
     SPEAK("rpgutils.dialogues.action_types.speak", SpeakDialogueActionTypeGui::new),
     CLEAR("rpgutils.dialogues.action_types.clear", ClearDialogueActionTypeGui::new),
     PAUSE("rpgutils.dialogues.action_types.pause", PauseDialogueActionTypeGui::new),
-    SPAWN("rpgutils.dialogues.action_types.pause", SpawnDialogueActionTypeGui::new);
+    SPAWN("rpgutils.dialogues.action_types.spawn", SpawnDialogueActionTypeGui::new);
     
     private final String id;
     private final Supplier<? extends IDialogueActionTypeGui> guiCreator;

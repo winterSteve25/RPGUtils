@@ -27,7 +27,8 @@ public class DialoguePoolEntryGui extends AbstractListEntryWidget {
     private Button poolDialogues;
     
     private List<DialogueRule> poolData;
-    
+    private Tuple<ResourceLocation, List<DialogueRule>> initialData;
+
     public DialoguePoolEntryGui(int index) {
         super(225, 25, StringTextComponent.EMPTY, index);
     }
@@ -48,10 +49,16 @@ public class DialoguePoolEntryGui extends AbstractListEntryWidget {
             Minecraft.getInstance().setScreen(new DialoguePoolUI(data -> {
                 Minecraft.getInstance().setScreen(parent);
                 poolData = data;
-            }));
+            }, poolData));
         });
         parent.addButton(poolDialogues);
         parent.addButton(this);
+        
+        if (initialData != null) {
+            poolName.setValue(initialData.getA().getPath());
+            poolData = initialData.getB();
+            initialData = null;
+        }
     }
 
     @Override
@@ -75,6 +82,10 @@ public class DialoguePoolEntryGui extends AbstractListEntryWidget {
     
     public Tuple<ResourceLocation, List<DialogueRule>> create() {
         return new Tuple<>(new ResourceLocation(poolName.getValue()), poolData == null ? new ArrayList<>() : poolData);
+    }
+    
+    public void load(Tuple<ResourceLocation, List<DialogueRule>> data) {
+        initialData = data;
     }
     
     public boolean isPoolnameEmpty() {
