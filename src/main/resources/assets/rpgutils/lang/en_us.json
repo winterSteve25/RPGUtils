@@ -27,6 +27,8 @@
   "rpgutils.gui.dialogue_editor.entity_to_spawn": "Entity type",
   "rpgutils.gui.dialogue_editor.no_entity_selected": "An entity type must be selected",
   
+  "rpgutils.gui.dialogue_editor.predicates.title": "Edit Predicates",
+  
   "rpgutils.gui.dialogue_editor.spawn.pos_x": "X Pos",
   "rpgutils.gui.dialogue_editor.spawn.pos_y": "Y Pos",
   "rpgutils.gui.dialogue_editor.spawn.pos_z": "Z Pos",
@@ -56,5 +58,9 @@
   "rpgutils.dialogues.action_types.speak": "Speak",
   "rpgutils.dialogues.action_types.clear": "Clear",
   "rpgutils.dialogues.action_types.pause": "Pause",
-  "rpgutils.dialogues.action_types.spawn": "Spawn"
+  "rpgutils.dialogues.action_types.spawn": "Spawn",
+
+  "rpgutils.dialogues.predicate_types.or": "Or",
+  "rpgutils.dialogues.predicate_types.and": "And",
+  "rpgutils.dialogues.predicate_types.local_player_health": "Player Health"
 }

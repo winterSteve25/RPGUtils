@@ -32,4 +32,8 @@ public abstract class DialoguePredicate {
         }
         return predicate;
     }
+    
+    public static DialoguePredicate create(JsonObject jsonObject) {
+        return create(jsonObject.get("name").getAsString(), jsonObject);
+    }
 }

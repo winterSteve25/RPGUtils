@@ -4,7 +4,7 @@ import com.google.gson.JsonObject;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.Minecraft;
 import wintersteve25.rpgutils.client.animation.IAnimatedEntity;
-import wintersteve25.rpgutils.client.ui.DialogueUI;
+import wintersteve25.rpgutils.client.ui.dialogues.DialogueUI;
 
 public interface IDialogueAction {
 

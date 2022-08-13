@@ -2,17 +2,13 @@ package wintersteve25.rpgutils.common.data.loaded.dialogue.dialogue.predicate;
 
 import com.google.gson.JsonObject;
 
-public class AndPredicate extends DialoguePredicate {
-    
-    private DialoguePredicate condition1;
-    private DialoguePredicate condition2;
+public class AndPredicate extends AbstractNestedPredicate {
+    public AndPredicate(DialoguePredicate condition1, DialoguePredicate condition2) {
+        super(condition1, condition2);
+    }
 
     protected AndPredicate(JsonObject jsonObject) {
         super(jsonObject);
-        JsonObject cond1 = jsonObject.getAsJsonObject("condition1");
-        JsonObject cond2 = jsonObject.getAsJsonObject("condition2");
-        condition1 = DialoguePredicate.create(cond1.get("name").getAsString(), cond1);
-        condition2 = DialoguePredicate.create(cond2.get("name").getAsString(), cond2);
     }
 
     @Override

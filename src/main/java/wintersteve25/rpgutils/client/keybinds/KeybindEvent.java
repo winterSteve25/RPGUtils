@@ -6,7 +6,6 @@ import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import wintersteve25.rpgutils.RPGUtils;
-import wintersteve25.rpgutils.client.ui.DialogueUI;
 
 import java.util.ArrayList;
 import java.util.List;

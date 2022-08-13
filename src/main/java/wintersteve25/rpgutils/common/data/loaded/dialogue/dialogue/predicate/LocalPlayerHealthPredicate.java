@@ -10,6 +10,12 @@ public class LocalPlayerHealthPredicate extends DialoguePredicate {
     private final HealthPredicateType type;
     private final float operand;
 
+    public LocalPlayerHealthPredicate(HealthPredicateType type, float operand) {
+        super(null);
+        this.type = type;
+        this.operand = operand;
+    }
+
     protected LocalPlayerHealthPredicate(JsonObject jsonObject) {
         super(jsonObject);
         String typeStr = jsonObject.get("type").getAsString();
