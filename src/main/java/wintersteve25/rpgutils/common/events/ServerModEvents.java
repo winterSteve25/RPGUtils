@@ -12,6 +12,6 @@ public class ServerModEvents {
 
     @SubscribeEvent
     public static void entityAttributes(EntityAttributeCreationEvent event) {
-        event.put(ModEntities.NPC_ENTITY.get(), NPCEntity.setAttributes());
+        event.put(ModEntities.NPC_ENTITY.get(), NPCEntity.createAttributes());
     }
 }
