@@ -3,7 +3,7 @@ package wintersteve25.rpgutils.common.systems;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.ResourceLocation;
 import wintersteve25.rpgutils.RPGUtils;
-import wintersteve25.rpgutils.client.ui.DialogueUI;
+import wintersteve25.rpgutils.client.ui.dialogues.DialogueUI;
 import wintersteve25.rpgutils.common.data.loaded.dialogue.dialogue.Dialogue;
 import wintersteve25.rpgutils.common.data.loaded.dialogue.dialogue.DialogueManager;
 import wintersteve25.rpgutils.common.data.loaded.dialogue.dialogue_pool.DialoguePoolManager;

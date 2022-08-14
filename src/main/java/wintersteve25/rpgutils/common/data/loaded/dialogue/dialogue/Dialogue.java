@@ -22,11 +22,12 @@ public class Dialogue {
         this.predicate = predicate;
     }
 
-    /**
-     * @return All the lines in the dialogue. If UUID is not present it means it is the player's line. 
-     */
     public List<Tuple<DynamicUUID, IDialogueAction>> getLines() {
         return lines;
+    }
+
+    public DialoguePredicate getPredicate() {
+        return predicate;
     }
 
     public ResourceLocation getResourceLocation() {
@@ -53,7 +54,7 @@ public class Dialogue {
 
         DialoguePredicate predicate = null;
         
-        if (object.has("predicates")) {
+        if (object.has("predicate")) {
             JsonObject predicateJson = object.getAsJsonObject("predicate");
             String predicateName = predicateJson.get("name").getAsString();
             predicate = DialoguePredicate.create(predicateName, predicateJson);

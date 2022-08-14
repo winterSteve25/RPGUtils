@@ -10,7 +10,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.registries.ForgeRegistries;
 import wintersteve25.rpgutils.client.animation.IAnimatedEntity;
-import wintersteve25.rpgutils.client.ui.DialogueUI;
+import wintersteve25.rpgutils.client.ui.dialogues.DialogueUI;
 import wintersteve25.rpgutils.common.data.loaded.dialogue.dialogue.actions.base.IDialogueAction;
 import wintersteve25.rpgutils.common.utils.IDeserializer;
 import wintersteve25.rpgutils.common.utils.JsonUtilities;

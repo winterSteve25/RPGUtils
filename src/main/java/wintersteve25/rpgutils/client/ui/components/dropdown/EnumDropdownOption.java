@@ -27,7 +27,7 @@ public class EnumDropdownOption<T extends Enum<T>> implements IDropdownOption {
     public T getValue() {
         return value;
     }
-
+    
     public static <T extends Enum<T>> List<EnumDropdownOption<T>> populate(Class<T> clazz) {
         return Arrays.stream(clazz.getEnumConstants()).map(EnumDropdownOption::new).collect(Collectors.toList());
     }

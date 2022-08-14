@@ -5,7 +5,7 @@ import net.minecraft.client.util.InputMappings;
 import net.minecraftforge.client.settings.KeyConflictContext;
 import org.lwjgl.glfw.GLFW;
 import wintersteve25.rpgutils.client.keybinds.Keybind;
-import wintersteve25.rpgutils.client.ui.DialogueUI;
+import wintersteve25.rpgutils.client.ui.dialogues.DialogueUI;
 
 public class ModKeybinds {
     public static final Keybind SKIP_DIALOGUE;

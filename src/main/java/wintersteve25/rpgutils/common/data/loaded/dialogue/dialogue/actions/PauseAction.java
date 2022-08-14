@@ -3,7 +3,7 @@ package wintersteve25.rpgutils.common.data.loaded.dialogue.dialogue.actions;
 import com.google.gson.JsonObject;
 import net.minecraft.client.Minecraft;
 import wintersteve25.rpgutils.client.animation.IAnimatedEntity;
-import wintersteve25.rpgutils.client.ui.DialogueUI;
+import wintersteve25.rpgutils.client.ui.dialogues.DialogueUI;
 import wintersteve25.rpgutils.common.data.loaded.dialogue.dialogue.actions.base.IDialogueAction;
 import wintersteve25.rpgutils.common.utils.IDeserializer;
 import wintersteve25.rpgutils.common.utils.JsonUtilities;
