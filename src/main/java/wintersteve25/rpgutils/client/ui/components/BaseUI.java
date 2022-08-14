@@ -54,4 +54,12 @@ public abstract class BaseUI extends Screen {
         minecraft.getTextureManager().bind(bg);
         this.blit(matrixStack, this.x, this.y, 0, 0, texWidth, texHeight);
     }
+
+    public int getTexWidth() {
+        return texWidth;
+    }
+
+    public int getTexHeight() {
+        return texHeight;
+    }
 }

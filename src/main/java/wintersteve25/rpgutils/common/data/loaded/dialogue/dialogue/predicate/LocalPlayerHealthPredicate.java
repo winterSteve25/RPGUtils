@@ -29,6 +29,27 @@ public class LocalPlayerHealthPredicate extends DialoguePredicate {
         return type.test(health, operand);
     }
 
+    @Override
+    public JsonObject toJson() {
+        JsonObject jsonObject = new JsonObject();
+        
+        jsonObject.addProperty("name", "localPlayerHealth");
+        jsonObject.addProperty("type", type.toString());
+        jsonObject.addProperty("operand", operand);
+        
+        return jsonObject;
+    }
+
+    @Override
+    public Object[] data() {
+        return new Object[] { type, operand };
+    }
+
+    @Override
+    public int guiIndex() {
+        return 3;
+    }
+
     public enum HealthPredicateType implements BiPredicate<Float, Float> {
         LESS_THAN {
             @Override

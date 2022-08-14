@@ -1,6 +1,5 @@
 package wintersteve25.rpgutils.client.ui.dialogues.dialogue_creator.entries;
 
-import com.google.common.collect.Lists;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
@@ -10,15 +9,13 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fml.client.gui.GuiUtils;
-import wintersteve25.rpgutils.client.ui.dialogues.DynamicUUIDUI;
 import wintersteve25.rpgutils.client.ui.components.BaseUI;
-import wintersteve25.rpgutils.client.ui.components.UIUtilities;
 import wintersteve25.rpgutils.client.ui.components.dropdown.Dropdown;
 import wintersteve25.rpgutils.client.ui.components.dropdown.EnumDropdownOption;
 import wintersteve25.rpgutils.client.ui.components.list.AbstractListEntryWidget;
-import wintersteve25.rpgutils.client.ui.dialogues.dialogue_creator.action_types.DialogueActionType;
+import wintersteve25.rpgutils.client.ui.dialogues.DynamicUUIDUI;
 import wintersteve25.rpgutils.client.ui.dialogues.dialogue_creator.IAttachedUI;
-import wintersteve25.rpgutils.client.ui.dialogues.dialogue_creator.predicates.DialoguePredicateConfigUI;
+import wintersteve25.rpgutils.client.ui.dialogues.dialogue_creator.action_types.DialogueActionType;
 import wintersteve25.rpgutils.common.data.loaded.dialogue.dialogue.DynamicUUID;
 import wintersteve25.rpgutils.common.data.loaded.dialogue.dialogue.actions.base.IDialogueAction;
 import wintersteve25.rpgutils.common.utils.RLHelper;
@@ -27,18 +24,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DialogueActionEntryGui extends AbstractListEntryWidget {
-    private static final TranslationTextComponent PREDICATE = RLHelper.dialogueEditorComponent("predicate");
+    private static final TranslationTextComponent SELECT_ENTITY = RLHelper.dialogueEditorComponent("select_entity");
     private static final TranslationTextComponent UUID = RLHelper.dialogueEditorComponent("selected_uuid");
-    
+
     private DynamicUUID selectedEntity;
 
     private Button selectEntity;
-    private Button predicateMenu;
     private Dropdown<EnumDropdownOption<DialogueActionType>> dropdown;
     private IAttachedUI<IDialogueAction> actionTypeGui;
-    
+
     private IDialogueAction initialData;
-    
+
     public DialogueActionEntryGui(int index) {
         super(225, 25, StringTextComponent.EMPTY, index);
     }
@@ -46,8 +42,8 @@ public class DialogueActionEntryGui extends AbstractListEntryWidget {
     @Override
     public void init(int parentX, int parentY, BaseUI parent) {
         super.init(parentX, parentY, parent);
-        
-        selectEntity = new Button(this.x + 25, this.y + 5, 20, 20, new StringTextComponent("S"), btn -> {
+
+        selectEntity = new Button(this.x + 25, this.y + 5, 60, 20, SELECT_ENTITY, btn -> {
             Minecraft.getInstance().setScreen(new DynamicUUIDUI(uuid -> {
                 Minecraft.getInstance().setScreen(parent);
                 selectedEntity = uuid;
@@ -63,13 +59,7 @@ public class DialogueActionEntryGui extends AbstractListEntryWidget {
             }
             GuiUtils.drawHoveringText(matrix, lines, x, y, window.getGuiScaledWidth(), window.getGuiScaledHeight(), 999, minecraft.font);
         });
-        
-        predicateMenu = new Button(this.x + 60, this.y + 5, 20, 20, new StringTextComponent("P"), btn -> {
-            Minecraft.getInstance().setScreen(new DialoguePredicateConfigUI(predicate -> {
-                Minecraft.getInstance().setScreen(parent);
-            }));
-        });
-        
+
         Dropdown<EnumDropdownOption<DialogueActionType>> dropdownNew = new Dropdown<>(x + 100, y + 5, 60, StringTextComponent.EMPTY, EnumDropdownOption.populate(DialogueActionType.class));
         if (dropdown == null) {
             dropdownNew.select(0);
@@ -83,9 +73,8 @@ public class DialogueActionEntryGui extends AbstractListEntryWidget {
         actionTypeGui.remove(parent);
         actionTypeGui.init(parentX, parentY, x, y, parent, this);
         parent.addButton(selectEntity);
-        parent.addButton(predicateMenu);
         parent.addButton(this);
-        
+
         dropdownNew.setOnChanged(action -> {
             if (actionTypeGui != null) {
                 actionTypeGui.remove(parent);
@@ -93,14 +82,12 @@ public class DialogueActionEntryGui extends AbstractListEntryWidget {
             actionTypeGui = action.getValue().getGuiCreator().get();
             parent.removeButton(this);
             parent.removeButton(selectEntity);
-            parent.removeButton(predicateMenu);
             actionTypeGui.remove(parent);
             actionTypeGui.init(parentX, parentY, x, y, parent, this);
             parent.addButton(selectEntity);
-            parent.addButton(predicateMenu);
             parent.addButton(this);
         });
-        
+
         if (initialData != null) {
             dropdown.select(initialData.guiIndex());
             actionTypeGui.load(initialData.data());
@@ -116,11 +103,10 @@ public class DialogueActionEntryGui extends AbstractListEntryWidget {
     @Override
     public void remove(BaseUI parent) {
         super.remove(parent);
-        
+
         parent.removeButton(selectEntity);
-        parent.removeButton(predicateMenu);
         parent.removeButton(dropdown);
-        
+
         if (actionTypeGui != null) {
             actionTypeGui.remove(parent);
         }
@@ -131,14 +117,13 @@ public class DialogueActionEntryGui extends AbstractListEntryWidget {
     @Override
     public void renderButton(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         actionTypeGui.render(matrixStack, x, y, mouseX, mouseY, partialTicks);
-        UIUtilities.tooltipWhenOver(matrixStack, predicateMenu, mouseX, mouseY, Lists.newArrayList(PREDICATE));
     }
-    
+
     public void load(Tuple<DynamicUUID, IDialogueAction> dialogue) {
         selectedEntity = dialogue.getA();
         initialData = dialogue.getB();
     }
-    
+
     public DynamicUUID getSelectedEntity() {
         return selectedEntity;
     }

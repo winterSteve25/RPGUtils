@@ -12,7 +12,17 @@ public class AndPredicate extends AbstractNestedPredicate {
     }
 
     @Override
+    protected String name() {
+        return "and";
+    }
+
+    @Override
     public boolean test() {
         return condition1.test() && condition2.test();
+    }
+    
+    @Override
+    public int guiIndex() {
+        return 2;
     }
 }

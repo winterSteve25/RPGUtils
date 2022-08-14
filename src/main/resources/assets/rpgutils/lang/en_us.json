@@ -19,6 +19,7 @@
   "rpgutils.gui.dialogue_editor.line_input": "Dialogue content",
   "rpgutils.gui.dialogue_editor.pause_duration": "Pause duration (s)",
   "rpgutils.gui.dialogue_editor.predicate": "Predicate",
+  "rpgutils.gui.dialogue_editor.select_entity": "Speaker",
   "rpgutils.gui.dialogue_editor.selected_uuid": "Click to select an entity as the speaker",
   "rpgutils.gui.dialogue_editor.select_sound": "Sound",
   "rpgutils.gui.dialogue_editor.wait_for_input": "Wait for input at end",
@@ -28,7 +29,10 @@
   "rpgutils.gui.dialogue_editor.no_entity_selected": "An entity type must be selected",
   
   "rpgutils.gui.dialogue_editor.predicates.title": "Edit Predicates",
-  
+  "rpgutils.gui.dialogue_editor.predicates.nested_condition": "Condition %s",
+  "rpgutils.gui.dialogue_editor.predicates.empty": "No type selected!",
+  "rpgutils.gui.dialogue_editor.predicates.local_player_health.operand": "Operand",
+
   "rpgutils.gui.dialogue_editor.spawn.pos_x": "X Pos",
   "rpgutils.gui.dialogue_editor.spawn.pos_y": "Y Pos",
   "rpgutils.gui.dialogue_editor.spawn.pos_z": "Z Pos",
@@ -60,6 +64,7 @@
   "rpgutils.dialogues.action_types.pause": "Pause",
   "rpgutils.dialogues.action_types.spawn": "Spawn",
 
+  "rpgutils.dialogues.predicate_types.none": "None",
   "rpgutils.dialogues.predicate_types.or": "Or",
   "rpgutils.dialogues.predicate_types.and": "And",
   "rpgutils.dialogues.predicate_types.local_player_health": "Player Health"

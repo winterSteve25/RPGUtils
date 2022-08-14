@@ -13,7 +13,17 @@ public class OrPredicate extends AbstractNestedPredicate {
     }
 
     @Override
+    protected String name() {
+        return "or";
+    }
+
+    @Override
     public boolean test() {
         return condition1.test() || condition2.test();
+    }
+
+    @Override
+    public int guiIndex() {
+        return 1;
     }
 }

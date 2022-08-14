@@ -10,7 +10,16 @@ public abstract class DialoguePredicate {
     protected DialoguePredicate(JsonObject jsonObject) {}
 
     public abstract boolean test();
+    
+    public abstract JsonObject toJson();
 
+    /**
+     * @return required data read by PredicateGui when initiating
+     */
+    public abstract Object[] data();
+    
+    public abstract int guiIndex();
+    
     /**
      * Currently, each predicate type must have its own block in the switch statement - could be improved in the future.
      * @param name The name associated with the desired DialoguePredicate (in the JSON files)

@@ -18,4 +18,20 @@ public abstract class AbstractNestedPredicate extends DialoguePredicate {
                 DialoguePredicate.create(jsonObject.getAsJsonObject("condition2"))
         );
     }
+
+    @Override
+    public JsonObject toJson() {
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("name", name());
+        jsonObject.add("condition1", condition1.toJson());
+        jsonObject.add("condition2", condition2.toJson());
+        return jsonObject;
+    }
+
+    @Override
+    public Object[] data() {
+        return new Object[] {condition1, condition2};
+    }
+
+    protected abstract String name();
 }
