@@ -4,6 +4,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.command.arguments.EntityAnchorArgument;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -84,7 +85,8 @@ public class DialogueUI extends Screen {
         }
 
         speakerEntity = IAnimatedEntity.getOrCreate((LivingEntity) entity);
-
+        speakerEntity.getSelf().lookAt(EntityAnchorArgument.Type.EYES, player.position());
+        
         currentAction = entry.getB();
 
         if (requireInitialization) {
@@ -100,9 +102,10 @@ public class DialogueUI extends Screen {
         int speakerNameWidth = fontRenderer.width(speakerName);
         int speakerX = (width-speakerNameWidth)/2;
         int speakerY = height - 200;
+        int dialogueTextWidth = fontRenderer.width(displayingDialogueText);
 
         drawString(pMatrixStack, fontRenderer, speakerName, speakerX, speakerY, TextFormatting.WHITE.getColor());
-        drawString(pMatrixStack, minecraft.font, displayingDialogueText, speakerX, speakerY + 10, TextFormatting.WHITE.getColor());
+        drawString(pMatrixStack, minecraft.font, displayingDialogueText, (width - dialogueTextWidth) / 2, speakerY + 10, TextFormatting.WHITE.getColor());
         
         currentAction.render(speakerEntity, this, pMatrixStack, minecraft, width, height, speakerX, speakerY, pMouseX, pMouseY);
 

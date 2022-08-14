@@ -74,14 +74,13 @@ public class DynamicUUIDUI extends BaseUI {
             }));
         });
         addButton(npcID);
-
-        BaseUI thisUI = this;
+        
         confirm = new Button(this.x + (WIDTH - 60) / 2, this.y + 35, 60, 20, CONFIRM_TEXT, btn -> {
             if (uuid.getType() == DynamicUUID.DynamicType.DYNAMIC && speakerNpcID.isEmpty()) {
                 minecraft.setScreen(new TextPrompt(EMPTY_NPC_ID) {
                     @Override
                     protected void Ok() {
-                        minecraft.setScreen(thisUI);
+                        minecraft.setScreen(DynamicUUIDUI.this);
                     }
                 });
                 return;
@@ -89,7 +88,7 @@ public class DynamicUUIDUI extends BaseUI {
                 minecraft.setScreen(new TextPrompt(EMPTY_UUID) {
                     @Override
                     protected void Ok() {
-                        minecraft.setScreen(thisUI);
+                        minecraft.setScreen(DynamicUUIDUI.this);
                     }
                 });
                 return;

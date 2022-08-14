@@ -42,12 +42,10 @@ public class DialoguePoolUI extends EditableListUI<DialogueRuleEntryGui> {
         }).collect(Collectors.toList());
         
         if (hasNull.get()) {
-            BaseUI thisUI = this;
-            
             minecraft.setScreen(new TextPrompt(NO_DIALOGUE) {
                 @Override
                 protected void Ok() {
-                    minecraft.setScreen(thisUI);
+                    minecraft.setScreen(DialoguePoolUI.this);
                 }
             });
 

@@ -34,6 +34,12 @@ public class ModNetworking {
                 .consumer(PacketOpenDialogueCreator::handle)
                 .add();
 
+        INSTANCE.messageBuilder(PacketOpenQuestCreator.class, nextID())
+                .encoder((data, buffer) -> {})
+                .decoder(buffer -> new PacketOpenQuestCreator())
+                .consumer(PacketOpenQuestCreator::handle)
+                .add();
+
         INSTANCE.messageBuilder(PacketPlaySound.class, nextID())
                 .encoder(PacketPlaySound::encode)
                 .decoder(PacketPlaySound::new)

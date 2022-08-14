@@ -52,12 +52,10 @@ public class EnterTextConfirmationUI extends ConfirmationUI {
     @Override
     protected void onAccept(Button button) {
         if (nameInput.getValue().isEmpty()) {
-            BaseUI thisUI = this;
-            
             Minecraft.getInstance().setScreen(new TextPrompt(EMPTY) {
                 @Override
                 protected void Ok() {
-                    Minecraft.getInstance().setScreen(thisUI);
+                    Minecraft.getInstance().setScreen(EnterTextConfirmationUI.this);
                 }
             });
             return;

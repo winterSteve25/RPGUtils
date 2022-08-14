@@ -43,9 +43,6 @@ public class DialogueCreatorUI extends EditableListUI<DialoguePoolEntryGui> {
             saveInternal(data);
             return;
         }
-
-        BaseUI thisUI = this;
-        
         Minecraft.getInstance().setScreen(new ConfirmationUI(EMPTY_POOL_NAME, 200, 60) {
             @Override
             protected void onAccept(Button button) {
@@ -54,7 +51,7 @@ public class DialogueCreatorUI extends EditableListUI<DialoguePoolEntryGui> {
 
             @Override
             protected void onDecline(Button button) {
-                Minecraft.getInstance().setScreen(thisUI);
+                Minecraft.getInstance().setScreen(DialogueCreatorUI.this);
             }
         });
     }

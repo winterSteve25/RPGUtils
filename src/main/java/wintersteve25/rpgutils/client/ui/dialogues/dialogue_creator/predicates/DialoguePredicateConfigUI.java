@@ -109,12 +109,10 @@ public class DialoguePredicateConfigUI extends BaseUI {
     }
     
     private void noPredicate() {
-        BaseUI thisUI = this;
-
         minecraft.setScreen(new TextPrompt(EMPTY_PREDICATE) {
             @Override
             protected void Ok() {
-                minecraft.setScreen(thisUI);
+                minecraft.setScreen(DialoguePredicateConfigUI.this);
             }
         });
     }

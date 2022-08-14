@@ -1,5 +1,6 @@
 package wintersteve25.rpgutils.common.data.loaded.dialogue.dialogue.actions.base;
 
+import wintersteve25.rpgutils.common.data.loaded.dialogue.dialogue.actions.ChoiceAction;
 import wintersteve25.rpgutils.common.data.loaded.dialogue.dialogue.actions.ClearAction;
 import wintersteve25.rpgutils.common.data.loaded.dialogue.dialogue.actions.PauseAction;
 import wintersteve25.rpgutils.common.data.loaded.dialogue.dialogue.actions.SpawnAction;
@@ -18,5 +19,6 @@ public class DialogueActionTypes {
         DESERIALIZERS.put("clear", json -> new ClearAction());
         DESERIALIZERS.put("pause", new PauseAction.Deserializer());
         DESERIALIZERS.put("spawn", new SpawnAction.Deserializer());
+        DESERIALIZERS.put("choice", new ChoiceAction.Deserializer());
     }
 }

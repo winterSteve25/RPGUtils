@@ -60,7 +60,7 @@ public class DialogueRuleEntryGui extends AbstractListEntryWidget {
         dialogueWeight.setValue(value);
         parent.addButton(dialogueWeight);
         
-        boolean initialState = interruptable != null && interruptable.isStateTriggered();
+        boolean initialState = interruptable == null || interruptable.isStateTriggered();
         interruptable = new ToggleButton(this.x + 310, this.y + 8, 12, 12, initialState, btn -> btn.setStateTriggered(!btn.isStateTriggered()));
         interruptable.initTextureValues(7, 208, 15, 15, ModConstants.Resources.BLANK_SCREEN);
         parent.addButton(interruptable);
