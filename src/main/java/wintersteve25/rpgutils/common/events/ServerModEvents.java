@@ -9,8 +9,9 @@ import wintersteve25.rpgutils.common.registry.ModEntities;
 
 @Mod.EventBusSubscriber(modid = RPGUtils.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ServerModEvents {
+
     @SubscribeEvent
     public static void entityAttributes(EntityAttributeCreationEvent event) {
-        event.put(ModEntities.NPC_ENTITY.get(), NPCEntity.createAttribute().build());
+        event.put(ModEntities.NPC_ENTITY.get(), NPCEntity.createAttributes());
     }
 }

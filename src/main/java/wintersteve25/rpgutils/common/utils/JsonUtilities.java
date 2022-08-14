@@ -43,8 +43,12 @@ public class JsonUtilities {
     public static final Path rpgutilsPath = FMLPaths.getOrCreateGameRelativePath(Paths.get("rpgutils/"), "");
 
     public static void saveDialogue(ResourceLocation resourceLocation, Object jsonObject) {
+        saveData(resourceLocation, jsonObject, "/dialogues/");
+    }
+
+    private static void saveData(ResourceLocation resourceLocation, Object jsonObject, String subdirectory) {
         try {
-            FileWriter fileWriter = new FileWriter(getGeneratedPath(resourceLocation, "/dialogues/"));
+            FileWriter fileWriter = new FileWriter(getGeneratedPath(resourceLocation, subdirectory));
             fileWriter.write(gson.toJson(jsonObject));
             fileWriter.close();
         } catch (IOException e) {
@@ -55,15 +59,11 @@ public class JsonUtilities {
     }
 
     public static void saveDialoguePool(ResourceLocation resourceLocation, Object jsonObject) {
-        try {
-            FileWriter fileWriter = new FileWriter(getGeneratedPath(resourceLocation, "/dialogue_pools/"));
-            fileWriter.write(gson.toJson(jsonObject));
-            fileWriter.close();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        saveData(resourceLocation, jsonObject, "/dialogue_pools/");
+    }
 
-        ClientOnlyLoadedData.reloadAll();
+    public static void saveNpcAttributes(ResourceLocation resourceLocation, Object jsonObject) {
+        saveData(resourceLocation, jsonObject, "/npc/attributes");
     }
     
     public static void deleteDialogue(ResourceLocation resourceLocation) {

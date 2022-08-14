@@ -8,10 +8,15 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
 import net.minecraft.command.arguments.ArgumentTypes;
+import net.minecraft.command.arguments.EntityArgument;
+import net.minecraft.command.arguments.EntitySelector;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.ResourceLocation;
 import wintersteve25.rpgutils.RPGUtils;
+import wintersteve25.rpgutils.common.data.loaded.npc.NPCAttributeLoader;
 import wintersteve25.rpgutils.common.data.loaded.storage.ServerOnlyLoadedData;
+import wintersteve25.rpgutils.common.entities.NPCEntity;
 import wintersteve25.rpgutils.common.network.ModNetworking;
 import wintersteve25.rpgutils.common.network.PacketLoadData;
 import wintersteve25.rpgutils.common.network.PacketOpenDialogueCreator;
@@ -19,9 +24,23 @@ import wintersteve25.rpgutils.common.systems.DialogueSystem;
 
 public class ModCommands {
     public static void registerCommands(CommandDispatcher<CommandSource> dispatcher) {
-        dispatcher.register(Commands.literal(RPGUtils.MOD_ID).then(Commands.literal("create_dialogues").executes(ModCommands::openDialogueCreator)));
-        dispatcher.register(Commands.literal(RPGUtils.MOD_ID).then(Commands.literal("reload").executes(ModCommands::reloadData)));
-        dispatcher.register(Commands.literal(RPGUtils.MOD_ID).then(Commands.literal("play_dialogue").executes(ModCommands::playDialogue)));
+        dispatcher.register(
+                Commands.literal(RPGUtils.MOD_ID)
+                .then(Commands.literal("create_dialogues").executes(ModCommands::openDialogueCreator)));
+
+        dispatcher.register(Commands.literal(RPGUtils.MOD_ID)
+                .then(Commands.literal("reload")
+                        .executes(ModCommands::reloadData)));
+
+        dispatcher.register(Commands.literal(RPGUtils.MOD_ID)
+                .then(Commands.literal("play_dialogue")
+                        .executes(ModCommands::playDialogue)));
+
+        dispatcher.register(Commands.literal(RPGUtils.MOD_ID)
+                .then(Commands.literal("npc_type")
+                        .then(Commands.argument("target", EntityArgument.entity())
+                                .then(Commands.argument("type", StringArgumentType.word())
+                                        .executes(ModCommands::modifyNpcType)))));
     }
 
     private static int openDialogueCreator(CommandContext<CommandSource> source) throws CommandSyntaxException {
@@ -36,6 +55,21 @@ public class ModCommands {
 
         ServerOnlyLoadedData.reloadAll();
         
+        return 1;
+    }
+
+    private static int modifyNpcType(CommandContext<CommandSource> source) {
+        try {
+            Entity target = source.getArgument("target", EntitySelector.class).findSingleEntity(source.getSource());
+            if (target instanceof NPCEntity) {
+                String type = source.getArgument("type", String.class);
+                ((NPCEntity) target).setType(type);
+            } else {
+                RPGUtils.LOGGER.warn("Bad target argument for command: expected NPCEntity, received " + target.getClass().getName());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return 1;
     }
 
