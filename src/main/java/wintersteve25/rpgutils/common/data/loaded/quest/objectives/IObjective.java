@@ -4,6 +4,4 @@ import net.minecraft.entity.player.PlayerEntity;
 
 public interface IObjective {
     boolean isCompleted(PlayerEntity player);
-    
-    
 }

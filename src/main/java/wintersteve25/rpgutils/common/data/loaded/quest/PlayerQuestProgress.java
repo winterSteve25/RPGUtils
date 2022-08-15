@@ -34,8 +34,8 @@ public class PlayerQuestProgress implements ICapabilityHolder {
         return currentActiveQuest;
     }
 
-    public void setCurrentActiveQuest(ResourceLocation quest) {
-        this.currentActiveQuest = QuestsManager.INSTANCE.getQuests().get(quest);
+    public void setCurrentActiveQuest(Quest quest) {
+        this.currentActiveQuest = quest;
     }
 
     @Override
