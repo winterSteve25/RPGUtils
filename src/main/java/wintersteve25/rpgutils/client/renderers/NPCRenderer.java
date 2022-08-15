@@ -18,6 +18,6 @@ public class NPCRenderer extends GeoEntityRenderer<NPCEntity> {
 
     @Override
     public ResourceLocation getTextureLocation(NPCEntity entity) {
-        return new ResourceLocation(RPGUtils.MOD_ID, entity.getClientPath());
+        return new ResourceLocation(RPGUtils.MOD_ID, entity.getTexturePath());
     }
 }

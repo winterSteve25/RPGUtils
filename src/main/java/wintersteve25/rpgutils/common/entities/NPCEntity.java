@@ -32,8 +32,6 @@ public class NPCEntity extends MobEntity implements IAnimatedEntity<NPCEntity> {
 
     private final AnimationFactory factory = new AnimationFactory(this);
     private NPCType npcType;
-    @OnlyIn(Dist.CLIENT)
-    private String clientPath = NPCType.DEFAULT_TEXTURE;
 
     public NPCEntity(EntityType<? extends MobEntity> entityType, World world) {
         super(entityType, world);
@@ -52,20 +50,21 @@ public class NPCEntity extends MobEntity implements IAnimatedEntity<NPCEntity> {
         this.npcType = NPCTypeLoader.INSTANCE.getType(type);
         this.getPersistentData().putString(getNameKey(), this.npcType.getName());
         NPCTypeLoader.INSTANCE.setAttributes(this, this.npcType.getName());
-        PacketSetType packet = new PacketSetType(this.getId(), npcType.getPath());
+        PacketSetType packet = new PacketSetType(this.getId(), npcType);
         for (ServerPlayerEntity player : getServer().getLevel(this.level.dimension()).players()) {
             ModNetworking.sendToClient(packet, player);
         }
     }
 
-    @OnlyIn(Dist.CLIENT)
-    public void setClientPath(String path) {
-        this.clientPath = path;
+    public void setNPCType(NPCType type) {
+        this.npcType = type;
     }
 
-    @OnlyIn(Dist.CLIENT)
-    public String getClientPath() {
-        return clientPath;
+    public String getTexturePath() {
+        if (npcType == null) {
+            return NPCType.DEFAULT_TEXTURE;
+        }
+        return npcType.getPath();
     }
 
     @Override
@@ -102,9 +101,7 @@ public class NPCEntity extends MobEntity implements IAnimatedEntity<NPCEntity> {
     }
 
     @Override
-    public void setAnimation(String controller, String animation) {
-
-    }
+    public void setAnimation(String controller, String animation) {}
 
     @Override
     public NPCEntity getSelf() {
