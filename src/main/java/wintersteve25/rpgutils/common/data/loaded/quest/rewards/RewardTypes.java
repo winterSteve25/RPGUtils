@@ -6,10 +6,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class RewardTypes {
-    public static final Map<String, IDeserializer<IReward>> SERIALIZERS;
+    public static final Map<String, IDeserializer<IReward>> DESERIALIZERS;
 
     static {
-        SERIALIZERS = new HashMap<>();
-        SERIALIZERS.put("item", new ItemReward.Deserializer());
+        DESERIALIZERS = new HashMap<>();
+        DESERIALIZERS.put("item", new ItemReward.Deserializer());
     }
 }

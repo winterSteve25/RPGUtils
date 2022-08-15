@@ -85,7 +85,11 @@ public class DialogueUI extends Screen {
         }
 
         speakerEntity = IAnimatedEntity.getOrCreate((LivingEntity) entity);
-        speakerEntity.getSelf().lookAt(EntityAnchorArgument.Type.EYES, player.position());
+        
+        if (!(entity instanceof PlayerEntity)) {
+            entity.lookAt(EntityAnchorArgument.Type.EYES, player.position());
+            player.lookAt(EntityAnchorArgument.Type.EYES, entity.position());
+        }
         
         currentAction = entry.getB();
 

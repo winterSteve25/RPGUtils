@@ -6,17 +6,8 @@ public class QuestCreatorUI extends BaseScreen {
     @Override
     public void addWidgets() {
     }
-
-    @Override
-    public boolean onInit() {
-        return super.onInit();
-    }
-
-    @Override
-    public void openGuiLater() {
-        super.openGuiLater();
-    }
     
+
     public static void open() {
         new QuestCreatorUI().openGui();
     }

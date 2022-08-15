@@ -5,6 +5,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TranslationTextComponent;
+import wintersteve25.rpgutils.common.data.loaded.quest.objectives.IObjective;
 import wintersteve25.rpgutils.common.data.loaded.quest.rewards.IReward;
 import wintersteve25.rpgutils.common.data.loaded.quest.rewards.RewardTypes;
 import wintersteve25.rpgutils.common.utils.JsonUtilities;
@@ -14,16 +15,24 @@ import java.util.List;
 
 public class Quest {
     
+    private final ResourceLocation resourceLocation;
     private final TranslationTextComponent title;
     private final TranslationTextComponent description;
     private final List<ResourceLocation> prerequisite;
     private final List<IReward> rewards;
+    private final List<IObjective> objectives;
     
-    public Quest(TranslationTextComponent title, TranslationTextComponent description, List<ResourceLocation> prerequisite, List<IReward> rewards) {
+    public Quest(ResourceLocation resourceLocation, TranslationTextComponent title, TranslationTextComponent description, List<ResourceLocation> prerequisite, List<IReward> rewards, List<IObjective> objectives) {
+        this.resourceLocation = resourceLocation;
         this.title = title;
         this.description = description;
         this.prerequisite = prerequisite;
         this.rewards = rewards;
+        this.objectives = objectives;
+    }
+
+    public ResourceLocation getResourceLocation() {
+        return resourceLocation;
     }
 
     public TranslationTextComponent getTitle() {
@@ -42,6 +51,10 @@ public class Quest {
         return rewards;
     }
 
+    public List<IObjective> getObjectives() {
+        return objectives;
+    }
+
     public static Quest fromJson(ResourceLocation resourceLocation, JsonObject jsonObject) {
         List<IReward> rewards = new ArrayList<>();
 
@@ -49,7 +62,7 @@ public class Quest {
             JsonArray rewardsJson = jsonObject.getAsJsonArray("rewards");
             for (JsonElement reward : rewardsJson) {
                 JsonObject r = reward.getAsJsonObject();
-                rewards.add(RewardTypes.SERIALIZERS.get(r.get("type").getAsString()).fromJson(r));
+                rewards.add(RewardTypes.DESERIALIZERS.get(r.get("type").getAsString()).fromJson(r));
             }
         }
 
@@ -66,10 +79,12 @@ public class Quest {
         String description = JsonUtilities.getOrDefault(jsonObject, "description", id + ".description");
 
         return new Quest(
+                resourceLocation, 
                 new TranslationTextComponent(title),
                 new TranslationTextComponent(description),
                 prerequisites,
-                rewards
-        );
+                rewards,
+                // TODO
+                new ArrayList<>());
     }
 }
