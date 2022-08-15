@@ -14,13 +14,14 @@ import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.util.ResourceLocation;
 import wintersteve25.rpgutils.RPGUtils;
 import wintersteve25.rpgutils.common.data.loaded.JsonDataLoader;
+import wintersteve25.rpgutils.common.entities.NPCType;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class NPCAttributeLoader extends JsonDataLoader {
+public class NPCTypeLoader extends JsonDataLoader {
 
-    public static final NPCAttributeLoader INSTANCE = new NPCAttributeLoader();
+    public static final NPCTypeLoader INSTANCE = new NPCTypeLoader();
 
     private static final Map<Attribute, String> ATTRIBUTE_NAMES;
     static {
@@ -31,9 +32,9 @@ public class NPCAttributeLoader extends JsonDataLoader {
         ATTRIBUTE_NAMES.put(Attributes.MOVEMENT_SPEED, "movementSpeed");
     }
 
-    private final Map<String, Map<Attribute, Double>> attributeMap = new HashMap<>();
+    private final Map<String, NPCType> typeMap = new HashMap<>();
 
-    public NPCAttributeLoader() {
+    public NPCTypeLoader() {
         super("npc/attributes");
     }
 
@@ -41,7 +42,7 @@ public class NPCAttributeLoader extends JsonDataLoader {
     protected void apply(Map<ResourceLocation, JsonElement> data) {
         RPGUtils.LOGGER.info("Loading NPC attributes");
 
-        attributeMap.clear();
+        typeMap.clear();
 
         for (Map.Entry<ResourceLocation, JsonElement> entry : data.entrySet()) {
             ResourceLocation resourcelocation = entry.getKey();
@@ -50,13 +51,18 @@ public class NPCAttributeLoader extends JsonDataLoader {
                 continue; // Forge: filter anything beginning with "_" as it's used for metadata.
             }
             try {
-                JsonObject jsonObject = entry.getValue().getAsJsonObject();
-                Map<Attribute, Double> attributes = createAttributes(jsonObject);
-                attributeMap.put(path, attributes);
+                JsonObject root = entry.getValue().getAsJsonObject();
+                Map<Attribute, Double> attributes = createAttributes(root.getAsJsonObject("attributes"));
+                NPCType type = new NPCType(attributes, path, root.get("texture").getAsString());
+                typeMap.put(path, type);
             } catch (IllegalArgumentException | JsonParseException e) {
                 RPGUtils.LOGGER.error("Parsing error loading NPC attribute set {}", resourcelocation, e);
             }
         }
+    }
+
+    public NPCType getType(String name) {
+        return typeMap.get(name);
     }
 
     public AttributeModifierMap createDefaultAttributes() {
@@ -68,7 +74,7 @@ public class NPCAttributeLoader extends JsonDataLoader {
     }
 
     public void setAttributes(MobEntity entity, String name) {
-        Map<Attribute, Double> modifierMap = attributeMap.get(name);
+        Map<Attribute, Double> modifierMap = typeMap.get(name).attributes();
         for (Attribute attribute : ATTRIBUTE_NAMES.keySet()) {
             setAttribute(entity, attribute, modifierMap.get(attribute));
         }

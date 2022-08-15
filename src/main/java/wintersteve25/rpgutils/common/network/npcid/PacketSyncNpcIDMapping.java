@@ -5,10 +5,11 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.network.NetworkEvent;
 import wintersteve25.rpgutils.common.data.saveddata.NpcIDMapping;
+import wintersteve25.rpgutils.common.network.ModPacket;
 
 import java.util.function.Supplier;
 
-public class PacketSyncNpcIDMapping {
+public class PacketSyncNpcIDMapping implements ModPacket {
     private final CompoundNBT data;
 
     public PacketSyncNpcIDMapping(CompoundNBT data) {
@@ -19,10 +20,12 @@ public class PacketSyncNpcIDMapping {
         this.data = buffer.readAnySizeNbt();
     }
 
+    @Override
     public void encode(PacketBuffer buffer) {
         buffer.writeNbt(data);
     }
 
+    @Override
     public void handle(Supplier<NetworkEvent.Context> ctx) {
         NetworkEvent.Context context = ctx.get();
         context.enqueueWork(() -> {

@@ -1,7 +1,7 @@
 package wintersteve25.rpgutils.common.data.loaded.storage;
 
 import wintersteve25.rpgutils.common.data.loaded.DataLoader;
-import wintersteve25.rpgutils.common.data.loaded.npc.NPCAttributeLoader;
+import wintersteve25.rpgutils.common.data.loaded.npc.NPCTypeLoader;
 import wintersteve25.rpgutils.common.data.loaded.quest.QuestsManager;
 
 import java.util.ArrayList;
@@ -16,7 +16,7 @@ public class ServerOnlyLoadedData {
     static {
         dataLoaders = new ArrayList<>();
         dataLoaders.add(QuestsManager.INSTANCE);
-        dataLoaders.add(NPCAttributeLoader.INSTANCE);
+        dataLoaders.add(NPCTypeLoader.INSTANCE);
     }
 
     public static void reloadAll() {

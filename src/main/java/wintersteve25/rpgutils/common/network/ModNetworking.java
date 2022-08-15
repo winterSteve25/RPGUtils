@@ -75,17 +75,23 @@ public class ModNetworking {
                 .decoder(PacketSpawnEntity::new)
                 .consumer(PacketSpawnEntity::handle)
                 .add();
+
+        INSTANCE.messageBuilder(PacketSetType.class, nextID())
+                .encoder(PacketSetType::encode)
+                .decoder(PacketSetType::new)
+                .consumer(PacketSetType::handle)
+                .add();
     }
 
     public static SimpleChannel getInstance() {
         return INSTANCE;
     }
 
-    public static void sendToClient(Object packet, ServerPlayerEntity player) {
+    public static void sendToClient(ModPacket packet, ServerPlayerEntity player) {
         INSTANCE.sendTo(packet, player.connection.connection, NetworkDirection.PLAY_TO_CLIENT);
     }
 
-    public static void sendToServer(Object packet) {
+    public static void sendToServer(ModPacket packet) {
         INSTANCE.sendToServer(packet);
     }
 }

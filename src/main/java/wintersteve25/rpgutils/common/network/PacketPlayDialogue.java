@@ -14,7 +14,7 @@ import wintersteve25.rpgutils.common.systems.DialogueSystem;
 
 import java.util.function.Supplier;
 
-public class PacketPlayDialogue {
+public class PacketPlayDialogue implements ModPacket {
     private final ResourceLocation dialogue;
 
     public PacketPlayDialogue(ResourceLocation dialogue) {
@@ -25,10 +25,12 @@ public class PacketPlayDialogue {
         this.dialogue = buffer.readResourceLocation();
     }
 
+    @Override
     public void encode(PacketBuffer buffer) {
         buffer.writeResourceLocation(dialogue);
     }
 
+    @Override
     public void handle(Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> {
             ServerPlayerEntity player = ctx.get().getSender();

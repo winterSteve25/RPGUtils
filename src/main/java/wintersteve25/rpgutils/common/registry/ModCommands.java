@@ -1,20 +1,17 @@
 package wintersteve25.rpgutils.common.registry;
 
 import com.mojang.brigadier.CommandDispatcher;
-import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
-import net.minecraft.command.arguments.ArgumentTypes;
 import net.minecraft.command.arguments.EntityArgument;
 import net.minecraft.command.arguments.EntitySelector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.ResourceLocation;
 import wintersteve25.rpgutils.RPGUtils;
-import wintersteve25.rpgutils.common.data.loaded.npc.NPCAttributeLoader;
 import wintersteve25.rpgutils.common.data.loaded.storage.ServerOnlyLoadedData;
 import wintersteve25.rpgutils.common.entities.NPCEntity;
 import wintersteve25.rpgutils.common.network.ModNetworking;
@@ -63,7 +60,7 @@ public class ModCommands {
             Entity target = source.getArgument("target", EntitySelector.class).findSingleEntity(source.getSource());
             if (target instanceof NPCEntity) {
                 String type = source.getArgument("type", String.class);
-                ((NPCEntity) target).setType(type);
+                ((NPCEntity) target).setNPCType(type);
             } else {
                 RPGUtils.LOGGER.warn("Bad target argument for command: expected NPCEntity, received " + target.getClass().getName());
             }
