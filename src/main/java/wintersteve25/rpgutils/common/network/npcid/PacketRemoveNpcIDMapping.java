@@ -5,11 +5,12 @@ import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fml.LogicalSide;
 import net.minecraftforge.fml.network.NetworkEvent;
 import wintersteve25.rpgutils.common.data.saveddata.NpcIDMapping;
+import wintersteve25.rpgutils.common.network.ModPacket;
 
 import java.util.UUID;
 import java.util.function.Supplier;
 
-public class PacketRemoveNpcIDMapping {
+public class PacketRemoveNpcIDMapping implements ModPacket {
     private final String npcID;
 
     public PacketRemoveNpcIDMapping(String npcID) {
@@ -20,10 +21,12 @@ public class PacketRemoveNpcIDMapping {
         this.npcID = buffer.readUtf();
     }
 
+    @Override
     public void encode(PacketBuffer buffer) {
         buffer.writeUtf(npcID);
     }
 
+    @Override
     public void handle(Supplier<NetworkEvent.Context> ctx) {
         NetworkEvent.Context context = ctx.get();
         context.enqueueWork(() -> {

@@ -14,7 +14,7 @@ import wintersteve25.rpgutils.common.data.saveddata.NpcIDMapping;
 
 import java.util.function.Supplier;
 
-public class PacketSpawnEntity {
+public class PacketSpawnEntity implements ModPacket {
     
     private final ResourceLocation entityType;
     private final BlockPos position;
@@ -32,12 +32,14 @@ public class PacketSpawnEntity {
         this.npcID = buffer.readUtf();
     }
 
+    @Override
     public void encode(PacketBuffer buffer) {
         buffer.writeResourceLocation(entityType);
         buffer.writeBlockPos(position);
         buffer.writeUtf(npcID);
     }
 
+    @Override
     public void handle(Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> {
             ServerPlayerEntity player = ctx.get().getSender();

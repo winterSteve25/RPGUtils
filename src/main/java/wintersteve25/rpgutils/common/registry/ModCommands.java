@@ -73,7 +73,7 @@ public class ModCommands {
             Entity target = source.getArgument("target", EntitySelector.class).findSingleEntity(source.getSource());
             if (target instanceof NPCEntity) {
                 String type = source.getArgument("type", String.class);
-                ((NPCEntity) target).setType(type);
+                ((NPCEntity) target).setNPCType(type);
             } else {
                 RPGUtils.LOGGER.warn("Bad target argument for command: expected NPCEntity, received " + target.getClass().getName());
             }

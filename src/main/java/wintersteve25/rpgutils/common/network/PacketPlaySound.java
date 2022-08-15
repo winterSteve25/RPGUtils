@@ -13,7 +13,7 @@ import wintersteve25.rpgutils.RPGUtils;
 
 import java.util.function.Supplier;
 
-public class PacketPlaySound {
+public class PacketPlaySound implements ModPacket {
 
     private final ResourceLocation sound;
     private final BlockPos position;
@@ -37,6 +37,7 @@ public class PacketPlaySound {
         this.pitch = buffer.readFloat();
     }
 
+    @Override
     public void encode(PacketBuffer buffer) {
         buffer.writeResourceLocation(sound);
         buffer.writeBlockPos(position);
@@ -45,6 +46,7 @@ public class PacketPlaySound {
         buffer.writeFloat(pitch);
     }
 
+    @Override
     public void handle(Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> {
             ServerPlayerEntity player = ctx.get().getSender();
