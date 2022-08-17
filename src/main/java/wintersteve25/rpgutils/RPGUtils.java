@@ -7,7 +7,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import wintersteve25.rpgutils.common.network.ModNetworking;
 import wintersteve25.rpgutils.common.registry.ModEntities;
-import wintersteve25.rpgutils.common.registry.ModItems;
+import wintersteve25.rpgutils.common.registry.ModMemoryModuleTypes;
 import wintersteve25.rpgutils.common.utils.DataUtils;
 
 @Mod(RPGUtils.MOD_ID)
@@ -21,6 +21,6 @@ public class RPGUtils {
         
         final IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
         ModEntities.register(modBus);
-        ModItems.register(modBus);
+        ModMemoryModuleTypes.register(modBus);
     }
 }

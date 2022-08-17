@@ -1,4 +1,4 @@
-package wintersteve25.rpgutils.client.renderers;
+package wintersteve25.rpgutils.client.renderers.npc;
 
 import net.minecraft.client.renderer.entity.EntityRendererManager;
 import net.minecraft.util.ResourceLocation;

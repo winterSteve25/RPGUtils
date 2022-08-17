@@ -1,7 +1,6 @@
 package wintersteve25.rpgutils.common.data.loaded.npc;
 
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
+import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
@@ -16,7 +15,9 @@ import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.util.ResourceLocation;
 import wintersteve25.rpgutils.RPGUtils;
 import wintersteve25.rpgutils.common.data.loaded.JsonDataLoader;
+import wintersteve25.rpgutils.common.data.loaded.npc.goal.ModGoals;
 import wintersteve25.rpgutils.common.entities.NPCType;
+import wintersteve25.rpgutils.common.utils.JsonRegistryMap;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,20 +25,13 @@ import java.util.Map;
 public class NPCTypeLoader extends JsonDataLoader {
 
     public static final NPCTypeLoader INSTANCE = new NPCTypeLoader();
-
-    public static final BiMap<String, Attribute> ATTRIBUTE_NAMES;
-    static {
-        ATTRIBUTE_NAMES = HashBiMap.create();
-        ATTRIBUTE_NAMES.put("maxHealth", Attributes.MAX_HEALTH);
-        ATTRIBUTE_NAMES.put("attackDamage", Attributes.ATTACK_DAMAGE);
-        ATTRIBUTE_NAMES.put("attackSpeed", Attributes.ATTACK_SPEED);
-        ATTRIBUTE_NAMES.put("movementSpeed", Attributes.MOVEMENT_SPEED);
-    }
+    public static final JsonRegistryMap<Attribute> ATTRIBUTES = new JsonRegistryMap<>(Attributes.class, Attribute.class);
+    public static final JsonRegistryMap<ModGoals.GoalConstructor> MOD_GOALS = new JsonRegistryMap<>(ModGoals.class, ModGoals.GoalConstructor.class);
 
     private final Map<String, NPCType> typeMap = new HashMap<>();
 
-    public NPCTypeLoader() {
-        super("npc/attributes");
+    private NPCTypeLoader() {
+        super("npc");
     }
 
     @Override
@@ -55,7 +49,14 @@ public class NPCTypeLoader extends JsonDataLoader {
             try {
                 JsonObject root = entry.getValue().getAsJsonObject();
                 Map<Attribute, Double> attributes = createAttributes(root.getAsJsonObject("attributes"));
-                NPCType type = new NPCType(attributes, path, root.get("texture").getAsString());
+                String texture = root.get("texture").getAsString();
+                String jsonString = root.getAsJsonObject("goals").toString();
+                Map<String, Integer> stringGoalWeights = new Gson().fromJson(jsonString, Map.class);
+                Map<ModGoals.GoalConstructor, Integer> goalWeights = new HashMap<>();
+                for (Map.Entry<String, Integer> goal : stringGoalWeights.entrySet()) {
+                    goalWeights.put(MOD_GOALS.get(goal.getKey()), (int) Double.parseDouble(String.valueOf(goal.getValue())));
+                }
+                NPCType type = new NPCType(attributes, path, texture, goalWeights);
                 typeMap.put(path, type);
             } catch (IllegalArgumentException | JsonParseException e) {
                 RPGUtils.LOGGER.error("Parsing error loading NPC attribute set {}", resourcelocation, e);
@@ -76,10 +77,13 @@ public class NPCTypeLoader extends JsonDataLoader {
     }
 
     public void setAttributes(MobEntity entity, String name) {
-        Map<Attribute, Double> modifierMap = typeMap.get(name).attributes();
-        for (Attribute attribute : ATTRIBUTE_NAMES.values()) {
-            setAttribute(entity, attribute, modifierMap.get(attribute));
+        Map<Attribute, Double> modifierMap = typeMap.get(name).getAttributes();
+        for (Attribute attribute : ATTRIBUTES.objectSet()) {
+            if (modifierMap.containsKey(attribute)) {
+                setAttribute(entity, attribute, modifierMap.get(attribute));
+            }
         }
+        entity.setHealth(entity.getMaxHealth());
     }
 
     private static void setAttribute(Entity entity, Attribute attribute, double value) {
@@ -93,8 +97,10 @@ public class NPCTypeLoader extends JsonDataLoader {
 
     private static Map<Attribute, Double> createAttributes(JsonObject jsonObject) {
         Map<Attribute, Double> attributes = new HashMap<>();
-        for (Map.Entry<String, Attribute> attribute : ATTRIBUTE_NAMES.entrySet()) {
-            attributes.put(attribute.getValue(), jsonObject.get(attribute.getKey()).getAsDouble());
+        for (JsonRegistryMap<Attribute>.Entry attribute : ATTRIBUTES.entrySet()) {
+            if (jsonObject.has(attribute.getFieldName())) {
+                attributes.put(attribute.getObject(), jsonObject.get(attribute.getFieldName()).getAsDouble());
+            }
         }
         return attributes;
     }

@@ -2,16 +2,9 @@ package wintersteve25.rpgutils.common.network;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fml.network.NetworkEvent;
-import net.minecraftforge.registries.ForgeRegistries;
 import wintersteve25.rpgutils.RPGUtils;
-import wintersteve25.rpgutils.common.data.saveddata.NpcIDMapping;
 import wintersteve25.rpgutils.common.entities.NPCEntity;
 import wintersteve25.rpgutils.common.entities.NPCType;
 
@@ -47,10 +40,10 @@ public class PacketSetType implements ModPacket {
                 if (entity instanceof NPCEntity) {
                     ((NPCEntity) entity).setNPCType(type);
                 } else {
-                    RPGUtils.LOGGER.warn("Tried to set client path for non-NPC entity: " + entity.getClass().getName());
+                    RPGUtils.LOGGER.warn("Tried to set type for non-NPC entity: " + entity.getClass().getName());
                 }
             } else {
-                Minecraft.getInstance().level.entitiesForRendering().forEach(RPGUtils.LOGGER::info);
+                RPGUtils.LOGGER.warn("Tried to set type for non-NPC entity: null");
             }
         });
         context.get().setPacketHandled(true);

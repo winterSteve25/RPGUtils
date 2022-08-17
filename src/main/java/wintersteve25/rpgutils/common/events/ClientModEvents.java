@@ -6,7 +6,7 @@ import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import wintersteve25.rpgutils.RPGUtils;
-import wintersteve25.rpgutils.client.renderers.NPCRenderer;
+import wintersteve25.rpgutils.client.renderers.npc.NPCRenderer;
 import wintersteve25.rpgutils.common.data.loaded.storage.ClientOnlyLoadedData;
 import wintersteve25.rpgutils.common.registry.ModEntities;
 import wintersteve25.rpgutils.common.registry.ModKeybinds;
