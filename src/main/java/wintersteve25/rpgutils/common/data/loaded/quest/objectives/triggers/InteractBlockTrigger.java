@@ -1,40 +1,23 @@
 package wintersteve25.rpgutils.common.data.loaded.quest.objectives.triggers;
 
-import net.minecraft.block.Block;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Hand;
-
-import javax.annotation.Nullable;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.server.ServerWorld;
 
 public class InteractBlockTrigger {
-    private final Block block;
-    @Nullable
-    private final TileEntity tileEntity;
-    private final PlayerEntity player;
-    private final Hand hand;
-
-    public InteractBlockTrigger(Block block, @Nullable TileEntity tileEntity, PlayerEntity player, Hand hand) {
-        this.block = block;
-        this.tileEntity = tileEntity;
-        this.player = player;
-        this.hand = hand;
+    
+    private final BlockPos pos;
+    private final ServerWorld world;
+    
+    public InteractBlockTrigger(BlockPos pos, ServerWorld world) {
+        this.pos = pos;
+        this.world = world;
     }
 
-    public Block getBlock() {
-        return block;
+    public BlockPos getPos() {
+        return pos;
     }
 
-    @Nullable
-    public TileEntity getTileEntity() {
-        return tileEntity;
-    }
-
-    public PlayerEntity getPlayer() {
-        return player;
-    }
-
-    public Hand getHand() {
-        return hand;
+    public ServerWorld getWorld() {
+        return world;
     }
 }

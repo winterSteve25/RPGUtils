@@ -2,16 +2,9 @@ package wintersteve25.rpgutils.common.network;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fml.network.NetworkEvent;
-import net.minecraftforge.registries.ForgeRegistries;
 import wintersteve25.rpgutils.RPGUtils;
-import wintersteve25.rpgutils.common.data.saveddata.NpcIDMapping;
 import wintersteve25.rpgutils.common.entities.NPCEntity;
 import wintersteve25.rpgutils.common.entities.NPCType;
 

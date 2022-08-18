@@ -6,9 +6,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ObjectiveTypes {
-    public static final Map<String, IDeserializer<IObjective>> DESERIALIZERS;
+    public static final Map<String, IDeserializer<? extends IObjective>> DESERIALIZERS;
 
     static {
         DESERIALIZERS = new HashMap<>();
+        DESERIALIZERS.put("interactBlock", new InteractWithBlockObjective.Deserializer());
+        DESERIALIZERS.put("interactEntity", new InteractWithEntityObjective.Deserializer());
     }
 }

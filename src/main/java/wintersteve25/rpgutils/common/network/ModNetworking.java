@@ -87,6 +87,12 @@ public class ModNetworking {
                 .decoder(PacketSetType::new)
                 .consumer(PacketSetType::handle)
                 .add();
+
+        INSTANCE.messageBuilder(PacketCurrentQuestStateChanged.class, nextID())
+                .encoder(PacketCurrentQuestStateChanged::encode)
+                .decoder(PacketCurrentQuestStateChanged::new)
+                .consumer(PacketCurrentQuestStateChanged::handle)
+                .add();
     }
 
     public static SimpleChannel getInstance() {

@@ -19,6 +19,9 @@ import wintersteve25.rpgutils.common.network.PacketLoadData;
 import wintersteve25.rpgutils.common.network.PacketOpenDialogueCreator;
 import wintersteve25.rpgutils.common.network.PacketOpenQuestCreator;
 import wintersteve25.rpgutils.common.systems.DialogueSystem;
+import wintersteve25.rpgutils.common.systems.QuestSystem;
+
+import javax.xml.transform.Source;
 
 public class ModCommands {
     public static void registerCommands(CommandDispatcher<CommandSource> dispatcher) {
@@ -40,7 +43,12 @@ public class ModCommands {
                 .then(Commands.literal("play_dialogue")
                         .then(Commands.argument("dialogue", StringArgumentType.word())
                                 .executes(ModCommands::playDialogue))));
-
+        
+        dispatcher.register(Commands.literal(RPGUtils.MOD_ID)
+                .then(Commands.literal("start_quest")
+                        .then(Commands.argument("quest", StringArgumentType.word())
+                                .executes(ModCommands::startQuest))));
+        
         dispatcher.register(Commands.literal(RPGUtils.MOD_ID)
                 .then(Commands.literal("npc_type")
                         .then(Commands.argument("target", EntityArgument.entity())
@@ -79,12 +87,25 @@ public class ModCommands {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            return 0;
         }
+        
         return 1;
     }
 
     private static int playDialogue(CommandContext<CommandSource> source) {
         DialogueSystem.play(new ResourceLocation(RPGUtils.MOD_ID, source.getArgument("dialogue", String.class)));
+        return 1;
+    }
+    
+    private static int startQuest(CommandContext<CommandSource> source) {
+        try {
+            QuestSystem.attemptStartQuest(source.getSource().getPlayerOrException(), new ResourceLocation(RPGUtils.MOD_ID, source.getArgument("quest", String.class)));
+        } catch (CommandSyntaxException e) {
+            e.printStackTrace();
+            return 0;
+        }
+        
         return 1;
     }
 }

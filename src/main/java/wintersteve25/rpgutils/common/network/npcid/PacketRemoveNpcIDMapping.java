@@ -7,7 +7,6 @@ import net.minecraftforge.fml.network.NetworkEvent;
 import wintersteve25.rpgutils.common.data.saveddata.NpcIDMapping;
 import wintersteve25.rpgutils.common.network.ModPacket;
 
-import java.util.UUID;
 import java.util.function.Supplier;
 
 public class PacketRemoveNpcIDMapping implements ModPacket {
