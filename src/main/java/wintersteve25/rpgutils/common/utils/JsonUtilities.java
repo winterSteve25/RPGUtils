@@ -83,7 +83,7 @@ public class JsonUtilities {
 
         Path path1 = Paths.get(rpgutilsPath + subdirectory);
         if (lastDir == -1) path = FMLPaths.getOrCreateGameRelativePath(path1, "").toString() + "/" + rlPath + ".json";
-        else path = FMLPaths.getOrCreateGameRelativePath(Paths.get(path1 + "/" + rlPath.substring(0, lastDir)), "") + "/" + rlPath.substring(lastDir, rlPath.length() - 1) + ".json";
+        else path = FMLPaths.getOrCreateGameRelativePath(Paths.get(path1 + "/" + rlPath.substring(0, lastDir)), "") + rlPath.substring(lastDir) + ".json";
         
         return path;
     }
