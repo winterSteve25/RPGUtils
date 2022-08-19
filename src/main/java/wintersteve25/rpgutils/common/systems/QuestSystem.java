@@ -22,7 +22,7 @@ public class QuestSystem {
                 return;
             }
             
-            if (!new HashSet<>(cap.getCompleted()).containsAll(quest.getPrerequisite())) {
+            if (!cap.canAcceptQuest(quest)) {
                 RPGUtils.LOGGER.info("Attempted to start quest {}, but player does not have the needed prerequisite(s)", resourceLocation);
                 return;
             }

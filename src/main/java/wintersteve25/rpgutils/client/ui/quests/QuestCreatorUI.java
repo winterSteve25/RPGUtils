@@ -6,7 +6,6 @@ public class QuestCreatorUI extends BaseScreen {
     @Override
     public void addWidgets() {
     }
-    
 
     public static void open() {
         new QuestCreatorUI().openGui();

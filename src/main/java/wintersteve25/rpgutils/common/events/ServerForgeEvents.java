@@ -38,8 +38,12 @@ public class ServerForgeEvents {
     
     @SubscribeEvent
     public static void playerConnect(PlayerEvent.PlayerLoggedInEvent event) {
-        if (!event.getPlayer().getCommandSenderWorld().isClientSide()) {
-            NpcIDMapping.refreshClient((ServerPlayerEntity) event.getPlayer());
+        PlayerEntity player = event.getPlayer();
+        if (!player.getCommandSenderWorld().isClientSide()) {
+            ServerPlayerEntity serverPlayerEntity = (ServerPlayerEntity) player;
+            
+            NpcIDMapping.refreshClient(serverPlayerEntity);
+            PlayerQuestProgress.refreshClient(serverPlayerEntity);
         }
     }
     
@@ -62,7 +66,7 @@ public class ServerForgeEvents {
         if (player instanceof FakePlayer) return;
         player.getCapability(ModCapabilities.PLAYER_QUEST).ifPresent(cap -> {
             if (cap.getCurrentQuest() == null) return;
-            cap.trigger(player, new InteractEntityTrigger(event.getTarget(), (ServerWorld) world));
+            cap.trigger((ServerPlayerEntity) player, new InteractEntityTrigger(event.getTarget(), (ServerWorld) world));
         });
     }
 
@@ -74,7 +78,7 @@ public class ServerForgeEvents {
         if (player instanceof FakePlayer) return;
         player.getCapability(ModCapabilities.PLAYER_QUEST).ifPresent(cap -> {
             if (cap.getCurrentQuest() == null) return;
-            cap.trigger(player, new InteractBlockTrigger(event.getPos(), (ServerWorld) world));
+            cap.trigger((ServerPlayerEntity) player, new InteractBlockTrigger(event.getPos(), (ServerWorld) world));
         });
     }
 }

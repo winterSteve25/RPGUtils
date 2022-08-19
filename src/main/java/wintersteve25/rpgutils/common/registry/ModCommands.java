@@ -12,6 +12,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.ResourceLocation;
 import wintersteve25.rpgutils.RPGUtils;
+import wintersteve25.rpgutils.common.data.loaded.quest.PlayerQuestProgress;
 import wintersteve25.rpgutils.common.data.loaded.storage.ServerOnlyLoadedData;
 import wintersteve25.rpgutils.common.entities.NPCEntity;
 import wintersteve25.rpgutils.common.network.ModNetworking;
@@ -67,12 +68,15 @@ public class ModCommands {
     }
 
     private static int reloadData(CommandContext<CommandSource> source) {
-        for (ServerPlayerEntity player : source.getSource().getLevel().getPlayers(player -> true)) {
-            ModNetworking.sendToClient(new PacketLoadData(), player);
-        }
-
         ServerOnlyLoadedData.reloadAll();
 
+        for (ServerPlayerEntity player : source.getSource().getLevel().getPlayers(player -> true)) {
+            ModNetworking.sendToClient(new PacketLoadData(), player);
+            
+            PlayerQuestProgress.refreshAvailableQuests(player);
+            PlayerQuestProgress.refreshClient(player);
+        }
+        
         return 1;
     }
 

@@ -93,6 +93,18 @@ public class ModNetworking {
                 .decoder(PacketCurrentQuestStateChanged::new)
                 .consumer(PacketCurrentQuestStateChanged::handle)
                 .add();
+
+        INSTANCE.messageBuilder(PacketCompletedQuestObjectives.class, nextID())
+                .encoder(PacketCompletedQuestObjectives::encode)
+                .decoder(PacketCompletedQuestObjectives::new)
+                .consumer(PacketCompletedQuestObjectives::handle)
+                .add();
+
+        INSTANCE.messageBuilder(PacketUpdatePlayerQuestProgress.class, nextID())
+                .encoder(PacketUpdatePlayerQuestProgress::encode)
+                .decoder(PacketUpdatePlayerQuestProgress::new)
+                .consumer(PacketUpdatePlayerQuestProgress::handle)
+                .add();
     }
 
     public static SimpleChannel getInstance() {
