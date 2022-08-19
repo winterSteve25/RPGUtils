@@ -56,5 +56,7 @@
   "rpgutils.dialogues.action_types.speak": "Speak",
   "rpgutils.dialogues.action_types.clear": "Clear",
   "rpgutils.dialogues.action_types.pause": "Pause",
-  "rpgutils.dialogues.action_types.spawn": "Spawn"
+  "rpgutils.dialogues.action_types.spawn": "Spawn",
+
+  "entity.rpgutils.npc.boss": "Boss"
 }

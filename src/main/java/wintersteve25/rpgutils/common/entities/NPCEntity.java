@@ -12,6 +12,8 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
@@ -35,12 +37,13 @@ import java.util.Map;
 public class NPCEntity extends MobEntity implements IAnimatedEntity<NPCEntity> {
 
     private final AnimationFactory factory = new AnimationFactory(this);
+    /**
+     * Use caution when accessing directly - invoking getNPCType() instead will ensure that it is initialised if necessary.
+     */
     private NPCType npcType = null;
 
     public NPCEntity(EntityType<? extends MobEntity> entityType, World world) {
         super(entityType, world);
-//         String type = this.getPersistentData().getString(getTypeKey());
-//        if (!type.equals("")) this.setNPCType(type);
     }
 
     public static NPCEntity create(EntityType<? extends MobEntity> entityType, World world, String type) {
@@ -158,29 +161,12 @@ public class NPCEntity extends MobEntity implements IAnimatedEntity<NPCEntity> {
         return this;
     }
 
-//    @Override
-//    public void onAddedToWorld() {
-//        super.onAddedToWorld();
-//        if (level instanceof ServerWorld) {
-//            updateClients();
-//        }
-//    }
-
     private static String getTypeKey() {
         return RPGUtils.MOD_ID + "_name";
     }
 
-//    @Override
-//    public CompoundNBT serializeNBT() {
-//        CompoundNBT nbt = super.serializeNBT();
-//        nbt.putString(getTypeKey(), npcType.getName());
-//        return nbt;
-//    }
-//
-//    @Override
-//    public void deserializeNBT(CompoundNBT nbt) {
-//        super.deserializeNBT(nbt);
-//        setNPCType(nbt.getString(getTypeKey()));
-//        updateClients();
-//    }
+    @Override
+    public ITextComponent getName() {
+        return new TranslationTextComponent("entity." + RPGUtils.MOD_ID + ".npc." + getNPCType().getName());
+    }
 }
