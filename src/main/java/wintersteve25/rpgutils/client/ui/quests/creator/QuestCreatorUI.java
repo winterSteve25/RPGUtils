@@ -1,4 +1,4 @@
-package wintersteve25.rpgutils.client.ui.quests;
+package wintersteve25.rpgutils.client.ui.quests.creator;
 
 import dev.ftb.mods.ftblibrary.ui.BaseScreen;
 

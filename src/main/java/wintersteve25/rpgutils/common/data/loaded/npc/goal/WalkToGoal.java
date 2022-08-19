@@ -30,7 +30,7 @@ public class WalkToGoal extends Goal {
     @Override
     public void start() {
 //        RPGUtils.LOGGER.info("Started WalkToGoal");
-        Path path = entity.getNavigation().createPath(entity.getBrain().getMemory(ModMemoryModuleTypes.MOVEMENT_TARGET.get()).orElseThrow(), 1);
+        Path path = entity.getNavigation().createPath(entity.getBrain().getMemory(ModMemoryModuleTypes.MOVEMENT_TARGET.get()).orElseThrow(RuntimeException::new), 1);
         entity.getNavigation().moveTo(path, 1.0D);
     }
 }

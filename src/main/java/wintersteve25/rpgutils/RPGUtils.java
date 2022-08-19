@@ -27,7 +27,6 @@ public class RPGUtils {
         final IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
         ModEntities.register(modBus);
         ModMemoryModuleTypes.register(modBus);
-        ModItems.register(modBus);
         modBus.addListener(RPGUtils::commonSetup);
         
         final IEventBus forgeBus = MinecraftForge.EVENT_BUS;
