@@ -2,8 +2,10 @@ package wintersteve25.rpgutils.common.systems;
 
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import wintersteve25.rpgutils.RPGUtils;
-import wintersteve25.rpgutils.client.ui.DialogueUI;
+import wintersteve25.rpgutils.client.ui.dialogues.DialogueUI;
 import wintersteve25.rpgutils.common.data.loaded.dialogue.dialogue.Dialogue;
 import wintersteve25.rpgutils.common.data.loaded.dialogue.dialogue.DialogueManager;
 import wintersteve25.rpgutils.common.data.loaded.dialogue.dialogue_pool.DialoguePoolManager;
@@ -15,6 +17,7 @@ import wintersteve25.rpgutils.common.utils.RandomCollection;
 import java.util.List;
 
 public class DialogueSystem {
+    @OnlyIn(Dist.CLIENT)
     public static void play(ResourceLocation dialoguePool) {
         RPGUtils.LOGGER.info("Attempting to play dialogue pool: {}", dialoguePool);
         
@@ -49,7 +52,7 @@ public class DialogueSystem {
         DialogueUI.show(dialogue, randomRule.isInterruptable());
     }
     
-    public static void playFromServer(ResourceLocation dialoguePool, ServerPlayerEntity playTo) {
-        ModNetworking.sendToClient(new PacketPlayDialogue(dialoguePool), playTo);
+    public static void playFromServer(ResourceLocation dialoguePool, ServerPlayerEntity player) {
+        ModNetworking.sendToClient(new PacketPlayDialogue(dialoguePool), player);
     }
 }

@@ -10,6 +10,12 @@ public class LocalPlayerHealthPredicate extends DialoguePredicate {
     private final HealthPredicateType type;
     private final float operand;
 
+    public LocalPlayerHealthPredicate(HealthPredicateType type, float operand) {
+        super(null);
+        this.type = type;
+        this.operand = operand;
+    }
+
     protected LocalPlayerHealthPredicate(JsonObject jsonObject) {
         super(jsonObject);
         String typeStr = jsonObject.get("type").getAsString();
@@ -21,6 +27,27 @@ public class LocalPlayerHealthPredicate extends DialoguePredicate {
     public boolean test() {
         float health = Minecraft.getInstance().player.getHealth();
         return type.test(health, operand);
+    }
+
+    @Override
+    public JsonObject toJson() {
+        JsonObject jsonObject = new JsonObject();
+        
+        jsonObject.addProperty("name", "localPlayerHealth");
+        jsonObject.addProperty("type", type.toString());
+        jsonObject.addProperty("operand", operand);
+        
+        return jsonObject;
+    }
+
+    @Override
+    public Object[] data() {
+        return new Object[] { type, operand };
+    }
+
+    @Override
+    public int guiIndex() {
+        return 3;
     }
 
     public enum HealthPredicateType implements BiPredicate<Float, Float> {

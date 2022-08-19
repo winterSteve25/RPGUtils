@@ -34,6 +34,12 @@ public class ModNetworking {
                 .consumer(PacketOpenDialogueCreator::handle)
                 .add();
 
+        INSTANCE.messageBuilder(PacketOpenQuestCreator.class, nextID())
+                .encoder((data, buffer) -> {})
+                .decoder(buffer -> new PacketOpenQuestCreator())
+                .consumer(PacketOpenQuestCreator::handle)
+                .add();
+
         INSTANCE.messageBuilder(PacketPlaySound.class, nextID())
                 .encoder(PacketPlaySound::encode)
                 .decoder(PacketPlaySound::new)
@@ -80,6 +86,24 @@ public class ModNetworking {
                 .encoder(PacketSetType::encode)
                 .decoder(PacketSetType::new)
                 .consumer(PacketSetType::handle)
+                .add();
+
+        INSTANCE.messageBuilder(PacketCurrentQuestStateChanged.class, nextID())
+                .encoder(PacketCurrentQuestStateChanged::encode)
+                .decoder(PacketCurrentQuestStateChanged::new)
+                .consumer(PacketCurrentQuestStateChanged::handle)
+                .add();
+
+        INSTANCE.messageBuilder(PacketCompletedQuestObjectives.class, nextID())
+                .encoder(PacketCompletedQuestObjectives::encode)
+                .decoder(PacketCompletedQuestObjectives::new)
+                .consumer(PacketCompletedQuestObjectives::handle)
+                .add();
+
+        INSTANCE.messageBuilder(PacketUpdatePlayerQuestProgress.class, nextID())
+                .encoder(PacketUpdatePlayerQuestProgress::encode)
+                .decoder(PacketUpdatePlayerQuestProgress::new)
+                .consumer(PacketUpdatePlayerQuestProgress::handle)
                 .add();
     }
 

@@ -2,7 +2,7 @@ package wintersteve25.rpgutils.common.network;
 
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent;
-import wintersteve25.rpgutils.client.ui.dialogue_creator.DialogueCreatorUI;
+import wintersteve25.rpgutils.client.ui.dialogues.dialogue_creator.DialogueCreatorUI;
 
 import java.util.function.Supplier;
 

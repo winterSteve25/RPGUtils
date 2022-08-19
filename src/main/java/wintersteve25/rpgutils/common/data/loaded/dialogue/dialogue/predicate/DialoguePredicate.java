@@ -10,7 +10,16 @@ public abstract class DialoguePredicate {
     protected DialoguePredicate(JsonObject jsonObject) {}
 
     public abstract boolean test();
+    
+    public abstract JsonObject toJson();
 
+    /**
+     * @return required data read by PredicateGui when initiating
+     */
+    public abstract Object[] data();
+    
+    public abstract int guiIndex();
+    
     /**
      * Currently, each predicate type must have its own block in the switch statement - could be improved in the future.
      * @param name The name associated with the desired DialoguePredicate (in the JSON files)
@@ -20,19 +29,20 @@ public abstract class DialoguePredicate {
     public static DialoguePredicate create(String name, JsonObject jsonObject) {
         DialoguePredicate predicate = null;
         switch (name) {
-            case "localPlayerHealth": {
+            case "localPlayerHealth":
                 predicate = new LocalPlayerHealthPredicate(jsonObject);
                 break;
-            }
-            case "and": {
+            case "and":
                 predicate = new AndPredicate(jsonObject);
                 break;
-            }
-            case "or": {
+            case "or":
                 predicate = new OrPredicate(jsonObject);
                 break;
-            }
         }
         return predicate;
+    }
+    
+    public static DialoguePredicate create(JsonObject jsonObject) {
+        return create(jsonObject.get("name").getAsString(), jsonObject);
     }
 }

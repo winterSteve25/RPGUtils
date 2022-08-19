@@ -90,13 +90,16 @@ minecraft {
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 repositories {
-    maven {
-        url "https://www.cursemaven.com"
-    }
-    maven { url 'https://modmaven.dev/' }
+    maven { url = "https://www.cursemaven.com" }
+    
+    maven { url = "https://modmaven.dev/" }
 
-    maven { url 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/' }
+    maven { url = "https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/" }
 
+    maven { url = "https://maven.architectury.dev" }
+
+    maven { url = "https://maven.saps.dev/minecraft" }
+    
     mavenLocal()
 }
 
@@ -116,6 +119,10 @@ dependencies {
     // geckolib
     implementation fg.deobf("software.bernie.geckolib:geckolib-forge-${geckolib_version}")
     
+    // ftb lib
+    implementation fg.deobf("dev.ftb.mods:ftb-library-forge:${ftblib_version}")
+    implementation fg.deobf("me.shedaniel:architectury-forge:${architectury_version}")
+
     annotationProcessor ("org.spongepowered:mixin:0.8.5:processor")
 }
 
