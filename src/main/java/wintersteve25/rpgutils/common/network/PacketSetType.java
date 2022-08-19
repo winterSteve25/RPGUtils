@@ -40,10 +40,10 @@ public class PacketSetType implements ModPacket {
                 if (entity instanceof NPCEntity) {
                     ((NPCEntity) entity).setNPCType(type);
                 } else {
-                    RPGUtils.LOGGER.warn("Tried to set client path for non-NPC entity: " + entity.getClass().getName());
+                    RPGUtils.LOGGER.warn("Tried to set type for non-NPC entity: " + entity.getClass().getName());
                 }
             } else {
-                Minecraft.getInstance().level.entitiesForRendering().forEach(RPGUtils.LOGGER::info);
+                RPGUtils.LOGGER.warn("Tried to set type for non-NPC entity: null");
             }
         });
         context.get().setPacketHandled(true);

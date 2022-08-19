@@ -67,5 +67,7 @@
   "rpgutils.dialogues.predicate_types.none": "None",
   "rpgutils.dialogues.predicate_types.or": "Or",
   "rpgutils.dialogues.predicate_types.and": "And",
-  "rpgutils.dialogues.predicate_types.local_player_health": "Player Health"
+  "rpgutils.dialogues.predicate_types.local_player_health": "Player Health",
+  
+  "entity.rpgutils.npc.boss": "Boss"
 }

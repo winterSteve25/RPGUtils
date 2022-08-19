@@ -6,12 +6,17 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.Commands;
+import net.minecraft.command.arguments.BlockPosArgument;
 import net.minecraft.command.arguments.EntityArgument;
 import net.minecraft.command.arguments.EntitySelector;
+import net.minecraft.command.arguments.LocationInput;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.server.ServerWorld;
 import wintersteve25.rpgutils.RPGUtils;
+import wintersteve25.rpgutils.common.data.loaded.npc.NPCTypeLoader;
 import wintersteve25.rpgutils.common.data.loaded.quest.PlayerQuestProgress;
 import wintersteve25.rpgutils.common.data.loaded.storage.ServerOnlyLoadedData;
 import wintersteve25.rpgutils.common.entities.NPCEntity;
@@ -51,10 +56,10 @@ public class ModCommands {
                                 .executes(ModCommands::startQuest))));
         
         dispatcher.register(Commands.literal(RPGUtils.MOD_ID)
-                .then(Commands.literal("npc_type")
-                        .then(Commands.argument("target", EntityArgument.entity())
+                .then(Commands.literal("summon_npc")
+                        .then(Commands.argument("position", BlockPosArgument.blockPos())
                                 .then(Commands.argument("type", StringArgumentType.word())
-                                        .executes(ModCommands::modifyNpcType)))));
+                                        .executes(ModCommands::summonNpc)))));
     }
 
     private static int openDialogueCreator(CommandContext<CommandSource> source) throws CommandSyntaxException {
@@ -78,6 +83,15 @@ public class ModCommands {
         }
         
         return 1;
+    }
+
+    private static int summonNpc(CommandContext<CommandSource> source) {
+        ServerWorld world = source.getSource().getLevel();
+        NPCEntity entity = NPCEntity.create(ModEntities.NPC_ENTITY.get(), world, source.getArgument("type", String.class));
+        BlockPos pos = source.getArgument("position", LocationInput.class).getBlockPos(source.getSource());
+        entity.setPos(pos.getX(), pos.getY(), pos.getZ());
+        world.addFreshEntity(entity);
+        entity.updateClients();
     }
 
     private static int modifyNpcType(CommandContext<CommandSource> source) {

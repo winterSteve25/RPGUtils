@@ -12,7 +12,7 @@ import wintersteve25.rpgutils.common.events.ServerForgeEvents;
 import wintersteve25.rpgutils.common.network.ModNetworking;
 import wintersteve25.rpgutils.common.registry.ModCapabilities;
 import wintersteve25.rpgutils.common.registry.ModEntities;
-import wintersteve25.rpgutils.common.registry.ModItems;
+import wintersteve25.rpgutils.common.registry.ModMemoryModuleTypes;
 import wintersteve25.rpgutils.common.utils.DataUtils;
 
 @Mod(RPGUtils.MOD_ID)
@@ -26,6 +26,7 @@ public class RPGUtils {
         
         final IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
         ModEntities.register(modBus);
+        ModMemoryModuleTypes.register(modBus);
         ModItems.register(modBus);
         modBus.addListener(RPGUtils::commonSetup);
         
