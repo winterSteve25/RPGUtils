@@ -1,9 +1,9 @@
-package wintersteve25.rpgutils.client.ui.components.list;
+package wintersteve25.rpgutils.client.ui.dialogues.components.list;
 
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.util.text.ITextComponent;
-import wintersteve25.rpgutils.client.ui.components.BaseUI;
-import wintersteve25.rpgutils.client.ui.components.buttons.ToggleButton;
+import wintersteve25.rpgutils.client.ui.dialogues.components.BaseUI;
+import wintersteve25.rpgutils.client.ui.dialogues.components.buttons.ToggleButton;
 import wintersteve25.rpgutils.common.utils.ModConstants;
 
 public abstract class AbstractListEntryWidget extends Widget {

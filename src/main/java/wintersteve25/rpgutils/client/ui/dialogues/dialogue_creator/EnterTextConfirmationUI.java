@@ -5,10 +5,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.util.text.TranslationTextComponent;
-import wintersteve25.rpgutils.client.ui.components.BaseUI;
-import wintersteve25.rpgutils.client.ui.components.UIUtilities;
-import wintersteve25.rpgutils.client.ui.components.prompt.ConfirmationUI;
-import wintersteve25.rpgutils.client.ui.components.prompt.TextPrompt;
+import wintersteve25.rpgutils.client.ui.dialogues.components.UIUtilities;
+import wintersteve25.rpgutils.client.ui.dialogues.components.prompt.ConfirmationUI;
+import wintersteve25.rpgutils.client.ui.dialogues.components.prompt.TextPrompt;
 import wintersteve25.rpgutils.common.utils.RLHelper;
 
 import java.util.function.Consumer;

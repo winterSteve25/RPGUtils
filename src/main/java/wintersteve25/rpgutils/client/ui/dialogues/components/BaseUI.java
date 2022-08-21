@@ -1,4 +1,4 @@
-package wintersteve25.rpgutils.client.ui.components;
+package wintersteve25.rpgutils.client.ui.dialogues.components;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.Minecraft;

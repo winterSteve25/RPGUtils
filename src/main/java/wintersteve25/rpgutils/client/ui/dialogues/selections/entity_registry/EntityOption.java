@@ -1,8 +1,8 @@
 package wintersteve25.rpgutils.client.ui.dialogues.selections.entity_registry;
 
 import net.minecraft.entity.EntityType;
-import wintersteve25.rpgutils.client.ui.components.selection.AbstractSelectionUI;
-import wintersteve25.rpgutils.client.ui.components.selection.SelectionOption;
+import wintersteve25.rpgutils.client.ui.dialogues.components.selection.AbstractSelectionUI;
+import wintersteve25.rpgutils.client.ui.dialogues.components.selection.SelectionOption;
 
 public class EntityOption extends SelectionOption<EntityOption> {
     

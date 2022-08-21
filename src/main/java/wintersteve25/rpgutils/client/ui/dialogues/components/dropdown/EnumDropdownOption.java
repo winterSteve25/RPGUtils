@@ -1,10 +1,8 @@
-package wintersteve25.rpgutils.client.ui.components.dropdown;
+package wintersteve25.rpgutils.client.ui.dialogues.components.dropdown;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 
 import java.util.Arrays;

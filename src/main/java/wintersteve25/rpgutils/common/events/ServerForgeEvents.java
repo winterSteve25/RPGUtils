@@ -75,7 +75,7 @@ public class ServerForgeEvents {
         if (player instanceof FakePlayer) return;
         player.getCapability(ModCapabilities.PLAYER_QUEST).ifPresent(cap -> {
             if (cap.getCurrentQuest() == null) return;
-            cap.trigger((ServerPlayerEntity) player, new InteractEntityTrigger(event.getTarget(), (ServerWorld) world));
+            cap.trigger((ServerPlayerEntity) player, new InteractEntityTrigger(event.getTarget(), (ServerPlayerEntity) player));
         });
     }
 

@@ -12,5 +12,6 @@ public class ObjectiveTypes {
         DESERIALIZERS = new HashMap<>();
         DESERIALIZERS.put("interactBlock", new InteractWithBlockObjective.Deserializer());
         DESERIALIZERS.put("interactEntity", new InteractWithEntityObjective.Deserializer());
+        DESERIALIZERS.put("finishDialogue", new FinishDialogueObjective.Deserializer());
     }
 }

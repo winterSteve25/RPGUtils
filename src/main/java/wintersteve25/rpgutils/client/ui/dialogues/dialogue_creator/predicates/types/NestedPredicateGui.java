@@ -5,7 +5,7 @@ import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
-import wintersteve25.rpgutils.client.ui.components.BaseUI;
+import wintersteve25.rpgutils.client.ui.dialogues.components.BaseUI;
 import wintersteve25.rpgutils.client.ui.dialogues.dialogue_creator.IAttachedUI;
 import wintersteve25.rpgutils.client.ui.dialogues.dialogue_creator.predicates.DialoguePredicateConfigUI;
 import wintersteve25.rpgutils.client.ui.dialogues.dialogue_creator.predicates.DialoguePredicateType;

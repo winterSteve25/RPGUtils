@@ -1,7 +1,7 @@
 package wintersteve25.rpgutils.client.ui.dialogues.selections.sound_registry;
 
 import net.minecraft.util.SoundEvent;
-import wintersteve25.rpgutils.client.ui.components.selection.SelectionOption;
+import wintersteve25.rpgutils.client.ui.dialogues.components.selection.SelectionOption;
 
 public class SoundOption extends SelectionOption<SoundOption> {
     private final SoundEvent soundEvent;

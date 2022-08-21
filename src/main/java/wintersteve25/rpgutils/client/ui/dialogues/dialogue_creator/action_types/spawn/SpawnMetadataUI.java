@@ -12,8 +12,8 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import org.apache.commons.lang3.math.NumberUtils;
-import wintersteve25.rpgutils.client.ui.components.BaseUI;
-import wintersteve25.rpgutils.client.ui.components.UIUtilities;
+import wintersteve25.rpgutils.client.ui.dialogues.components.BaseUI;
+import wintersteve25.rpgutils.client.ui.dialogues.components.UIUtilities;
 import wintersteve25.rpgutils.client.ui.dialogues.selections.nearby_entities.SelectNearbyEntity;
 import wintersteve25.rpgutils.client.ui.dialogues.selections.npc_id.SelectNpcID;
 import wintersteve25.rpgutils.common.utils.ModConstants;
@@ -21,7 +21,7 @@ import wintersteve25.rpgutils.common.utils.RLHelper;
 
 import java.util.function.Consumer;
 
-import static wintersteve25.rpgutils.client.ui.components.selection.AbstractSelectionUI.WIDTH;
+import static wintersteve25.rpgutils.client.ui.dialogues.components.selection.AbstractSelectionUI.WIDTH;
 
 public class SpawnMetadataUI extends BaseUI {
 

@@ -1,11 +1,11 @@
-package wintersteve25.rpgutils.client.ui.components.prompt;
+package wintersteve25.rpgutils.client.ui.dialogues.components.prompt;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
-import wintersteve25.rpgutils.client.ui.components.BaseUI;
+import wintersteve25.rpgutils.client.ui.dialogues.components.BaseUI;
 import wintersteve25.rpgutils.common.utils.RLHelper;
 
 public abstract class ConfirmationUI extends BaseUI {

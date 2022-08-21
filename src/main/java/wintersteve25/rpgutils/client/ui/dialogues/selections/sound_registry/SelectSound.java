@@ -3,7 +3,7 @@ package wintersteve25.rpgutils.client.ui.dialogues.selections.sound_registry;
 import net.minecraft.client.gui.IGuiEventListener;
 import net.minecraft.util.SoundEvent;
 import net.minecraftforge.registries.ForgeRegistries;
-import wintersteve25.rpgutils.client.ui.components.selection.AbstractSelectionUI;
+import wintersteve25.rpgutils.client.ui.dialogues.components.selection.AbstractSelectionUI;
 
 import java.util.ArrayList;
 import java.util.List;

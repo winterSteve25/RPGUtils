@@ -2,7 +2,7 @@ package wintersteve25.rpgutils.client.ui.dialogues.dialogue_creator.predicates.t
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.gui.widget.Widget;
-import wintersteve25.rpgutils.client.ui.components.BaseUI;
+import wintersteve25.rpgutils.client.ui.dialogues.components.BaseUI;
 import wintersteve25.rpgutils.client.ui.dialogues.dialogue_creator.IAttachedUI;
 import wintersteve25.rpgutils.common.data.loaded.dialogue.dialogue.predicate.DialoguePredicate;
 

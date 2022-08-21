@@ -13,6 +13,6 @@ public class ModCapabilities {
     
     public static void register() {
         RPGUtils.LOGGER.info("Registering capabilities");
-        CapabilityManager.INSTANCE.register(PlayerQuestProgress.class, new CapabilityStorage<>(), PlayerQuestProgress::new);
+        CapabilityManager.INSTANCE.register(PlayerQuestProgress.class, new CapabilityStorage<>(), () -> new PlayerQuestProgress());
     }
 }

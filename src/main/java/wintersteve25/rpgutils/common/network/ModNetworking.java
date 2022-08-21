@@ -105,6 +105,12 @@ public class ModNetworking {
                 .decoder(PacketUpdatePlayerQuestProgress::new)
                 .consumer(PacketUpdatePlayerQuestProgress::handle)
                 .add();
+
+        INSTANCE.messageBuilder(PacketFinishedDialogue.class, nextID())
+                .encoder(PacketFinishedDialogue::encode)
+                .decoder(PacketFinishedDialogue::new)
+                .consumer(PacketFinishedDialogue::handle)
+                .add();
     }
 
     public static SimpleChannel getInstance() {

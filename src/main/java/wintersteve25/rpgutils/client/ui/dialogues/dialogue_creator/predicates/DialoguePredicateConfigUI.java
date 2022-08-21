@@ -3,10 +3,10 @@ package wintersteve25.rpgutils.client.ui.dialogues.dialogue_creator.predicates;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.util.text.TranslationTextComponent;
-import wintersteve25.rpgutils.client.ui.components.BaseUI;
-import wintersteve25.rpgutils.client.ui.components.dropdown.Dropdown;
-import wintersteve25.rpgutils.client.ui.components.dropdown.EnumDropdownOption;
-import wintersteve25.rpgutils.client.ui.components.prompt.TextPrompt;
+import wintersteve25.rpgutils.client.ui.dialogues.components.BaseUI;
+import wintersteve25.rpgutils.client.ui.dialogues.components.dropdown.Dropdown;
+import wintersteve25.rpgutils.client.ui.dialogues.components.dropdown.EnumDropdownOption;
+import wintersteve25.rpgutils.client.ui.dialogues.components.prompt.TextPrompt;
 import wintersteve25.rpgutils.client.ui.dialogues.dialogue_creator.IAttachedUI;
 import wintersteve25.rpgutils.client.ui.dialogues.selections.nearby_entities.SelectNearbyEntity;
 import wintersteve25.rpgutils.common.data.loaded.dialogue.dialogue.predicate.DialoguePredicate;
@@ -14,10 +14,9 @@ import wintersteve25.rpgutils.common.utils.ModConstants;
 import wintersteve25.rpgutils.common.utils.RLHelper;
 
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 
-import static wintersteve25.rpgutils.client.ui.components.selection.AbstractSelectionUI.CONFIRM_TEXT;
-import static wintersteve25.rpgutils.client.ui.components.selection.AbstractSelectionUI.WIDTH;
+import static wintersteve25.rpgutils.client.ui.dialogues.components.selection.AbstractSelectionUI.CONFIRM_TEXT;
+import static wintersteve25.rpgutils.client.ui.dialogues.components.selection.AbstractSelectionUI.WIDTH;
 
 public class DialoguePredicateConfigUI extends BaseUI {
 

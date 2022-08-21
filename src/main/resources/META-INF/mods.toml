@@ -27,3 +27,9 @@ description='''
     versionRange="[3.0.84,)"
     ordering="NONE"
     side="BOTH"
+[[dependencies.rpgutils]]
+    modId="ftblibrary"
+    mandatory=true
+    versionRange="[1605.3.4-build.90,)"
+    ordering="NONE"
+    side="BOTH"
