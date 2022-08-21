@@ -1,9 +1,13 @@
 package wintersteve25.rpgutils.client.ui.quests.creator;
 
+import com.google.gson.JsonElement;
 import dev.ftb.mods.ftblibrary.ui.Panel;
 import dev.ftb.mods.ftblibrary.ui.Widget;
 import dev.ftb.mods.ftblibrary.ui.WidgetLayout;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Tuple;
 import wintersteve25.rpgutils.client.ui.components.PanelScrollbar;
+import wintersteve25.rpgutils.common.utils.JsonUtilities;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,6 +65,15 @@ public class AllQuestsPanel extends Panel {
         buttonsPanel.setY(5);
         scrollBar.setY(5);
         align(new WidgetLayout.Horizontal(0, 5, 0));
+    }
+
+    @Override
+    public void onClosed() {
+        for (QuestBuilderButton button : buttons) {
+            Tuple<ResourceLocation, JsonElement> quest = button.builder.build();
+            JsonUtilities.saveQuest(quest.getA(), quest.getB());
+        }
+        super.onClosed();
     }
 
     @Override

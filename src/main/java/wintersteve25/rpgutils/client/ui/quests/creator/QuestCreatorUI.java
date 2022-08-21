@@ -8,17 +8,17 @@ import dev.ftb.mods.ftblibrary.ui.input.MouseButton;
 import net.minecraft.util.text.StringTextComponent;
 
 public class QuestCreatorUI extends BaseScreen {
-    
+
     private final AllQuestsPanel questsPanel;
     private final CreateQuestPanel createQuestPanel;
     private final QuestCreationDetailsPanel detailsPanel;
-    
+
     private QuestCreatorUI() {
         detailsPanel = new QuestCreationDetailsPanel(this);
         createQuestPanel = new CreateQuestPanel(this);
         questsPanel = new AllQuestsPanel(this, detailsPanel);
     }
-    
+
     @Override
     public void addWidgets() {
         add(questsPanel);
@@ -27,7 +27,7 @@ public class QuestCreatorUI extends BaseScreen {
         createQuestPanel.setSize(176, 100);
         add(detailsPanel);
         detailsPanel.setPosAndSize(170, 15, getScreen().getScreenWidth() - 180, getScreen().getGuiScaledHeight() - 40);
-        
+
         Button button = new SimpleTextButton(this, new StringTextComponent("New Quest"), Icon.EMPTY) {
             @Override
             public void onClicked(MouseButton mouseButton) {
@@ -41,7 +41,7 @@ public class QuestCreatorUI extends BaseScreen {
         add(button);
         button.setPosAndSize(10, 15, 135, 20);
     }
-    
+
     @Override
     public void alignWidgets() {
         questsPanel.alignWidgets();
@@ -58,7 +58,7 @@ public class QuestCreatorUI extends BaseScreen {
     public void addQuest(String path) {
         questsPanel.add(path);
     }
-    
+
     public static void open() {
         new QuestCreatorUI().openGui();
     }

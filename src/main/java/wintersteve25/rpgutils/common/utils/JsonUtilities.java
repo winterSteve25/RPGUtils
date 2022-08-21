@@ -65,7 +65,11 @@ public class JsonUtilities {
     public static void saveNpcAttributes(ResourceLocation resourceLocation, Object jsonObject) {
         saveData(resourceLocation, jsonObject, "/npc/attributes");
     }
-    
+
+    public static void saveQuest(ResourceLocation resourceLocation, Object jsonObject) {
+        saveData(resourceLocation, jsonObject, "/quests/");
+    }
+
     public static void deleteDialogue(ResourceLocation resourceLocation) {
         File file = new File(getGeneratedPath(resourceLocation, "/dialogues/"));
         file.delete();

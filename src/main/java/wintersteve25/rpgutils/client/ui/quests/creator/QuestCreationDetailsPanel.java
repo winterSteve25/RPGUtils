@@ -4,20 +4,33 @@ import dev.ftb.mods.ftblibrary.ui.Panel;
 import dev.ftb.mods.ftblibrary.ui.TextBox;
 import dev.ftb.mods.ftblibrary.ui.TextField;
 import dev.ftb.mods.ftblibrary.ui.WidgetLayout;
+import net.minecraft.util.text.StringTextComponent;
+import wintersteve25.rpgutils.common.data.loaded.quest.Quest;
 
 public class QuestCreationDetailsPanel extends Panel {
-
-    private boolean enabled;
     
     private final TextBox title;
     private final TextBox description;
     
+    private Quest.Builder builder;
+    private boolean enabled;
+
     public QuestCreationDetailsPanel(Panel panel) {
         super(panel);
-        title = new TextBox(this);
+        title = new TextBox(this) {
+            @Override
+            public void onTextChanged() {
+                builder.setTitle(new StringTextComponent(title.getText()));
+            }
+        };
         title.setSize(100, 20);
         title.ghostText = "Title";
-        description = new TextBox(this);
+        description = new TextBox(this) {
+            @Override
+            public void onTextChanged() {
+                builder.setDescription(new StringTextComponent(description.getText()));
+            }
+        };
         description.setSize(100, 20);
         description.ghostText = "Description";
     }
@@ -45,6 +58,9 @@ public class QuestCreationDetailsPanel extends Panel {
     
     public void enable(QuestBuilderButton button) {
         enabled = true;
+        builder = button.builder;
+        title.setText(builder.getTitle());
+        description.setText(builder.getDescription());
         refreshWidgets();
     }
 }

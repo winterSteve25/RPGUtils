@@ -5,8 +5,11 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Tuple;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import wintersteve25.rpgutils.common.data.loaded.quest.objectives.IObjective;
 import wintersteve25.rpgutils.common.data.loaded.quest.objectives.ObjectiveTypes;
@@ -94,9 +97,8 @@ public class Quest {
             objectives.add(ObjectiveTypes.DESERIALIZERS.get(o.get("type").getAsString()).fromJson(o));
         }
         
-        String id = resourceLocation.toString().replace(':', '.').replace("/", ".");
-        String title = JsonUtilities.getOrDefault(jsonObject, "title", id + ".title");
-        String description = JsonUtilities.getOrDefault(jsonObject, "description", id + ".description");
+        String title = JsonUtilities.getOrDefault(jsonObject, "title", defaultTitle(resourceLocation));
+        String description = JsonUtilities.getOrDefault(jsonObject, "description", defaultDescription(resourceLocation));
         boolean unlockable = JsonUtilities.getOrDefault(jsonObject, "unlockable", false);
         
         return new Quest(
@@ -109,14 +111,28 @@ public class Quest {
                 unlockable);
     }
     
+    private static String defaultTitle(ResourceLocation resourceLocation) {
+        return getID(resourceLocation) + ".title";
+    }
+
+    private static String defaultDescription(ResourceLocation resourceLocation) {
+        return getID(resourceLocation) + ".description";
+    }
+    
+    private static String getID(ResourceLocation resourceLocation) {
+        String modid = resourceLocation.getNamespace();
+        String path = resourceLocation.getPath();
+        return modid + ".quest." + path;
+    }
+    
     public static class Builder {
         private final ResourceLocation resourceLocation;
         private final List<ResourceLocation> prerequisite;
         private final List<IReward> rewards;
         private final List<IObjective> objectives;
 
-        private TranslationTextComponent title;
-        private TranslationTextComponent description;
+        private ITextComponent title;
+        private ITextComponent description;
         private boolean unlockable;
     
         public Builder(ResourceLocation resourceLocation) {
@@ -126,12 +142,12 @@ public class Quest {
             this.objectives = new ArrayList<>();
         }
 
-        public Builder setTitle(TranslationTextComponent title) {
+        public Builder setTitle(ITextComponent title) {
             this.title = title;
             return this;
         }
 
-        public Builder setDescription(TranslationTextComponent description) {
+        public Builder setDescription(ITextComponent description) {
             this.description = description;
             return this;
         }
@@ -151,9 +167,32 @@ public class Quest {
             return this;
         }
 
+        public Builder removePrerequisite(ResourceLocation prerequisite) {
+            this.prerequisite.remove(prerequisite);
+            return this;
+        }
+
+        public Builder removeRewards(IReward rewards) {
+            this.rewards.remove(rewards);
+            return this;
+        }
+
+        public Builder removeObjectives(IObjective objectives) {
+            this.objectives.remove(objectives);
+            return this;
+        }
+
         public Builder setUnlockable(boolean unlockable) {
             this.unlockable = unlockable;
             return this;
+        }
+        
+        public String getTitle() {
+            return title == null ? defaultTitle(resourceLocation) : I18n.get(title.getString());
+        }
+        
+        public String getDescription() {
+            return description == null ? defaultDescription(resourceLocation) : I18n.get(description.getString());
         }
         
         public Tuple<ResourceLocation, JsonElement> build() throws IllegalArgumentException {
