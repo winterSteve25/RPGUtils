@@ -47,10 +47,10 @@ public class JsonUtilities {
     public static final Path rpgutilsPath = FMLPaths.getOrCreateGameRelativePath(Paths.get("rpgutils/"), "");
 
     public static void saveDialogue(ResourceLocation resourceLocation, Object jsonObject) {
-        saveData(resourceLocation, jsonObject, "/dialogues/");
+        saveData(resourceLocation, jsonObject, "/dialogues/", true);
     }
 
-    private static void saveData(ResourceLocation resourceLocation, Object jsonObject, String subdirectory) {
+    private static void saveData(ResourceLocation resourceLocation, Object jsonObject, String subdirectory, boolean reload) {
         try {
             FileWriter fileWriter = new FileWriter(getGeneratedPath(resourceLocation, subdirectory));
             fileWriter.write(gson.toJson(jsonObject));
@@ -59,20 +59,24 @@ public class JsonUtilities {
             throw new RuntimeException(e);
         }
 
-        ClientOnlyLoadedData.reloadAll();
+        if (reload) {
+            ClientOnlyLoadedData.reloadAll();
+        }        
     }
 
     public static void saveDialoguePool(ResourceLocation resourceLocation, Object jsonObject) {
-        saveData(resourceLocation, jsonObject, "/dialogue_pools/");
+        saveData(resourceLocation, jsonObject, "/dialogue_pools/", true);
     }
 
     public static void saveNpcAttributes(ResourceLocation resourceLocation, Object jsonObject) {
-        saveData(resourceLocation, jsonObject, "/npc/attributes");
+        saveData(resourceLocation, jsonObject, "/npc/attributes", true);
     }
 
-    public static void saveQuest(ResourceLocation resourceLocation, Object jsonObject) {
-        saveData(resourceLocation, jsonObject, "/quests/");
-        ModNetworking.sendToServer(new PacketLoadData());
+    public static void saveQuest(ResourceLocation resourceLocation, Object jsonObject, boolean reload) {
+        saveData(resourceLocation, jsonObject, "/quests/", reload);
+        if (reload) {
+            ModNetworking.sendToServer(new PacketLoadData());
+        }
     }
 
     public static void deleteDialogue(ResourceLocation resourceLocation) {
@@ -86,6 +90,11 @@ public class JsonUtilities {
         for (File file : files) {
             file.delete();
         }
+    }
+    
+    public static void reloadAllDataFromClient() {
+        ClientOnlyLoadedData.reloadAll();
+        ModNetworking.sendToServer(new PacketLoadData());
     }
     
     private static String getGeneratedPath(ResourceLocation resourceLocation, String subdirectory) {

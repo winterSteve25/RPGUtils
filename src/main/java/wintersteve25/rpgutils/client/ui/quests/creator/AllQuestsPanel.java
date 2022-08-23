@@ -68,6 +68,8 @@ public class AllQuestsPanel extends Panel {
     public void alignWidgets() {
         buttonsPanel.setY(5);
         scrollBar.setY(5);
+        
+        buttonsPanel.alignWidgets();
         align(new WidgetLayout.Horizontal(0, 5, 0));
     }
 
@@ -75,8 +77,10 @@ public class AllQuestsPanel extends Panel {
     public void onClosed() {
         JsonUtilities.deleteAllFiles("quests");
         for (QuestBuilderButton button : buttons) {
-            save(button);
+            save(button, false);
         }
+        JsonUtilities.reloadAllDataFromClient();
+        
         super.onClosed();
     }
 
@@ -106,12 +110,12 @@ public class AllQuestsPanel extends Panel {
     public void select(QuestBuilderButton clicked) {
         for (QuestBuilderButton button : buttons) {
             if (button == clicked) continue;
-            save(button);
+            save(button, true);
         }
     }
     
-    private void save(QuestBuilderButton button) {
+    private void save(QuestBuilderButton button, boolean reload) {
         Tuple<ResourceLocation, JsonElement> quest = button.builder.build();
-        JsonUtilities.saveQuest(quest.getA(), quest.getB());
+        JsonUtilities.saveQuest(quest.getA(), quest.getB(), reload);
     }
 }

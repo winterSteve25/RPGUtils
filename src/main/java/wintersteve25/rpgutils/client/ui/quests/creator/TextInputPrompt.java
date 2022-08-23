@@ -13,7 +13,7 @@ import java.util.function.Consumer;
 
 public class TextInputPrompt extends BaseScreen {
 
-    public boolean enabled;
+    private boolean enabled;
     
     public final TextField title;
     public final TextBox enterText;
@@ -84,5 +84,15 @@ public class TextInputPrompt extends BaseScreen {
     @Override
     public boolean shouldDraw() {
         return enabled;
+    }
+    
+    public void disable() {
+        enabled = false;
+        initGui();
+    }
+    
+    public void enable() {
+        enabled = true;
+        initGui();
     }
 }

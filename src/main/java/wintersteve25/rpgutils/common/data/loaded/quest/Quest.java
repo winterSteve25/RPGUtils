@@ -125,11 +125,11 @@ public class Quest {
     }
     
     public static class Builder {
-        private final ResourceLocation resourceLocation;
         private final List<ResourceLocation> prerequisite;
         private final List<IReward> rewards;
         private final List<IObjective> objectives;
 
+        private ResourceLocation resourceLocation;
         private String title;
         private String description;
         private Optional<Boolean> unlockable;
@@ -194,6 +194,11 @@ public class Quest {
 
         public Builder setUnlockable(boolean unlockable) {
             this.unlockable = Optional.of(unlockable);
+            return this;
+        }
+        
+        public Builder rename(ResourceLocation resourceLocation) {
+            this.resourceLocation = resourceLocation;
             return this;
         }
         

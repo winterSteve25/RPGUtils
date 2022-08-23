@@ -38,7 +38,7 @@ public class QuestBuilderButton extends NordButton {
             questDetails.enable(this);
         } else if (mouseButton.isRight()) {
             playClickSound();
-            openContextMenu(QuestBuilderContextMenu.create(parent, allQuestsPanel, this));
+            openContextMenu(QuestBuilderContextMenu.create(parent, allQuestsPanel, this, (QuestCreatorUI) questDetails.parent));
         }
     }
 }

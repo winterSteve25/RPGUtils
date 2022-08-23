@@ -14,11 +14,11 @@ public class QuestBuilderContextMenu extends ContextMenu {
         super(panel, i);
     }
     
-    public static QuestBuilderContextMenu create(Panel panel, AllQuestsPanel allQuestsPanel, QuestBuilderButton button) {
+    public static QuestBuilderContextMenu create(Panel panel, AllQuestsPanel allQuestsPanel, QuestBuilderButton button, QuestCreatorUI creatorUI) {
         List<ContextMenuItem> items = new ArrayList<>();
 
         items.add(new ContextMenuItem(new StringTextComponent("Rename"), Icon.EMPTY, () -> {
-                
+            creatorUI.renameQuestPrompt.enable(button);
         }));
         
         items.add(new ContextMenuItem(new StringTextComponent("Remove"), Icon.EMPTY, () -> allQuestsPanel.remove(button)));
