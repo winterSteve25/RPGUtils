@@ -7,6 +7,8 @@ import dev.ftb.mods.ftblibrary.ui.WidgetLayout;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Tuple;
 import wintersteve25.rpgutils.client.ui.components.PanelScrollbar;
+import wintersteve25.rpgutils.common.data.loaded.quest.Quest;
+import wintersteve25.rpgutils.common.data.loaded.quest.QuestsManager;
 import wintersteve25.rpgutils.common.utils.JsonUtilities;
 
 import java.util.ArrayList;
@@ -37,8 +39,6 @@ public class AllQuestsPanel extends Panel {
                     widget.setSize(width, 15);
                 }
 
-                align(WidgetLayout.VERTICAL);
-                
                 int scrollHeight = this.align(new WidgetLayout.Vertical(0, 2, 0));
                 AllQuestsPanel.this.scrollBar.setMaxValue(scrollHeight);
                 AllQuestsPanel.this.scrollBar.setShouldDraw(scrollHeight >= height);
@@ -50,6 +50,10 @@ public class AllQuestsPanel extends Panel {
         this.scrollBar.setScrollStep(20.0);
         
         this.buttons = new ArrayList<>();
+        
+        for (Quest quest : QuestsManager.INSTANCE.getQuests().values()) {
+            buttons.add(new QuestBuilderButton(buttonsPanel, questDetails, this, new Quest.Builder(quest)));
+        }
     }
 
     @Override
@@ -69,9 +73,9 @@ public class AllQuestsPanel extends Panel {
 
     @Override
     public void onClosed() {
+        JsonUtilities.deleteAllFiles("quests");
         for (QuestBuilderButton button : buttons) {
-            Tuple<ResourceLocation, JsonElement> quest = button.builder.build();
-            JsonUtilities.saveQuest(quest.getA(), quest.getB());
+            save(button);
         }
         super.onClosed();
     }
@@ -87,9 +91,27 @@ public class AllQuestsPanel extends Panel {
     }
     
     public void add(String path) {
-        QuestBuilderButton button = new QuestBuilderButton(buttonsPanel, path, questDetails);
+        QuestBuilderButton button = new QuestBuilderButton(buttonsPanel, path, questDetails, this);
         buttons.add(button);
         buttonsPanel.add(button);
         buttonsPanel.alignWidgets();
+    }
+    
+    public void remove(QuestBuilderButton button) {
+        buttons.remove(button);
+        buttonsPanel.widgets.remove(button);
+        buttonsPanel.alignWidgets();
+    }
+    
+    public void select(QuestBuilderButton clicked) {
+        for (QuestBuilderButton button : buttons) {
+            if (button == clicked) continue;
+            save(button);
+        }
+    }
+    
+    private void save(QuestBuilderButton button) {
+        Tuple<ResourceLocation, JsonElement> quest = button.builder.build();
+        JsonUtilities.saveQuest(quest.getA(), quest.getB());
     }
 }

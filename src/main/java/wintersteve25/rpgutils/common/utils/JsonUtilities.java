@@ -6,11 +6,15 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.loading.FMLPaths;
+import org.apache.commons.io.FileUtils;
 import wintersteve25.rpgutils.common.data.loaded.storage.ClientOnlyLoadedData;
+import wintersteve25.rpgutils.common.network.ModNetworking;
+import wintersteve25.rpgutils.common.network.PacketLoadData;
 
 import java.io.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Collection;
 import java.util.function.Function;
 
 public class JsonUtilities {
@@ -68,6 +72,7 @@ public class JsonUtilities {
 
     public static void saveQuest(ResourceLocation resourceLocation, Object jsonObject) {
         saveData(resourceLocation, jsonObject, "/quests/");
+        ModNetworking.sendToServer(new PacketLoadData());
     }
 
     public static void deleteDialogue(ResourceLocation resourceLocation) {
@@ -75,9 +80,12 @@ public class JsonUtilities {
         file.delete();
     }
 
-    public static void deleteDialoguePool(ResourceLocation resourceLocation) {
-        File file = new File(getGeneratedPath(resourceLocation, "/dialogue_pools/"));
-        file.delete();
+    public static void deleteAllFiles(String path) {
+        Path directory = FMLPaths.getOrCreateGameRelativePath(Paths.get(rpgutilsPath + "/" + path + "/"), "");
+        Collection<File> files = FileUtils.listFiles(directory.toFile(), null, true);
+        for (File file : files) {
+            file.delete();
+        }
     }
     
     private static String getGeneratedPath(ResourceLocation resourceLocation, String subdirectory) {

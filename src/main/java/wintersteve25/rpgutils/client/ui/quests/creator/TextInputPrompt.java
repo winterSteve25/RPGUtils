@@ -3,26 +3,30 @@ package wintersteve25.rpgutils.client.ui.quests.creator;
 import dev.ftb.mods.ftblibrary.icon.Icon;
 import dev.ftb.mods.ftblibrary.ui.*;
 import dev.ftb.mods.ftblibrary.ui.input.MouseButton;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import wintersteve25.rpgutils.client.ui.components.CenterLayout;
 
-public class CreateQuestPanel extends BaseScreen {
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
+
+public class TextInputPrompt extends BaseScreen {
 
     public boolean enabled;
     
-    private final TextField title;
-    private final TextBox enterText;
-    private final Panel buttons;
+    public final TextField title;
+    public final TextBox enterText;
+    public final Panel buttons;
     
-    public CreateQuestPanel(QuestCreatorUI panel) {
+    public TextInputPrompt(QuestCreatorUI panel, ITextComponent title, String hintText, BiConsumer<TextInputPrompt, MouseButton> onConfirmed, BiConsumer<TextInputPrompt, MouseButton> onDenied) {
         this.parent = panel;
-        title = new TextField(this);
-        title.setSize(100, 20);
-        title.setText("Create a quest");
+        this.title = new TextField(this);
+        this.title.setSize(100, 20);
+        this.title.setText(title);
         enterText = new TextBox(this);
         enterText.setSize(100, 20);
-        enterText.ghostText = "Quest path";
+        enterText.ghostText = hintText;
         
         buttons = new Panel(this) {
             @Override
@@ -30,21 +34,7 @@ public class CreateQuestPanel extends BaseScreen {
                 Button confirm = new SimpleTextButton(this, new StringTextComponent("Confirm"), Icon.EMPTY) {
                     @Override
                     public void onClicked(MouseButton mouseButton) {
-                        if (mouseButton.isLeft()) {
-                            String text = enterText.getText();
-
-                            if (text.isEmpty()) {
-                                enterText.ghostText = TextFormatting.RED.toString() + TextFormatting.ITALIC + "Quest path";
-                                enterText.setFocused(false);
-                                return;
-                            }
-
-                            enterText.setText("");
-                            panel.addQuest(text);
-                            enabled = false;
-                            CreateQuestPanel.this.initGui();
-                            playClickSound();
-                        }
+                        onConfirmed.accept(TextInputPrompt.this, mouseButton);
                     }
 
                     @Override
@@ -58,11 +48,7 @@ public class CreateQuestPanel extends BaseScreen {
                 Button cancel = new SimpleTextButton(this, new StringTextComponent("Cancel"), Icon.EMPTY) {
                     @Override
                     public void onClicked(MouseButton mouseButton) {
-                        if (mouseButton.isLeft()) {
-                            enterText.setText("");
-                            enabled = false;
-                            CreateQuestPanel.this.initGui();
-                        }
+                        onDenied.accept(TextInputPrompt.this, mouseButton);
                     }
 
                     @Override

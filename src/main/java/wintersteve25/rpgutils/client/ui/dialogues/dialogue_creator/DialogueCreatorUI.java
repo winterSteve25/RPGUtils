@@ -24,11 +24,8 @@ public class DialogueCreatorUI extends EditableListUI<DialoguePoolEntryGui> {
     private static final TranslationTextComponent TITLE = RLHelper.dialogueCreatorComponent("title");
     private static final TranslationTextComponent EMPTY_POOL_NAME = RLHelper.dialogueCreatorComponent("empty_pool_name");
 
-    private final List<ResourceLocation> toRemoves;
-    
     protected DialogueCreatorUI() {
         super(TITLE);
-        toRemoves = new ArrayList<>();
     }
 
     @Override
@@ -56,6 +53,9 @@ public class DialogueCreatorUI extends EditableListUI<DialoguePoolEntryGui> {
     }
     
     private void saveInternal(List<DialoguePoolEntryGui> data) {
+        
+        JsonUtilities.deleteAllFiles("dialogue_pools");
+        
         for (DialoguePoolEntryGui poolEntry : data) {
             Tuple<ResourceLocation, List<DialogueRule>> pool = poolEntry.create();
 
@@ -69,10 +69,6 @@ public class DialogueCreatorUI extends EditableListUI<DialoguePoolEntryGui> {
             }
 
             JsonUtilities.saveDialoguePool(pool.getA(), dialogues);
-        }
-
-        for (ResourceLocation pool : toRemoves) {
-            JsonUtilities.deleteDialoguePool(pool);
         }
 
         ClientOnlyLoadedData.reloadAll();
@@ -91,10 +87,5 @@ public class DialogueCreatorUI extends EditableListUI<DialoguePoolEntryGui> {
     public static void open() {
         Minecraft.getInstance().setScreen(null);
         Minecraft.getInstance().setScreen(new DialogueCreatorUI());
-    }
-
-    @Override
-    protected void onEntryRemoved(DialoguePoolEntryGui entry) {
-        toRemoves.add(entry.create().getA());
     }
 }

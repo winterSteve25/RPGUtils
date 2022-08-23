@@ -8,8 +8,6 @@ import com.google.gson.JsonParseException;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Tuple;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import wintersteve25.rpgutils.common.data.loaded.quest.objectives.IObjective;
 import wintersteve25.rpgutils.common.data.loaded.quest.objectives.ObjectiveTypes;
@@ -19,6 +17,7 @@ import wintersteve25.rpgutils.common.utils.JsonUtilities;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class Quest {
     
@@ -131,23 +130,34 @@ public class Quest {
         private final List<IReward> rewards;
         private final List<IObjective> objectives;
 
-        private ITextComponent title;
-        private ITextComponent description;
-        private boolean unlockable;
+        private String title;
+        private String description;
+        private Optional<Boolean> unlockable;
     
         public Builder(ResourceLocation resourceLocation) {
             this.resourceLocation = resourceLocation;
             this.prerequisite = new ArrayList<>();
             this.rewards = new ArrayList<>();
             this.objectives = new ArrayList<>();
+            this.unlockable = Optional.empty();
+        }
+        
+        public Builder(Quest quest) {
+            this.resourceLocation = quest.getResourceLocation();
+            this.prerequisite = quest.getPrerequisite();
+            this.rewards = quest.getRewards();
+            this.objectives = quest.getObjectives();
+            this.title = quest.getTitle().getKey();
+            this.description = quest.getDescription().getKey();
+            this.unlockable = Optional.of(quest.isUnlockable());
         }
 
-        public Builder setTitle(ITextComponent title) {
+        public Builder setTitle(String title) {
             this.title = title;
             return this;
         }
 
-        public Builder setDescription(ITextComponent description) {
+        public Builder setDescription(String description) {
             this.description = description;
             return this;
         }
@@ -183,18 +193,22 @@ public class Quest {
         }
 
         public Builder setUnlockable(boolean unlockable) {
-            this.unlockable = unlockable;
+            this.unlockable = Optional.of(unlockable);
             return this;
         }
         
         public String getTitle() {
-            return title == null ? defaultTitle(resourceLocation) : I18n.get(title.getString());
+            return title == null ? defaultTitle(resourceLocation) : I18n.get(title);
         }
         
         public String getDescription() {
-            return description == null ? defaultDescription(resourceLocation) : I18n.get(description.getString());
+            return description == null ? defaultDescription(resourceLocation) : I18n.get(description);
         }
-        
+
+        public ResourceLocation getResourceLocation() {
+            return resourceLocation;
+        }
+
         public Tuple<ResourceLocation, JsonElement> build() throws IllegalArgumentException {
             JsonObject jsonObject = new JsonObject();
 
@@ -219,7 +233,7 @@ public class Quest {
             }
             
             if (objectives.isEmpty()) {
-                throw new IllegalArgumentException("A quest can not have no objectives");
+//                throw new IllegalArgumentException("A quest can not have no objectives");
             }
             
             JsonArray objectives = new JsonArray();
@@ -229,6 +243,16 @@ public class Quest {
             }
             
             jsonObject.add("objectives", objectives);
+
+            if (title != null) {
+                jsonObject.addProperty("title", title);
+            }
+            
+            if (description != null) {
+                jsonObject.addProperty("description", description);
+            }
+            
+            unlockable.ifPresent(aBoolean -> jsonObject.addProperty("unlockable", aBoolean));
             
             return new Tuple<>(resourceLocation, jsonObject);
         }
