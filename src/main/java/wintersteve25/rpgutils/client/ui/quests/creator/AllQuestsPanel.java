@@ -105,6 +105,9 @@ public class AllQuestsPanel extends Panel {
         buttons.remove(button);
         buttonsPanel.widgets.remove(button);
         buttonsPanel.alignWidgets();
+        if (questDetails.button == button) {
+            questDetails.disable();
+        }
     }
     
     public void select(QuestBuilderButton clicked) {

@@ -13,6 +13,7 @@ public class QuestCreationDetailsPanel extends Panel {
     
     private final Left left;
     
+    public QuestBuilderButton button;
     private Quest.Builder builder;
     private boolean enabled;
 
@@ -34,9 +35,17 @@ public class QuestCreationDetailsPanel extends Panel {
     
     public void enable(QuestBuilderButton button) {
         enabled = true;
+        this.button = button;
         builder = button.builder;
         left.title.getWidget().setText(builder.getTitle());
         left.description.getWidget().setText(builder.getDescription());
+        refreshWidgets();
+    }
+    
+    public void disable() {
+        enabled = false;
+        button = null;
+        builder = null;
         refreshWidgets();
     }
 
