@@ -18,7 +18,7 @@ public class AllQuestsPanel extends Panel {
     
     private final Panel buttonsPanel;
     private final PanelScrollbar scrollBar;
-    private final List<QuestBuilderButton> buttons;
+    public final List<QuestBuilderButton> buttons;
     private final QuestCreationDetailsPanel questDetails;
     
     public AllQuestsPanel(QuestCreatorUI panel, QuestCreationDetailsPanel questDetails) {

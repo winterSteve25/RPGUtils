@@ -24,11 +24,21 @@ public class SelectQuest extends AbstractSelectionUI<SelectQuest.SelectQuestOpti
     protected void populateOptions(List<SelectQuestOption> list) {
         List<Quest> quests = new ArrayList<>(QuestsManager.INSTANCE.getQuests().values());
 
+        boolean skipped = false;
+        
         for (int i = 0; i < quests.size(); i++) {
             Quest q = quests.get(i);
-            if (q.getResourceLocation().equals(exclude)) continue;
-            list.add(new SelectQuestOption(this.x + 10, this.y + 40 + i * 12, q, this, i));
+            if (q.getResourceLocation().equals(exclude)) {
+                skipped = true;
+                continue;
+            }
+            list.add(new SelectQuestOption(this.x + 10, this.y + 40 + (skipped ? i - 1 : i) * 12, q, this, (skipped ? i - 1 : i)));
         }
+    }
+
+    @Override
+    protected boolean atLeastOne() {
+        return false;
     }
 
     @Override

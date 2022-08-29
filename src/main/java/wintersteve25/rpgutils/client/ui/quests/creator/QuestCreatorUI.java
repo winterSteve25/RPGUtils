@@ -16,15 +16,17 @@ public class QuestCreatorUI extends BaseScreen {
     private final QuestCreationDetailsPanel detailsPanel;
     private final TextInputPrompt createQuestPrompt;
     public final RenameQuestPrompt renameQuestPrompt;
-
+    public final RewardDetailsPrompt rewardDetailsPanel;
+    
     private QuestCreatorUI() {
+        rewardDetailsPanel = new RewardDetailsPrompt(this);
         detailsPanel = new QuestCreationDetailsPanel(this);
         questsPanel = new AllQuestsPanel(this, detailsPanel);
         
         createQuestPrompt = new TextInputPrompt(this, new StringTextComponent("Create Quest"), "Quest path", (prompt, btn) -> {
             if (btn.isLeft()) {
                 String text = prompt.enterText.getText();
-
+                
                 if (text.isEmpty()) {
                     prompt.enterText.ghostText = TextFormatting.RED.toString() + TextFormatting.ITALIC + "Quest path";
                     prompt.enterText.setFocused(false);
@@ -32,7 +34,7 @@ public class QuestCreatorUI extends BaseScreen {
                 }
 
                 prompt.enterText.setText("");
-                QuestCreatorUI.this.addQuest(text);
+                QuestCreatorUI.this.addQuest(text.replace(" ", "_"));
                 prompt.disable();
                 playClickSound();
             }
@@ -46,19 +48,30 @@ public class QuestCreatorUI extends BaseScreen {
 
         renameQuestPrompt = new RenameQuestPrompt(this, new StringTextComponent("Rename Quest"), "Quest path", (prompt, btn) -> {
             if (btn.isLeft()) {
-                String text = prompt.enterText.getText();
+                String text = prompt.enterText.getText().replace(" ", "_").toLowerCase();
 
                 if (text.isEmpty()) {
                     prompt.enterText.ghostText = TextFormatting.RED.toString() + TextFormatting.ITALIC + "Quest path";
                     prompt.enterText.setFocused(false);
                     return;
                 }
-
-                ((RenameQuestPrompt)prompt).button.builder.rename(new ResourceLocation(RPGUtils.MOD_ID, text));
-                ((RenameQuestPrompt)prompt).button.setTitle(new StringTextComponent(text));
+                
+                QuestBuilderButton currentRenameButton = ((RenameQuestPrompt)prompt).button;
+                ResourceLocation newLocation = new ResourceLocation(RPGUtils.MOD_ID, text);
+                
+                // refactor all quests that used the previous name as a dependency
+                for (QuestBuilderButton button : questsPanel.buttons) {
+                    if (button == currentRenameButton) continue;
+                    button.builder.getPrerequisite().replaceAll(pre -> pre.equals(currentRenameButton.builder.getResourceLocation()) ? newLocation : pre);
+                }
+                
+                currentRenameButton.builder.rename(newLocation);
+                currentRenameButton.setTitle(new StringTextComponent(text));
+                
                 prompt.enterText.setText("");
                 prompt.disable();
                 playClickSound();
+                detailsPanel.left.refreshPrerequisitesTooltips();
                 questsPanel.alignWidgets();
             }
         }, (prompt, btn) -> {
@@ -80,6 +93,7 @@ public class QuestCreatorUI extends BaseScreen {
         createQuestPrompt.setSize(176, 100);
         add(renameQuestPrompt);
         renameQuestPrompt.setSize(176, 100);
+        add(rewardDetailsPanel);
         
         Button button = new SimpleTextButton(this, new StringTextComponent("New Quest"), Icon.EMPTY) {
             @Override
@@ -94,18 +108,32 @@ public class QuestCreatorUI extends BaseScreen {
         button.setPosAndSize(10, 15, 135, 20);
     }
 
+    public boolean isPromptOpen() {
+        if (rewardDetailsPanel.shouldDraw()) {
+            return true;
+        }
+
+        if (createQuestPrompt.shouldDraw()) {
+            return true;
+        }
+
+        return renameQuestPrompt.shouldDraw();
+    }
+    
     @Override
     public void alignWidgets() {
         questsPanel.alignWidgets();
         detailsPanel.alignWidgets();
         createQuestPrompt.alignWidgets();
         renameQuestPrompt.alignWidgets();
+        rewardDetailsPanel.alignWidgets();
     }
 
     @Override
     public boolean onInit() {
         createQuestPrompt.initGui();
         renameQuestPrompt.initGui();
+        rewardDetailsPanel.initGui();
         return setFullscreen();
     }
     

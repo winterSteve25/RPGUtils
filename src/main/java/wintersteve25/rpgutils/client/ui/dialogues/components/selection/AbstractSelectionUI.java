@@ -179,7 +179,9 @@ public abstract class AbstractSelectionUI<T extends SelectionOption<T>> extends 
     }
     
     protected void updateConfirmButton() {
-        confirm.active = !selectedIndices.isEmpty() && !totalOptions.isEmpty();
+        if (atLeastOne()) {
+            confirm.active = !selectedIndices.isEmpty() && !totalOptions.isEmpty();
+        }
     }
     
     protected abstract void populateOptions(List<T> list);
@@ -187,6 +189,10 @@ public abstract class AbstractSelectionUI<T extends SelectionOption<T>> extends 
     protected abstract T copyFrom(T copyFrom);
     
     protected abstract boolean isSameType(IGuiEventListener listener);
+    
+    protected boolean atLeastOne() {
+        return true;
+    }
     
     protected boolean filterSearch(T element, String searchbarValue) {
         return !element.getText().toLowerCase().contains(searchbarValue);

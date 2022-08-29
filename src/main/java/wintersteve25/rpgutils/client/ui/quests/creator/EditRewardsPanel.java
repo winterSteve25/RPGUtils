@@ -16,10 +16,12 @@ public class EditRewardsPanel extends Panel {
     private final PanelScrollbar scrollBar;
     private final List<RewardButton> buttons;
     private final Button add;
+    private final RewardDetailsPrompt rewardDetailsPanel;
     
-    public EditRewardsPanel(Panel panel) {
+    public EditRewardsPanel(Panel panel, RewardDetailsPrompt rewardDetailsPanel) {
         super(panel);
-        
+        this.rewardDetailsPanel = rewardDetailsPanel;
+
         scrollPanel = new Panel(this) {
             @Override
             public void addWidgets() {
@@ -31,7 +33,7 @@ public class EditRewardsPanel extends Panel {
 
             @Override
             public void alignWidgets() {
-                align(WidgetLayout.HORIZONTAL);
+                align(new WidgetLayout.Horizontal(0, 10, 0));
             }
         };
         
@@ -67,9 +69,11 @@ public class EditRewardsPanel extends Panel {
                 if (mouseButton.isLeft()) {
                     playClickSound();
                     RewardButton button = new RewardButton(buttonsPanel, new StringTextComponent("Reward"), Icon.EMPTY);
-                    buttons.add(button);
-                    buttonsPanel.add(button);
-                    buttonsPanel.alignWidgets();
+                    rewardDetailsPanel.enable(button, b -> {
+                        buttons.add(b);
+                        buttonsPanel.add(b);
+                        buttonsPanel.alignWidgets();
+                    });
                 }
             }
         };

@@ -144,9 +144,9 @@ public class Quest {
         
         public Builder(Quest quest) {
             this.resourceLocation = quest.getResourceLocation();
-            this.prerequisite = quest.getPrerequisite();
-            this.rewards = quest.getRewards();
-            this.objectives = quest.getObjectives();
+            this.prerequisite = new ArrayList<>(quest.getPrerequisite());
+            this.rewards = new ArrayList<>(quest.getRewards());
+            this.objectives = new ArrayList<>(quest.getObjectives());
             this.title = quest.getTitle().getKey();
             this.description = quest.getDescription().getKey();
             this.unlockable = Optional.of(quest.isUnlockable());
@@ -182,6 +182,11 @@ public class Quest {
             return this;
         }
 
+        public Builder clearPrerequisite() {
+            this.prerequisite.clear();
+            return this;
+        }
+        
         public Builder removeRewards(IReward rewards) {
             this.rewards.remove(rewards);
             return this;
@@ -196,7 +201,7 @@ public class Quest {
             this.unlockable = Optional.of(unlockable);
             return this;
         }
-        
+
         public Builder rename(ResourceLocation resourceLocation) {
             this.resourceLocation = resourceLocation;
             return this;
@@ -212,6 +217,10 @@ public class Quest {
 
         public ResourceLocation getResourceLocation() {
             return resourceLocation;
+        }
+
+        public List<ResourceLocation> getPrerequisite() {
+            return prerequisite;
         }
 
         public Tuple<ResourceLocation, JsonElement> build() throws IllegalArgumentException {
