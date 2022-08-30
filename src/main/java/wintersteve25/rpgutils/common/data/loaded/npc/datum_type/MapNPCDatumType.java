@@ -18,7 +18,7 @@ import java.util.Map;
  */
 public abstract class MapNPCDatumType<V1, K2, V2> extends NPCDatumType<Map<K2, V2>> {
 
-    public static final MapNPCDatumType<Double, Attribute, Double> ATTRIBUTES = new MapNPCDatumType<>("attributes") {
+    public static final MapNPCDatumType<Double, Attribute, Double> ATTRIBUTES = new MapNPCDatumType<Double, Attribute, Double>("attributes") {
         @Override
         protected Attribute fromJsonKey(String key) {
             return NPCTypeLoader.ATTRIBUTES.get(key);
@@ -50,7 +50,7 @@ public abstract class MapNPCDatumType<V1, K2, V2> extends NPCDatumType<Map<K2, V
         }
     };
 
-    public static final MapNPCDatumType<Double, ModGoals.GoalConstructor, Integer> GOALS = new MapNPCDatumType<>("goals") {
+    public static final MapNPCDatumType<Double, ModGoals.GoalConstructor, Integer> GOALS = new MapNPCDatumType<Double, ModGoals.GoalConstructor, Integer>("goals") {
         @Override
         protected ModGoals.GoalConstructor fromJsonKey(String key) {
             return NPCTypeLoader.MOD_GOALS.get(key);

@@ -6,6 +6,7 @@ import dev.ftb.mods.ftblibrary.ui.*;
 import dev.ftb.mods.ftblibrary.ui.input.MouseButton;
 import dev.ftb.mods.ftblibrary.util.TooltipList;
 import net.minecraft.client.Minecraft;
+import net.minecraft.util.LazyValue;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
@@ -17,7 +18,8 @@ import java.util.List;
 public class QuestCreationDetailsPanel extends Panel {
 
     public final Left left;
-
+    private final Right right;
+    
     public QuestBuilderButton button;
     private Quest.Builder builder;
     private boolean enabled;
@@ -25,12 +27,16 @@ public class QuestCreationDetailsPanel extends Panel {
     public QuestCreationDetailsPanel(QuestCreatorUI panel) {
         super(panel);
         left = new Left(this);
+        right = new Right(this);
     }
 
     @Override
     public void addWidgets() {
         left.setSize(165, getScreen().getScreenHeight());
         add(left);
+        
+        right.setSize(165, getScreen().getScreenHeight());
+        add(right);
     }
 
     @Override
@@ -129,7 +135,7 @@ public class QuestCreationDetailsPanel extends Panel {
             };
             selectPrerequisites.setSize(165, 20);
 
-            rewardsPanel = new EditRewardsPanel(this, ((QuestCreatorUI) parent1.parent).rewardDetailsPanel);
+            rewardsPanel = new EditRewardsPanel(this, ((QuestCreatorUI) parent1.parent).rewardDetailsPanel, new LazyValue<>(() -> parent1.builder));
             rewardsPanel.setSize(165, 160);
         
             refreshPrerequisitesTooltips();
@@ -183,6 +189,23 @@ public class QuestCreationDetailsPanel extends Panel {
                     prerequisitesTooltip.string(pre.toString());
                 }
             }
+        }
+    }
+    
+    private static class Right extends Panel {
+
+        public Right(Panel panel) {
+            super(panel);
+        }
+
+        @Override
+        public void addWidgets() {
+            
+        }
+
+        @Override
+        public void alignWidgets() {
+
         }
     }
 }
