@@ -2,7 +2,7 @@ package wintersteve25.rpgutils.common.entities;
 
 import com.google.gson.JsonObject;
 import net.minecraft.network.PacketBuffer;
-import wintersteve25.rpgutils.common.data.loaded.npc.NPCDatumType;
+import wintersteve25.rpgutils.common.data.loaded.npc.datum_type.NPCDatumType;
 
 import java.util.HashMap;
 import java.util.Map;

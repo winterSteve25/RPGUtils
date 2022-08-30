@@ -24,8 +24,10 @@ import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 import wintersteve25.rpgutils.RPGUtils;
 import wintersteve25.rpgutils.client.animation.IAnimatedEntity;
-import wintersteve25.rpgutils.common.data.loaded.npc.NPCDatumType;
+import wintersteve25.rpgutils.common.data.loaded.npc.datum_type.MapNPCDatumType;
 import wintersteve25.rpgutils.common.data.loaded.npc.NPCTypeLoader;
+import wintersteve25.rpgutils.common.data.loaded.npc.datum_type.SoundEventNPCDatumType;
+import wintersteve25.rpgutils.common.data.loaded.npc.datum_type.StringNPCDatumType;
 import wintersteve25.rpgutils.common.data.loaded.npc.goal.ModGoals;
 import wintersteve25.rpgutils.common.network.ModNetworking;
 import wintersteve25.rpgutils.common.network.PacketSetType;
@@ -34,6 +36,9 @@ import wintersteve25.rpgutils.common.registry.ModMemoryModuleTypes;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Map;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 public class NPCEntity extends MobEntity implements IAnimatedEntity<NPCEntity> {
 
@@ -61,7 +66,7 @@ public class NPCEntity extends MobEntity implements IAnimatedEntity<NPCEntity> {
     protected void registerGoals() {
         NPCType type = getNPCType();
         if (type != null) {
-            Map<ModGoals.GoalConstructor, Integer> goalWeights = (Map<ModGoals.GoalConstructor, Integer>) type.getDatum(NPCDatumType.GOALS);
+            Map<ModGoals.GoalConstructor, Integer> goalWeights = type.getDatum(MapNPCDatumType.GOALS);
             for (Map.Entry<ModGoals.GoalConstructor, Integer> goal : goalWeights.entrySet()) {
                 this.goalSelector.addGoal(goal.getValue(), goal.getKey().apply(this));
             }
@@ -86,11 +91,15 @@ public class NPCEntity extends MobEntity implements IAnimatedEntity<NPCEntity> {
      */
     private void setNPCType(String type) {
         this.npcType = NPCTypeLoader.INSTANCE.getType(type);
-        this.getPersistentData().putString(getTypeKey(), (String) this.npcType.getDatum(NPCDatumType.NAME));
-        NPCTypeLoader.INSTANCE.setAttributes(this, (String) this.npcType.getDatum(NPCDatumType.NAME));
+        this.getPersistentData().putString(getTypeKey(), this.npcType.getDatum(StringNPCDatumType.NAME));
+        NPCTypeLoader.INSTANCE.setAttributes(this, this.npcType.getDatum(StringNPCDatumType.NAME));
         this.registerGoals();
     }
 
+    /**
+     * Null check should always be performed on result - alternatively, use getTypeOrElse()
+     * @return The type of the NPC
+     */
     public NPCType getNPCType() {
         if (npcType == null) {
             String type = this.getPersistentData().getString(getTypeKey());
@@ -99,6 +108,14 @@ public class NPCEntity extends MobEntity implements IAnimatedEntity<NPCEntity> {
             } else npcType = null;
         }
         return npcType;
+    }
+
+    private <T> T getTypeOrElse(Function<NPCType, T> ifValid, T ifNull) {
+        NPCType type = getNPCType();
+        if (type != null) {
+            return ifValid.apply(type);
+        }
+        return ifNull;
     }
 
     /**
@@ -121,11 +138,7 @@ public class NPCEntity extends MobEntity implements IAnimatedEntity<NPCEntity> {
     }
 
     public String getTexturePath() {
-        NPCType type = getNPCType();
-        if (type == null) {
-            return NPCType.DEFAULT_TEXTURE;
-        }
-        return (String) type.getDatum(NPCDatumType.TEXTURE);
+        return getTypeOrElse(t -> t.getDatum(StringNPCDatumType.TEXTURE), NPCType.DEFAULT_TEXTURE);
     }
 
     @Override
@@ -146,19 +159,19 @@ public class NPCEntity extends MobEntity implements IAnimatedEntity<NPCEntity> {
     @Nullable
     @Override
     protected SoundEvent getAmbientSound() {
-        return SoundEvents.VILLAGER_AMBIENT;
+        return getTypeOrElse(t -> t.getDatum(SoundEventNPCDatumType.AMBIENT_SOUND), SoundEvents.VILLAGER_AMBIENT);
     }
 
     @Nullable
     @Override
     protected SoundEvent getHurtSound(@Nonnull DamageSource damageSource) {
-        return SoundEvents.VILLAGER_HURT;
+        return getTypeOrElse(t -> t.getDatum(SoundEventNPCDatumType.HURT_SOUND), SoundEvents.VILLAGER_HURT);
     }
 
     @Nullable
     @Override
     protected SoundEvent getDeathSound() {
-        return SoundEvents.VILLAGER_DEATH;
+        return getTypeOrElse(t -> t.getDatum(SoundEventNPCDatumType.DEATH_SOUND), SoundEvents.VILLAGER_DEATH);
     }
 
     @Override
@@ -175,10 +188,7 @@ public class NPCEntity extends MobEntity implements IAnimatedEntity<NPCEntity> {
 
     @Override
     public ITextComponent getName() {
-        NPCType type = getNPCType();
-        if (type == null) {
-            return new TranslationTextComponent("entity." + RPGUtils.MOD_ID + ".npc.npc");
-        }
-        return new TranslationTextComponent("entity." + RPGUtils.MOD_ID + ".npc." + type.getDatum(NPCDatumType.NAME));
+        String name = getTypeOrElse(t -> t.getDatum(StringNPCDatumType.NAME), "npc");
+        return new TranslationTextComponent("entity." + RPGUtils.MOD_ID + ".npc." + name);
     }
 }

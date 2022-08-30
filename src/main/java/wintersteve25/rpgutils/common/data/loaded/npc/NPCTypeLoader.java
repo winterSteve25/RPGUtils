@@ -12,8 +12,12 @@ import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
 import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.SoundEvents;
 import wintersteve25.rpgutils.RPGUtils;
 import wintersteve25.rpgutils.common.data.loaded.JsonDataLoader;
+import wintersteve25.rpgutils.common.data.loaded.npc.datum_type.MapNPCDatumType;
+import wintersteve25.rpgutils.common.data.loaded.npc.datum_type.NPCDatumType;
 import wintersteve25.rpgutils.common.data.loaded.npc.goal.ModGoals;
 import wintersteve25.rpgutils.common.entities.NPCType;
 import wintersteve25.rpgutils.common.utils.JsonRegistryMap;
@@ -28,6 +32,7 @@ public class NPCTypeLoader extends JsonDataLoader {
     // JSON registry maps
     public static final JsonRegistryMap<Attribute> ATTRIBUTES = new JsonRegistryMap<>(Attributes.class, Attribute.class);
     public static final JsonRegistryMap<ModGoals.GoalConstructor> MOD_GOALS = new JsonRegistryMap<>(ModGoals.class, ModGoals.GoalConstructor.class);
+    public static final JsonRegistryMap<SoundEvent> SOUND_EVENTS = new JsonRegistryMap<>(SoundEvents.class, SoundEvent.class);
 
     private final Map<String, NPCType> typeMap = new HashMap<>();
 
@@ -38,6 +43,8 @@ public class NPCTypeLoader extends JsonDataLoader {
     @Override
     protected void apply(Map<ResourceLocation, JsonElement> data) {
         RPGUtils.LOGGER.info("Loading NPC attributes");
+
+        NPCDatumType.register();
 
         typeMap.clear();
 
@@ -70,7 +77,7 @@ public class NPCTypeLoader extends JsonDataLoader {
     }
 
     public void setAttributes(MobEntity entity, String name) {
-        Map<Attribute, Double> attributeMap = (Map<Attribute, Double>) typeMap.get(name).getDatum(NPCDatumType.ATTRIBUTES);
+        Map<Attribute, Double> attributeMap = typeMap.get(name).getDatum(MapNPCDatumType.ATTRIBUTES);
         for (Attribute attribute : ATTRIBUTES.objectSet()) {
             if (attributeMap.containsKey(attribute)) {
                 setAttribute(entity, attribute, attributeMap.get(attribute));
