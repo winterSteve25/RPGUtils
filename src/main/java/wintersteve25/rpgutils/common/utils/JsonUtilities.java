@@ -1,9 +1,6 @@
 package wintersteve25.rpgutils.common.utils;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
+import com.google.gson.*;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.loading.FMLPaths;
 import wintersteve25.rpgutils.common.data.loaded.storage.ClientOnlyLoadedData;
@@ -11,6 +8,8 @@ import wintersteve25.rpgutils.common.data.loaded.storage.ClientOnlyLoadedData;
 import java.io.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Function;
 
 public class JsonUtilities {
@@ -39,7 +38,7 @@ public class JsonUtilities {
         return mapper.apply(object.get(key));
     }
     
-    private static final Gson gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
+    public static final Gson gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
     public static final Path rpgutilsPath = FMLPaths.getOrCreateGameRelativePath(Paths.get("rpgutils/"), "");
 
     public static void saveDialogue(ResourceLocation resourceLocation, Object jsonObject) {

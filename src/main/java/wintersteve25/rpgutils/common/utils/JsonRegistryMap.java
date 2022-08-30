@@ -74,7 +74,7 @@ public class JsonRegistryMap<T> {
         }
     }
 
-    private static String toCamelCase(String s) {
+    public static String toCamelCase(String s) {
         StringBuilder result = new StringBuilder();
         boolean nextUpper = false;
         for (char c : s.toCharArray()) {

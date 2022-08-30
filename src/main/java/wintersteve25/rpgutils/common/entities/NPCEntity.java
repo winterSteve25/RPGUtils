@@ -24,6 +24,7 @@ import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 import wintersteve25.rpgutils.RPGUtils;
 import wintersteve25.rpgutils.client.animation.IAnimatedEntity;
+import wintersteve25.rpgutils.common.data.loaded.npc.NPCDatumType;
 import wintersteve25.rpgutils.common.data.loaded.npc.NPCTypeLoader;
 import wintersteve25.rpgutils.common.data.loaded.npc.goal.ModGoals;
 import wintersteve25.rpgutils.common.network.ModNetworking;
@@ -38,7 +39,7 @@ public class NPCEntity extends MobEntity implements IAnimatedEntity<NPCEntity> {
 
     private final AnimationFactory factory = new AnimationFactory(this);
     /**
-     * Use caution when accessing directly - invoking getNPCType() instead will ensure that it is initialised if necessary.
+     * Use caution when accessing directly - invoking getNPCType() instead will ensure initialisation from NBT if necessary.
      */
     private NPCType npcType = null;
 
@@ -58,8 +59,12 @@ public class NPCEntity extends MobEntity implements IAnimatedEntity<NPCEntity> {
 
     @Override
     protected void registerGoals() {
-        for (Map.Entry<ModGoals.GoalConstructor, Integer> goal : getNPCType().getGoalWeights().entrySet()) {
-            this.goalSelector.addGoal(goal.getValue(), goal.getKey().apply(this));
+        NPCType type = getNPCType();
+        if (type != null) {
+            Map<ModGoals.GoalConstructor, Integer> goalWeights = (Map<ModGoals.GoalConstructor, Integer>) type.getDatum(NPCDatumType.GOAL_WEIGHTS);
+            for (Map.Entry<ModGoals.GoalConstructor, Integer> goal : goalWeights.entrySet()) {
+                this.goalSelector.addGoal(goal.getValue(), goal.getKey().apply(this));
+            }
         }
     }
 
@@ -81,8 +86,8 @@ public class NPCEntity extends MobEntity implements IAnimatedEntity<NPCEntity> {
      */
     private void setNPCType(String type) {
         this.npcType = NPCTypeLoader.INSTANCE.getType(type);
-        this.getPersistentData().putString(getTypeKey(), this.npcType.getName());
-        NPCTypeLoader.INSTANCE.setAttributes(this, this.npcType.getName());
+        this.getPersistentData().putString(getTypeKey(), (String) this.npcType.getDatum(NPCDatumType.NAME));
+        NPCTypeLoader.INSTANCE.setAttributes(this, (String) this.npcType.getDatum(NPCDatumType.NAME));
         this.registerGoals();
     }
 
@@ -91,7 +96,7 @@ public class NPCEntity extends MobEntity implements IAnimatedEntity<NPCEntity> {
             String type = this.getPersistentData().getString(getTypeKey());
             if (!type.equals("")) {
                 this.setNPCType(type);
-            } else npcType = NPCType.DEFAULT;
+            } else npcType = null;
         }
         return npcType;
     }
@@ -116,7 +121,11 @@ public class NPCEntity extends MobEntity implements IAnimatedEntity<NPCEntity> {
     }
 
     public String getTexturePath() {
-        return getNPCType().getPath();
+        NPCType type = getNPCType();
+        if (type == null) {
+            return NPCType.DEFAULT_TEXTURE;
+        }
+        return (String) type.getDatum(NPCDatumType.TEXTURE);
     }
 
     @Override
@@ -167,6 +176,10 @@ public class NPCEntity extends MobEntity implements IAnimatedEntity<NPCEntity> {
 
     @Override
     public ITextComponent getName() {
-        return new TranslationTextComponent("entity." + RPGUtils.MOD_ID + ".npc." + getNPCType().getName());
+        NPCType type = getNPCType();
+        if (type == null) {
+            return new TranslationTextComponent("entity." + RPGUtils.MOD_ID + ".npc.npc");
+        }
+        return new TranslationTextComponent("entity." + RPGUtils.MOD_ID + ".npc." + type.getDatum(NPCDatumType.NAME));
     }
 }
