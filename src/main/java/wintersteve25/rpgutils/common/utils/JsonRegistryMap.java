@@ -19,7 +19,7 @@ public class JsonRegistryMap<T> {
         map = HashBiMap.create();
         for (Field field : container.getFields()) {
             int modifiers = field.getModifiers();
-            if (Modifier.isStatic(modifiers) && Modifier.isFinal(modifiers) && field.getType() == objects) {
+            if (Modifier.isStatic(modifiers) && field.getType() == objects) {
                 try {
                     map.put((T) field.get(null), toCamelCase(field.getName()));
                 } catch (IllegalAccessException e) {
@@ -74,7 +74,7 @@ public class JsonRegistryMap<T> {
         }
     }
 
-    private static String toCamelCase(String s) {
+    public static String toCamelCase(String s) {
         StringBuilder result = new StringBuilder();
         boolean nextUpper = false;
         for (char c : s.toCharArray()) {

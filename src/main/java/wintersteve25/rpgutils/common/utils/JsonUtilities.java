@@ -1,9 +1,6 @@
 package wintersteve25.rpgutils.common.utils;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
+import com.google.gson.*;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.loading.FMLPaths;
 import org.apache.commons.io.FileUtils;
@@ -14,6 +11,8 @@ import wintersteve25.rpgutils.common.network.PacketLoadData;
 import java.io.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Collection;
 import java.util.function.Function;
 
@@ -43,7 +42,7 @@ public class JsonUtilities {
         return mapper.apply(object.get(key));
     }
     
-    private static final Gson gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
+    public static final Gson gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
     public static final Path rpgutilsPath = FMLPaths.getOrCreateGameRelativePath(Paths.get("rpgutils/"), "");
 
     public static void saveDialogue(ResourceLocation resourceLocation, Object jsonObject) {
@@ -78,7 +77,7 @@ public class JsonUtilities {
             ModNetworking.sendToServer(new PacketLoadData());
         }
     }
-
+    
     public static void deleteDialogue(ResourceLocation resourceLocation) {
         File file = new File(getGeneratedPath(resourceLocation, "/dialogues/"));
         file.delete();
@@ -91,12 +90,12 @@ public class JsonUtilities {
             file.delete();
         }
     }
-    
+
     public static void reloadAllDataFromClient() {
         ClientOnlyLoadedData.reloadAll();
         ModNetworking.sendToServer(new PacketLoadData());
     }
-    
+
     private static String getGeneratedPath(ResourceLocation resourceLocation, String subdirectory) {
         String rlPath = resourceLocation.getPath();
         int lastDir = rlPath.lastIndexOf('/');

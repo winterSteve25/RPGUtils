@@ -1,6 +1,5 @@
 package wintersteve25.rpgutils.common.data.loaded.npc;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
@@ -13,8 +12,12 @@ import net.minecraft.entity.ai.attributes.Attributes;
 import net.minecraft.entity.ai.attributes.ModifiableAttributeInstance;
 import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.SoundEvents;
 import wintersteve25.rpgutils.RPGUtils;
 import wintersteve25.rpgutils.common.data.loaded.JsonDataLoader;
+import wintersteve25.rpgutils.common.data.loaded.npc.datum_type.MapNPCDatumType;
+import wintersteve25.rpgutils.common.data.loaded.npc.datum_type.NPCDatumType;
 import wintersteve25.rpgutils.common.data.loaded.npc.goal.ModGoals;
 import wintersteve25.rpgutils.common.entities.NPCType;
 import wintersteve25.rpgutils.common.utils.JsonRegistryMap;
@@ -25,8 +28,11 @@ import java.util.Map;
 public class NPCTypeLoader extends JsonDataLoader {
 
     public static final NPCTypeLoader INSTANCE = new NPCTypeLoader();
+
+    // JSON registry maps
     public static final JsonRegistryMap<Attribute> ATTRIBUTES = new JsonRegistryMap<>(Attributes.class, Attribute.class);
     public static final JsonRegistryMap<ModGoals.GoalConstructor> MOD_GOALS = new JsonRegistryMap<>(ModGoals.class, ModGoals.GoalConstructor.class);
+    public static final JsonRegistryMap<SoundEvent> SOUND_EVENTS = new JsonRegistryMap<>(SoundEvents.class, SoundEvent.class);
 
     private final Map<String, NPCType> typeMap = new HashMap<>();
 
@@ -38,6 +44,8 @@ public class NPCTypeLoader extends JsonDataLoader {
     protected void apply(Map<ResourceLocation, JsonElement> data) {
         RPGUtils.LOGGER.info("Loading NPC attributes");
 
+        NPCDatumType.register();
+
         typeMap.clear();
 
         for (Map.Entry<ResourceLocation, JsonElement> entry : data.entrySet()) {
@@ -48,15 +56,7 @@ public class NPCTypeLoader extends JsonDataLoader {
             }
             try {
                 JsonObject root = entry.getValue().getAsJsonObject();
-                Map<Attribute, Double> attributes = createAttributes(root.getAsJsonObject("attributes"));
-                String texture = root.get("texture").getAsString();
-                String jsonString = root.getAsJsonObject("goals").toString();
-                Map<String, Integer> stringGoalWeights = new Gson().fromJson(jsonString, Map.class);
-                Map<ModGoals.GoalConstructor, Integer> goalWeights = new HashMap<>();
-                for (Map.Entry<String, Integer> goal : stringGoalWeights.entrySet()) {
-                    goalWeights.put(MOD_GOALS.get(goal.getKey()), (int) Double.parseDouble(String.valueOf(goal.getValue())));
-                }
-                NPCType type = new NPCType(attributes, path, texture, goalWeights);
+                NPCType type = new NPCType(root);
                 typeMap.put(path, type);
             } catch (IllegalArgumentException | JsonParseException e) {
                 RPGUtils.LOGGER.error("Parsing error loading NPC attribute set {}", resourcelocation, e);
@@ -77,10 +77,10 @@ public class NPCTypeLoader extends JsonDataLoader {
     }
 
     public void setAttributes(MobEntity entity, String name) {
-        Map<Attribute, Double> modifierMap = typeMap.get(name).getAttributes();
+        Map<Attribute, Double> attributeMap = typeMap.get(name).getDatum(MapNPCDatumType.ATTRIBUTES);
         for (Attribute attribute : ATTRIBUTES.objectSet()) {
-            if (modifierMap.containsKey(attribute)) {
-                setAttribute(entity, attribute, modifierMap.get(attribute));
+            if (attributeMap.containsKey(attribute)) {
+                setAttribute(entity, attribute, attributeMap.get(attribute));
             }
         }
         entity.setHealth(entity.getMaxHealth());
