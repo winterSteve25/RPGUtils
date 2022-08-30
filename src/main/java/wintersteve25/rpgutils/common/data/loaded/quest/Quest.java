@@ -223,6 +223,10 @@ public class Quest {
             return prerequisite;
         }
 
+        public List<IReward> getRewards() {
+            return rewards;
+        }
+
         public Tuple<ResourceLocation, JsonElement> build() throws IllegalArgumentException {
             JsonObject jsonObject = new JsonObject();
 

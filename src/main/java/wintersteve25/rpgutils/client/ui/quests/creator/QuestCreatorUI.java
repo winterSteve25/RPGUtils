@@ -50,7 +50,7 @@ public class QuestCreatorUI extends BaseScreen {
             if (btn.isLeft()) {
                 String text = prompt.enterText.getText().replace(" ", "_").toLowerCase();
 
-                if (text.isEmpty()) {
+                if (text.isEmpty() || questsPanel.buttons.stream().anyMatch(button -> button.getTitle().getContents().equals(text))) {
                     prompt.enterText.ghostText = TextFormatting.RED.toString() + TextFormatting.ITALIC + "Quest path";
                     prompt.enterText.setFocused(false);
                     return;

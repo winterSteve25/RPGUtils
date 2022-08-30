@@ -7,6 +7,7 @@ import wintersteve25.rpgutils.client.ui.dialogues.DialogueUI;
 import wintersteve25.rpgutils.common.data.loaded.dialogue.dialogue.actions.base.IDialogueAction;
 import wintersteve25.rpgutils.common.utils.IDeserializer;
 
+// TODO
 public class ChoiceAction implements IDialogueAction {
     
     
