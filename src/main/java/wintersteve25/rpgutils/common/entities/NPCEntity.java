@@ -61,7 +61,7 @@ public class NPCEntity extends MobEntity implements IAnimatedEntity<NPCEntity> {
     protected void registerGoals() {
         NPCType type = getNPCType();
         if (type != null) {
-            Map<ModGoals.GoalConstructor, Integer> goalWeights = (Map<ModGoals.GoalConstructor, Integer>) type.getDatum(NPCDatumType.GOAL_WEIGHTS);
+            Map<ModGoals.GoalConstructor, Integer> goalWeights = (Map<ModGoals.GoalConstructor, Integer>) type.getDatum(NPCDatumType.GOALS);
             for (Map.Entry<ModGoals.GoalConstructor, Integer> goal : goalWeights.entrySet()) {
                 this.goalSelector.addGoal(goal.getValue(), goal.getKey().apply(this));
             }
@@ -152,7 +152,6 @@ public class NPCEntity extends MobEntity implements IAnimatedEntity<NPCEntity> {
     @Nullable
     @Override
     protected SoundEvent getHurtSound(@Nonnull DamageSource damageSource) {
-        RPGUtils.LOGGER.info(getPersistentData().get(getTypeKey()));
         return SoundEvents.VILLAGER_HURT;
     }
 

@@ -11,29 +11,29 @@ public class NPCType {
 
     public static final String DEFAULT_TEXTURE = "textures/entity/npc/npc.png";
 
-    private final Map<NPCDatumType, Object> data;
+    private final Map<NPCDatumType<?>, Object> data;
 
     public NPCType(PacketBuffer buffer) {
         data = new HashMap<>();
-        for (NPCDatumType datumType : NPCDatumType.values()) {
+        for (NPCDatumType<?> datumType : NPCDatumType.getDatumTypes()) {
             data.put(datumType, datumType.deserialisePacket(buffer));
         }
     }
 
     public NPCType(JsonObject json) {
         data = new HashMap<>();
-        for (NPCDatumType datumType : NPCDatumType.values()) {
+        for (NPCDatumType<?> datumType : NPCDatumType.getDatumTypes()) {
             data.put(datumType, datumType.deserialiseJson(json.get(datumType.jsonName)));
         }
     }
 
     public void writeToBuffer(PacketBuffer buffer) {
-        for (NPCDatumType datumType : NPCDatumType.values()) {
+        for (NPCDatumType datumType : NPCDatumType.getDatumTypes()) {
             datumType.serialisePacket(buffer, data.get(datumType));
         }
     }
 
-    public Object getDatum(NPCDatumType key) {
-        return data.get(key);
+    public <T> T getDatum(NPCDatumType<T> key) {
+        return (T) data.get(key);
     }
 }
