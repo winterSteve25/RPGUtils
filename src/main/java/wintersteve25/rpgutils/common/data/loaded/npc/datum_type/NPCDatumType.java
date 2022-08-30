@@ -34,5 +34,6 @@ public abstract class NPCDatumType<T> {
         StringNPCDatumType.register();
         MapNPCDatumType.register();
         SoundEventNPCDatumType.register();
+        FloatNPCDatumType.register();
     }
 }

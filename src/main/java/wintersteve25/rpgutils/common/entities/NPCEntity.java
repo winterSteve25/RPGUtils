@@ -2,6 +2,8 @@ package wintersteve25.rpgutils.common.entities;
 
 import com.google.common.collect.ImmutableList;
 import com.mojang.serialization.Dynamic;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntitySize;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
@@ -15,6 +17,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
@@ -55,6 +58,7 @@ public class NPCEntity extends MobEntity implements IAnimatedEntity<NPCEntity> {
     public static NPCEntity create(EntityType<? extends MobEntity> entityType, World world, String type) {
         NPCEntity entity = new NPCEntity(entityType, world);
         entity.setNPCType(type);
+//        ObfuscationReflectionHelper.setPrivateValue(Entity.class, entity, new EntitySize(1.2f, 3.5f, false), "field_213325_aI");
         return entity;
     }
 
@@ -93,6 +97,7 @@ public class NPCEntity extends MobEntity implements IAnimatedEntity<NPCEntity> {
         this.npcType = NPCTypeLoader.INSTANCE.getType(type);
         this.getPersistentData().putString(getTypeKey(), this.npcType.getDatum(StringNPCDatumType.NAME));
         NPCTypeLoader.INSTANCE.setAttributes(this, this.npcType.getDatum(StringNPCDatumType.NAME));
+        this.refreshDimensions();
         this.registerGoals();
     }
 
