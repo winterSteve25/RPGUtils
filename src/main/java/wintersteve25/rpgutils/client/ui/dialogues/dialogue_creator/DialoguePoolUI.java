@@ -1,9 +1,8 @@
 package wintersteve25.rpgutils.client.ui.dialogues.dialogue_creator;
 
 import net.minecraft.util.text.TranslationTextComponent;
-import wintersteve25.rpgutils.client.ui.components.BaseUI;
-import wintersteve25.rpgutils.client.ui.components.list.EditableListUI;
-import wintersteve25.rpgutils.client.ui.components.prompt.TextPrompt;
+import wintersteve25.rpgutils.client.ui.dialogues.components.list.EditableListUI;
+import wintersteve25.rpgutils.client.ui.dialogues.components.prompt.TextPrompt;
 import wintersteve25.rpgutils.client.ui.dialogues.dialogue_creator.entries.DialogueRuleEntryGui;
 import wintersteve25.rpgutils.common.data.loaded.dialogue.dialogue_pool.DialogueRule;
 import wintersteve25.rpgutils.common.utils.RLHelper;

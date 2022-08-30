@@ -6,7 +6,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import wintersteve25.rpgutils.client.ui.components.selection.AbstractSelectionUI;
+import wintersteve25.rpgutils.client.ui.dialogues.components.selection.AbstractSelectionUI;
 
 import java.util.List;
 import java.util.function.Consumer;

@@ -1,4 +1,4 @@
-package wintersteve25.rpgutils.client.ui.components.selection;
+package wintersteve25.rpgutils.client.ui.dialogues.components.selection;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.client.MainWindow;
@@ -9,9 +9,9 @@ import net.minecraft.client.gui.widget.ToggleWidget;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TranslationTextComponent;
-import wintersteve25.rpgutils.client.ui.components.UIUtilities;
-import wintersteve25.rpgutils.client.ui.components.BaseUI;
-import wintersteve25.rpgutils.client.ui.components.buttons.ToggleButton;
+import wintersteve25.rpgutils.client.ui.dialogues.components.UIUtilities;
+import wintersteve25.rpgutils.client.ui.dialogues.components.BaseUI;
+import wintersteve25.rpgutils.client.ui.dialogues.components.buttons.ToggleButton;
 import wintersteve25.rpgutils.common.utils.ModConstants;
 import wintersteve25.rpgutils.common.utils.RLHelper;
 
@@ -179,7 +179,9 @@ public abstract class AbstractSelectionUI<T extends SelectionOption<T>> extends 
     }
     
     protected void updateConfirmButton() {
-        confirm.active = !selectedIndices.isEmpty() && !totalOptions.isEmpty();
+        if (atLeastOne()) {
+            confirm.active = !selectedIndices.isEmpty() && !totalOptions.isEmpty();
+        }
     }
     
     protected abstract void populateOptions(List<T> list);
@@ -187,6 +189,10 @@ public abstract class AbstractSelectionUI<T extends SelectionOption<T>> extends 
     protected abstract T copyFrom(T copyFrom);
     
     protected abstract boolean isSameType(IGuiEventListener listener);
+    
+    protected boolean atLeastOne() {
+        return true;
+    }
     
     protected boolean filterSearch(T element, String searchbarValue) {
         return !element.getText().toLowerCase().contains(searchbarValue);

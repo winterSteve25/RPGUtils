@@ -3,13 +3,17 @@ package wintersteve25.rpgutils.common.utils;
 import com.google.gson.*;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.loading.FMLPaths;
+import org.apache.commons.io.FileUtils;
 import wintersteve25.rpgutils.common.data.loaded.storage.ClientOnlyLoadedData;
+import wintersteve25.rpgutils.common.network.ModNetworking;
+import wintersteve25.rpgutils.common.network.PacketLoadData;
 
 import java.io.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Collection;
 import java.util.function.Function;
 
 public class JsonUtilities {
@@ -42,10 +46,10 @@ public class JsonUtilities {
     public static final Path rpgutilsPath = FMLPaths.getOrCreateGameRelativePath(Paths.get("rpgutils/"), "");
 
     public static void saveDialogue(ResourceLocation resourceLocation, Object jsonObject) {
-        saveData(resourceLocation, jsonObject, "/dialogues/");
+        saveData(resourceLocation, jsonObject, "/dialogues/", true);
     }
 
-    private static void saveData(ResourceLocation resourceLocation, Object jsonObject, String subdirectory) {
+    private static void saveData(ResourceLocation resourceLocation, Object jsonObject, String subdirectory, boolean reload) {
         try {
             FileWriter fileWriter = new FileWriter(getGeneratedPath(resourceLocation, subdirectory));
             fileWriter.write(gson.toJson(jsonObject));
@@ -54,15 +58,24 @@ public class JsonUtilities {
             throw new RuntimeException(e);
         }
 
-        ClientOnlyLoadedData.reloadAll();
+        if (reload) {
+            ClientOnlyLoadedData.reloadAll();
+        }        
     }
 
     public static void saveDialoguePool(ResourceLocation resourceLocation, Object jsonObject) {
-        saveData(resourceLocation, jsonObject, "/dialogue_pools/");
+        saveData(resourceLocation, jsonObject, "/dialogue_pools/", true);
     }
 
     public static void saveNpcAttributes(ResourceLocation resourceLocation, Object jsonObject) {
-        saveData(resourceLocation, jsonObject, "/npc/attributes");
+        saveData(resourceLocation, jsonObject, "/npc/attributes", true);
+    }
+
+    public static void saveQuest(ResourceLocation resourceLocation, Object jsonObject, boolean reload) {
+        saveData(resourceLocation, jsonObject, "/quests/", reload);
+        if (reload) {
+            ModNetworking.sendToServer(new PacketLoadData());
+        }
     }
     
     public static void deleteDialogue(ResourceLocation resourceLocation) {
@@ -70,11 +83,19 @@ public class JsonUtilities {
         file.delete();
     }
 
-    public static void deleteDialoguePool(ResourceLocation resourceLocation) {
-        File file = new File(getGeneratedPath(resourceLocation, "/dialogue_pools/"));
-        file.delete();
+    public static void deleteAllFiles(String path) {
+        Path directory = FMLPaths.getOrCreateGameRelativePath(Paths.get(rpgutilsPath + "/" + path + "/"), "");
+        Collection<File> files = FileUtils.listFiles(directory.toFile(), null, true);
+        for (File file : files) {
+            file.delete();
+        }
     }
-    
+
+    public static void reloadAllDataFromClient() {
+        ClientOnlyLoadedData.reloadAll();
+        ModNetworking.sendToServer(new PacketLoadData());
+    }
+
     private static String getGeneratedPath(ResourceLocation resourceLocation, String subdirectory) {
         String rlPath = resourceLocation.getPath();
         int lastDir = rlPath.lastIndexOf('/');

@@ -6,16 +6,15 @@ import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.util.text.TranslationTextComponent;
 import org.apache.commons.lang3.math.NumberUtils;
-import wintersteve25.rpgutils.client.ui.components.BaseUI;
-import wintersteve25.rpgutils.client.ui.components.UIUtilities;
-import wintersteve25.rpgutils.client.ui.components.dropdown.Dropdown;
-import wintersteve25.rpgutils.client.ui.components.dropdown.EnumDropdownOption;
+import wintersteve25.rpgutils.client.ui.dialogues.components.BaseUI;
+import wintersteve25.rpgutils.client.ui.dialogues.components.UIUtilities;
+import wintersteve25.rpgutils.client.ui.dialogues.components.dropdown.Dropdown;
+import wintersteve25.rpgutils.client.ui.dialogues.components.dropdown.EnumDropdownOption;
 import wintersteve25.rpgutils.client.ui.dialogues.dialogue_creator.IAttachedUI;
 import wintersteve25.rpgutils.common.data.loaded.dialogue.dialogue.predicate.DialoguePredicate;
 import wintersteve25.rpgutils.common.data.loaded.dialogue.dialogue.predicate.LocalPlayerHealthPredicate;
 import wintersteve25.rpgutils.common.utils.RLHelper;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 
 public class LocalPlayerHealthPredicateGui implements IAttachedUI<DialoguePredicate> {

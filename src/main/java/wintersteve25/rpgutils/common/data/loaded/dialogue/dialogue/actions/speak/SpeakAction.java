@@ -73,7 +73,7 @@ public class SpeakAction implements IDialogueAction {
     @Override
     public void initialize(IAnimatedEntity<?> speaker, DialogueUI dialogueUI, Minecraft minecraft) {
         String speakerNameFormatted = getContentOrTranslation(speaker.getSelf().getName());
-        String playerNameFormatted = getContentOrTranslation(minecraft.player.getName());
+        String playerNameFormatted = getContentOrTranslation(dialogueUI.getPlayer().getName());
 
         formattedText = I18n.get(text, speakerNameFormatted, playerNameFormatted);
         displayIndex = 0;

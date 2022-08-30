@@ -8,6 +8,8 @@ import net.minecraft.command.arguments.EntityAnchorArgument;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.INameable;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Tuple;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -19,6 +21,8 @@ import wintersteve25.rpgutils.client.animation.IAnimatedEntity;
 import wintersteve25.rpgutils.common.data.loaded.dialogue.dialogue.Dialogue;
 import wintersteve25.rpgutils.common.data.loaded.dialogue.dialogue.DynamicUUID;
 import wintersteve25.rpgutils.common.data.loaded.dialogue.dialogue.actions.base.IDialogueAction;
+import wintersteve25.rpgutils.common.network.ModNetworking;
+import wintersteve25.rpgutils.common.network.PacketFinishedDialogue;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -36,34 +40,37 @@ public class DialogueUI extends Screen {
 
     private boolean requireInitialization;
     private IDialogueAction currentAction;
+    private ResourceLocation currentDialogue;
     
     public String displayingDialogueText;
-    
+    private PlayerEntity player;
+
     public DialogueUI() {
         super(StringTextComponent.EMPTY);
         this.minecraft = Minecraft.getInstance();
     }
     
-    private void setDialogue(Dialogue dialogue) {
+    private void setDialogue(Dialogue dialogue, PlayerEntity player) {
         this.entries = dialogue.getLines();
+        this.currentDialogue = dialogue.getResourceLocation();
         this.currentIndex = 0;
         this.requireInitialization = true;
         this.currentAction = null;
         this.displayingDialogueText = "";
+        this.player = player;
     }
 
     @Override
     public void render(MatrixStack pMatrixStack, int pMouseX, int pMouseY, float pPartialTicks) {
         super.render(pMatrixStack, pMouseX, pMouseY, pPartialTicks);
 
-        if (minecraft.player == null) return;
+        if (player == null) return;
         
         pMatrixStack.pushPose();
 
         Tuple<DynamicUUID, IDialogueAction> entry = entries.get(currentIndex);
         DynamicUUID speaker = entry.getA();
         speaker.setup();
-        PlayerEntity player = minecraft.player;
         World world = player.level;
         BlockPos posStart = player.blockPosition().offset(-16, -16, -16);
         BlockPos posEnd = player.blockPosition().offset(16, 16, 16);
@@ -120,6 +127,7 @@ public class DialogueUI extends Screen {
                 currentAction = null;
 
                 if (currentIndex >= entries.size()) {
+                    ModNetworking.sendToServer(new PacketFinishedDialogue(currentDialogue));
                     pMatrixStack.popPose();
                     disable();
                     return;
@@ -150,8 +158,8 @@ public class DialogueUI extends Screen {
         return false;
     }
 
-    public static void show(Dialogue dialogue, boolean interruptable) {
-        INSTANCE.setDialogue(dialogue);
+    public static void show(PlayerEntity player, Dialogue dialogue, boolean interruptable) {
+        INSTANCE.setDialogue(dialogue, player);
         INSTANCE.interruptable = interruptable;
         INSTANCE.active = true;
         Minecraft.getInstance().setScreen(null);
@@ -159,8 +167,14 @@ public class DialogueUI extends Screen {
     }
     
     public static void disable() {
+        INSTANCE.currentDialogue = null;
         INSTANCE.currentAction = null;
+        INSTANCE.player = null;
         INSTANCE.active = false;
         Minecraft.getInstance().setScreen(null);
+    }
+
+    public INameable getPlayer() {
+        return player;
     }
 }

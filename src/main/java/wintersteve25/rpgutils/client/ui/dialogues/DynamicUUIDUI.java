@@ -10,10 +10,10 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
-import wintersteve25.rpgutils.client.ui.components.BaseUI;
-import wintersteve25.rpgutils.client.ui.components.dropdown.Dropdown;
-import wintersteve25.rpgutils.client.ui.components.dropdown.EnumDropdownOption;
-import wintersteve25.rpgutils.client.ui.components.prompt.TextPrompt;
+import wintersteve25.rpgutils.client.ui.dialogues.components.BaseUI;
+import wintersteve25.rpgutils.client.ui.dialogues.components.dropdown.Dropdown;
+import wintersteve25.rpgutils.client.ui.dialogues.components.dropdown.EnumDropdownOption;
+import wintersteve25.rpgutils.client.ui.dialogues.components.prompt.TextPrompt;
 import wintersteve25.rpgutils.client.ui.dialogues.selections.nearby_entities.NearbyEntityOption;
 import wintersteve25.rpgutils.client.ui.dialogues.selections.nearby_entities.SelectNearbyEntity;
 import wintersteve25.rpgutils.client.ui.dialogues.selections.npc_id.SelectNpcID;
@@ -25,8 +25,8 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Consumer;
 
-import static wintersteve25.rpgutils.client.ui.components.selection.AbstractSelectionUI.CONFIRM_TEXT;
-import static wintersteve25.rpgutils.client.ui.components.selection.AbstractSelectionUI.WIDTH;
+import static wintersteve25.rpgutils.client.ui.dialogues.components.selection.AbstractSelectionUI.CONFIRM_TEXT;
+import static wintersteve25.rpgutils.client.ui.dialogues.components.selection.AbstractSelectionUI.WIDTH;
 
 public class DynamicUUIDUI extends BaseUI {
 

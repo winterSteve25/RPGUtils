@@ -1,5 +1,7 @@
 package wintersteve25.rpgutils.common.systems;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
@@ -18,7 +20,7 @@ import java.util.List;
 
 public class DialogueSystem {
     @OnlyIn(Dist.CLIENT)
-    public static void play(ResourceLocation dialoguePool) {
+    public static void play(PlayerEntity player, ResourceLocation dialoguePool) {
         RPGUtils.LOGGER.info("Attempting to play dialogue pool: {}", dialoguePool);
         
         List<DialogueRule> pool = DialoguePoolManager.INSTANCE.getPools().get(dialoguePool);
@@ -49,10 +51,15 @@ public class DialogueSystem {
             return;
         }
         
-        DialogueUI.show(dialogue, randomRule.isInterruptable());
+        DialogueUI.show(player, dialogue, randomRule.isInterruptable());
+    }
+    
+    @OnlyIn(Dist.CLIENT)
+    public static void play(ResourceLocation dialoguePool) {
+        play(Minecraft.getInstance().player, dialoguePool);
     }
     
     public static void playFromServer(ResourceLocation dialoguePool, ServerPlayerEntity player) {
-        ModNetworking.sendToClient(new PacketPlayDialogue(dialoguePool), player);
+        ModNetworking.sendToClient(new PacketPlayDialogue(dialoguePool, player), player);
     }
 }

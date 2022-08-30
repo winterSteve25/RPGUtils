@@ -1,5 +1,6 @@
 package wintersteve25.rpgutils.common.network;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent;
 import wintersteve25.rpgutils.client.ui.quests.creator.QuestCreatorUI;
@@ -13,7 +14,7 @@ public class PacketOpenQuestCreator implements ModPacket {
     }
 
     public void handle(Supplier<NetworkEvent.Context> ctx) {
-        ctx.get().enqueueWork(QuestUI::open);
+        ctx.get().enqueueWork(QuestCreatorUI::open);
         ctx.get().setPacketHandled(true);
     }
 }

@@ -6,7 +6,7 @@ import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
-import wintersteve25.rpgutils.client.ui.components.selection.AbstractSelectionUI;
+import wintersteve25.rpgutils.client.ui.dialogues.components.selection.AbstractSelectionUI;
 import wintersteve25.rpgutils.client.ui.dialogues.dialogue_creator.DialogueEditorUI;
 import wintersteve25.rpgutils.client.ui.dialogues.dialogue_creator.EnterTextConfirmationUI;
 import wintersteve25.rpgutils.common.data.loaded.dialogue.dialogue.Dialogue;

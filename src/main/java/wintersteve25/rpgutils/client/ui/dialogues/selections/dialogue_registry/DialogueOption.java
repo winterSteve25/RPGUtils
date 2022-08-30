@@ -1,6 +1,6 @@
 package wintersteve25.rpgutils.client.ui.dialogues.selections.dialogue_registry;
 
-import wintersteve25.rpgutils.client.ui.components.selection.SelectionOption;
+import wintersteve25.rpgutils.client.ui.dialogues.components.selection.SelectionOption;
 import wintersteve25.rpgutils.common.data.loaded.dialogue.dialogue.Dialogue;
 
 public class DialogueOption extends SelectionOption<DialogueOption> {

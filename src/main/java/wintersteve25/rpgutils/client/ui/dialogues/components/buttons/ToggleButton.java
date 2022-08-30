@@ -1,4 +1,4 @@
-package wintersteve25.rpgutils.client.ui.components.buttons;
+package wintersteve25.rpgutils.client.ui.dialogues.components.buttons;
 
 import net.minecraft.client.gui.widget.ToggleWidget;
 

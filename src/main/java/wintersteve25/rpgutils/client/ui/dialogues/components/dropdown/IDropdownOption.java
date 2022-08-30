@@ -1,4 +1,4 @@
-package wintersteve25.rpgutils.client.ui.components.dropdown;
+package wintersteve25.rpgutils.client.ui.dialogues.components.dropdown;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 

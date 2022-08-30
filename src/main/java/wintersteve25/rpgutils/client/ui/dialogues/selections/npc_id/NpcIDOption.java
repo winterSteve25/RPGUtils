@@ -1,6 +1,6 @@
 package wintersteve25.rpgutils.client.ui.dialogues.selections.npc_id;
 
-import wintersteve25.rpgutils.client.ui.components.selection.SelectionOption;
+import wintersteve25.rpgutils.client.ui.dialogues.components.selection.SelectionOption;
 
 public class NpcIDOption extends SelectionOption<NpcIDOption> {
     private final String npcID;

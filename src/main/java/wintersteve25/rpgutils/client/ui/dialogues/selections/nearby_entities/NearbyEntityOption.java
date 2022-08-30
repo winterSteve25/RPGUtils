@@ -3,8 +3,8 @@ package wintersteve25.rpgutils.client.ui.dialogues.selections.nearby_entities;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.text.ITextComponent;
-import wintersteve25.rpgutils.client.ui.components.selection.AbstractSelectionUI;
-import wintersteve25.rpgutils.client.ui.components.selection.SelectionOption;
+import wintersteve25.rpgutils.client.ui.dialogues.components.selection.AbstractSelectionUI;
+import wintersteve25.rpgutils.client.ui.dialogues.components.selection.SelectionOption;
 
 import java.util.UUID;
 
