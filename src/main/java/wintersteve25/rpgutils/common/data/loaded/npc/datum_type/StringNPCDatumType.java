@@ -7,6 +7,8 @@ public class StringNPCDatumType extends NPCDatumType<String> {
 
     public static final StringNPCDatumType NAME = new StringNPCDatumType("name");
     public static final StringNPCDatumType TEXTURE = new StringNPCDatumType("texture");
+    public static final StringNPCDatumType MODEL = new StringNPCDatumType("model");
+    public static final StringNPCDatumType ANIMATIONS = new StringNPCDatumType("animations");
 
     protected StringNPCDatumType(String jsonName) {
         super(jsonName);
@@ -30,5 +32,7 @@ public class StringNPCDatumType extends NPCDatumType<String> {
     public static void register() {
         register(NAME);
         register(TEXTURE);
+        register(MODEL);
+        register(ANIMATIONS);
     }
 }
