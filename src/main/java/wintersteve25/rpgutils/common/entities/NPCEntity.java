@@ -10,7 +10,10 @@ import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.brain.Brain;
 import net.minecraft.entity.ai.brain.sensor.SensorType;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.Hand;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
@@ -27,8 +30,9 @@ import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 import wintersteve25.rpgutils.RPGUtils;
 import wintersteve25.rpgutils.client.animation.IAnimatedEntity;
-import wintersteve25.rpgutils.common.data.loaded.npc.datum_type.MapNPCDatumType;
 import wintersteve25.rpgutils.common.data.loaded.npc.NPCTypeLoader;
+import wintersteve25.rpgutils.common.data.loaded.npc.datum_type.FloatNPCDatumType;
+import wintersteve25.rpgutils.common.data.loaded.npc.datum_type.MapNPCDatumType;
 import wintersteve25.rpgutils.common.data.loaded.npc.datum_type.SoundEventNPCDatumType;
 import wintersteve25.rpgutils.common.data.loaded.npc.datum_type.StringNPCDatumType;
 import wintersteve25.rpgutils.common.data.loaded.npc.goal.ModGoals;
@@ -39,9 +43,7 @@ import wintersteve25.rpgutils.common.registry.ModMemoryModuleTypes;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Map;
-import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 public class NPCEntity extends MobEntity implements IAnimatedEntity<NPCEntity> {
 
@@ -55,11 +57,22 @@ public class NPCEntity extends MobEntity implements IAnimatedEntity<NPCEntity> {
         super(entityType, world);
     }
 
-    public static NPCEntity create(EntityType<? extends MobEntity> entityType, World world, String type) {
+    public static NPCEntity create(EntityType<? extends MobEntity> entityType, World world, String typeStr) {
         NPCEntity entity = new NPCEntity(entityType, world);
-        entity.setNPCType(type);
-//        ObfuscationReflectionHelper.setPrivateValue(Entity.class, entity, new EntitySize(1.2f, 3.5f, false), "field_213325_aI");
+        entity.setNPCType(typeStr);
+        entity.setItemInHand(Hand.MAIN_HAND, new ItemStack(Items.APPLE));
+        NPCType type = entity.getNPCType();
+        float width = type.getDatum(FloatNPCDatumType.WIDTH);
+        float height = type.getDatum(FloatNPCDatumType.WIDTH);
+        float eyeHeight = type.getDatum(FloatNPCDatumType.EYE_HEIGHT);
+        entity.updateDimensions();
         return entity;
+    }
+
+    private void updateDimensions() {
+        NPCType type = getNPCType();
+        ObfuscationReflectionHelper.setPrivateValue(Entity.class, this, new EntitySize(type.getDatum(FloatNPCDatumType.WIDTH), type.getDatum(FloatNPCDatumType.HEIGHT), true), "field_213325_aI"); // dimensions
+        ObfuscationReflectionHelper.setPrivateValue(Entity.class, this, type.getDatum(FloatNPCDatumType.EYE_HEIGHT), "field_213326_aJ"); // eyeHeight
     }
 
     public static AttributeModifierMap createAttributes() {
@@ -129,6 +142,7 @@ public class NPCEntity extends MobEntity implements IAnimatedEntity<NPCEntity> {
      */
     public void setNPCType(NPCType type) {
         this.npcType = type;
+        this.updateDimensions();
     }
 
     public void updateClients() {
@@ -148,7 +162,7 @@ public class NPCEntity extends MobEntity implements IAnimatedEntity<NPCEntity> {
 
     @Override
     public void registerControllers(AnimationData data) {
-        data.addAnimationController(new AnimationController(this, "controller", 0, this::predicate));
+        data.addAnimationController(new AnimationController<>(this, "controller", 0, this::predicate));
     }
 
     private <E extends IAnimatable> PlayState predicate(AnimationEvent<E> event) {

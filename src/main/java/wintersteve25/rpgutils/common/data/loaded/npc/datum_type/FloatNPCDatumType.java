@@ -7,6 +7,7 @@ public class FloatNPCDatumType extends NPCDatumType<Float> {
 
     public static final FloatNPCDatumType WIDTH = new FloatNPCDatumType("width");
     public static final FloatNPCDatumType HEIGHT = new FloatNPCDatumType("height");
+    public static final FloatNPCDatumType EYE_HEIGHT = new FloatNPCDatumType("eyeHeight");
 
     protected FloatNPCDatumType(String jsonName) {
         super(jsonName);
@@ -30,5 +31,6 @@ public class FloatNPCDatumType extends NPCDatumType<Float> {
     public static void register() {
         register(WIDTH);
         register(HEIGHT);
+        register(EYE_HEIGHT);
     }
 }

@@ -103,6 +103,7 @@ public class ServerForgeEvents {
             NPCType type = npcEntity.getNPCType();
             if (type != null) {
                 event.setNewSize(new EntitySize(type.getDatum(FloatNPCDatumType.WIDTH), type.getDatum(FloatNPCDatumType.HEIGHT), true), true);
+                event.setNewEyeHeight(type.getDatum(FloatNPCDatumType.EYE_HEIGHT));
             }
         }
     }
