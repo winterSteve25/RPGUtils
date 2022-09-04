@@ -31,10 +31,10 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 import wintersteve25.rpgutils.RPGUtils;
 import wintersteve25.rpgutils.client.animation.IAnimatedEntity;
 import wintersteve25.rpgutils.common.data.loaded.npc.NPCTypeLoader;
-import wintersteve25.rpgutils.common.data.loaded.npc.datum_type.FloatNPCDatumType;
-import wintersteve25.rpgutils.common.data.loaded.npc.datum_type.MapNPCDatumType;
-import wintersteve25.rpgutils.common.data.loaded.npc.datum_type.SoundEventNPCDatumType;
-import wintersteve25.rpgutils.common.data.loaded.npc.datum_type.StringNPCDatumType;
+import wintersteve25.rpgutils.common.data.loaded.npc.property.FloatNPCProperty;
+import wintersteve25.rpgutils.common.data.loaded.npc.property.MapNPCProperty;
+import wintersteve25.rpgutils.common.data.loaded.npc.property.SoundEventNPCProperty;
+import wintersteve25.rpgutils.common.data.loaded.npc.property.StringNPCProperty;
 import wintersteve25.rpgutils.common.data.loaded.npc.goal.ModGoals;
 import wintersteve25.rpgutils.common.network.ModNetworking;
 import wintersteve25.rpgutils.common.network.PacketSetType;
@@ -60,19 +60,15 @@ public class NPCEntity extends MobEntity implements IAnimatedEntity<NPCEntity> {
     public static NPCEntity create(EntityType<? extends MobEntity> entityType, World world, String typeStr) {
         NPCEntity entity = new NPCEntity(entityType, world);
         entity.setNPCType(typeStr);
-        entity.setItemInHand(Hand.MAIN_HAND, new ItemStack(Items.APPLE));
-        NPCType type = entity.getNPCType();
-        float width = type.getDatum(FloatNPCDatumType.WIDTH);
-        float height = type.getDatum(FloatNPCDatumType.WIDTH);
-        float eyeHeight = type.getDatum(FloatNPCDatumType.EYE_HEIGHT);
+        entity.setItemInHand(Hand.MAIN_HAND, new ItemStack(Items.NETHERITE_SWORD));
         entity.updateDimensions();
         return entity;
     }
 
     private void updateDimensions() {
         NPCType type = getNPCType();
-        ObfuscationReflectionHelper.setPrivateValue(Entity.class, this, new EntitySize(type.getDatum(FloatNPCDatumType.WIDTH), type.getDatum(FloatNPCDatumType.HEIGHT), true), "field_213325_aI"); // dimensions
-        ObfuscationReflectionHelper.setPrivateValue(Entity.class, this, type.getDatum(FloatNPCDatumType.EYE_HEIGHT), "field_213326_aJ"); // eyeHeight
+        ObfuscationReflectionHelper.setPrivateValue(Entity.class, this, new EntitySize(((float) type.getProperty(FloatNPCProperty.WIDTH)), (Float) type.getProperty(FloatNPCProperty.HEIGHT), true), "field_213325_aI"); // dimensions
+        ObfuscationReflectionHelper.setPrivateValue(Entity.class, this, type.getProperty(FloatNPCProperty.EYE_HEIGHT), "field_213326_aJ"); // eyeHeight
     }
 
     public static AttributeModifierMap createAttributes() {
@@ -83,7 +79,7 @@ public class NPCEntity extends MobEntity implements IAnimatedEntity<NPCEntity> {
     protected void registerGoals() {
         NPCType type = getNPCType();
         if (type != null) {
-            Map<ModGoals.GoalConstructor, Integer> goalWeights = type.getDatum(MapNPCDatumType.GOALS);
+            Map<ModGoals.GoalConstructor, Integer> goalWeights = (Map<ModGoals.GoalConstructor, Integer>) type.getProperty(MapNPCProperty.GOALS);
             for (Map.Entry<ModGoals.GoalConstructor, Integer> goal : goalWeights.entrySet()) {
                 this.goalSelector.addGoal(goal.getValue(), goal.getKey().apply(this));
             }
@@ -108,8 +104,8 @@ public class NPCEntity extends MobEntity implements IAnimatedEntity<NPCEntity> {
      */
     private void setNPCType(String type) {
         this.npcType = NPCTypeLoader.INSTANCE.getType(type);
-        this.getPersistentData().putString(getTypeKey(), this.npcType.getDatum(StringNPCDatumType.NAME));
-        NPCTypeLoader.INSTANCE.setAttributes(this, this.npcType.getDatum(StringNPCDatumType.NAME));
+        this.getPersistentData().putString(getTypeKey(), (String) this.npcType.getProperty(StringNPCProperty.NAME));
+        NPCTypeLoader.INSTANCE.setAttributes(this, (String) this.npcType.getProperty(StringNPCProperty.NAME));
         this.refreshDimensions();
         this.registerGoals();
     }
@@ -157,7 +153,7 @@ public class NPCEntity extends MobEntity implements IAnimatedEntity<NPCEntity> {
     }
 
     public String getTexturePath() {
-        return getTypeOrElse(t -> t.getDatum(StringNPCDatumType.TEXTURE), NPCType.DEFAULT_TEXTURE);
+        return (String) getTypeOrElse(t -> t.getProperty(StringNPCProperty.TEXTURE), NPCType.DEFAULT_TEXTURE);
     }
 
     @Override
@@ -178,19 +174,19 @@ public class NPCEntity extends MobEntity implements IAnimatedEntity<NPCEntity> {
     @Nullable
     @Override
     protected SoundEvent getAmbientSound() {
-        return getTypeOrElse(t -> t.getDatum(SoundEventNPCDatumType.AMBIENT_SOUND), SoundEvents.VILLAGER_AMBIENT);
+        return (SoundEvent) getTypeOrElse(t -> t.getProperty(SoundEventNPCProperty.AMBIENT_SOUND), SoundEvents.VILLAGER_AMBIENT);
     }
 
     @Nullable
     @Override
     protected SoundEvent getHurtSound(@Nonnull DamageSource damageSource) {
-        return getTypeOrElse(t -> t.getDatum(SoundEventNPCDatumType.HURT_SOUND), SoundEvents.VILLAGER_HURT);
+        return (SoundEvent) getTypeOrElse(t -> t.getProperty(SoundEventNPCProperty.HURT_SOUND), SoundEvents.VILLAGER_HURT);
     }
 
     @Nullable
     @Override
     protected SoundEvent getDeathSound() {
-        return getTypeOrElse(t -> t.getDatum(SoundEventNPCDatumType.DEATH_SOUND), SoundEvents.VILLAGER_DEATH);
+        return (SoundEvent) getTypeOrElse(t -> t.getProperty(SoundEventNPCProperty.DEATH_SOUND), SoundEvents.VILLAGER_DEATH);
     }
 
     @Override
@@ -207,7 +203,7 @@ public class NPCEntity extends MobEntity implements IAnimatedEntity<NPCEntity> {
 
     @Override
     public ITextComponent getName() {
-        String name = getTypeOrElse(t -> t.getDatum(StringNPCDatumType.NAME), "npc");
+        String name = (String) getTypeOrElse(t -> t.getProperty(StringNPCProperty.NAME), "npc");
         return new TranslationTextComponent("entity." + RPGUtils.MOD_ID + ".npc." + name);
     }
 }

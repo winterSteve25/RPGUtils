@@ -18,7 +18,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.server.FMLServerAboutToStartEvent;
 import wintersteve25.rpgutils.RPGUtils;
 import wintersteve25.rpgutils.common.data.capabilities.base.CapabilityProvider;
-import wintersteve25.rpgutils.common.data.loaded.npc.datum_type.FloatNPCDatumType;
+import wintersteve25.rpgutils.common.data.loaded.npc.property.FloatNPCProperty;
 import wintersteve25.rpgutils.common.data.loaded.quest.PlayerQuestProgress;
 import wintersteve25.rpgutils.common.data.loaded.quest.objectives.triggers.InteractBlockTrigger;
 import wintersteve25.rpgutils.common.data.loaded.quest.objectives.triggers.InteractEntityTrigger;
@@ -102,8 +102,8 @@ public class ServerForgeEvents {
             NPCEntity npcEntity = (NPCEntity) entity;
             NPCType type = npcEntity.getNPCType();
             if (type != null) {
-                event.setNewSize(new EntitySize(type.getDatum(FloatNPCDatumType.WIDTH), type.getDatum(FloatNPCDatumType.HEIGHT), true), true);
-                event.setNewEyeHeight(type.getDatum(FloatNPCDatumType.EYE_HEIGHT));
+                event.setNewSize(new EntitySize(((float) type.getProperty(FloatNPCProperty.WIDTH)), (Float) type.getProperty(FloatNPCProperty.HEIGHT), true), true);
+                event.setNewEyeHeight((Float) type.getProperty(FloatNPCProperty.EYE_HEIGHT));
             }
         }
     }

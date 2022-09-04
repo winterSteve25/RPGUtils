@@ -3,7 +3,7 @@ package wintersteve25.rpgutils.client.renderers.npc;
 import net.minecraft.util.ResourceLocation;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
 import wintersteve25.rpgutils.RPGUtils;
-import wintersteve25.rpgutils.common.data.loaded.npc.datum_type.StringNPCDatumType;
+import wintersteve25.rpgutils.common.data.loaded.npc.property.StringNPCProperty;
 import wintersteve25.rpgutils.common.entities.NPCEntity;
 import wintersteve25.rpgutils.common.entities.NPCType;
 
@@ -16,7 +16,7 @@ public class NPCModel extends AnimatedGeoModel<NPCEntity> {
     public ResourceLocation getModelLocation(NPCEntity entity) {
         NPCType type = entity.getNPCType();
         if (type != null) {
-            return new ResourceLocation(RPGUtils.MOD_ID, type.getDatum(StringNPCDatumType.MODEL));
+            return new ResourceLocation(RPGUtils.MOD_ID, (String) type.getProperty(StringNPCProperty.MODEL));
         }
         return DEFAULT_PATH;
     }
@@ -30,7 +30,7 @@ public class NPCModel extends AnimatedGeoModel<NPCEntity> {
     public ResourceLocation getAnimationFileLocation(NPCEntity entity) {
         NPCType type = entity.getNPCType();
         if (type != null) {
-            return new ResourceLocation(RPGUtils.MOD_ID, type.getDatum(StringNPCDatumType.ANIMATIONS));
+            return new ResourceLocation(RPGUtils.MOD_ID, (String) type.getProperty(StringNPCProperty.ANIMATIONS));
         }
         return DEFAULT_ANIMATIONS;
     }

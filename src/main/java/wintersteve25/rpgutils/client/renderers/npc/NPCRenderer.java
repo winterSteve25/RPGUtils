@@ -13,6 +13,7 @@ public class NPCRenderer extends GeoEntityRenderer<NPCEntity> {
 
     public NPCRenderer(EntityRendererManager renderManager) {
         super(renderManager, new NPCModel());
+        addLayer(new HeldItemRenderLayer(this));
         this.shadowRadius = 0.5f;
     }
 

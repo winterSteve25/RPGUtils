@@ -16,8 +16,8 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.SoundEvents;
 import wintersteve25.rpgutils.RPGUtils;
 import wintersteve25.rpgutils.common.data.loaded.JsonDataLoader;
-import wintersteve25.rpgutils.common.data.loaded.npc.datum_type.MapNPCDatumType;
-import wintersteve25.rpgutils.common.data.loaded.npc.datum_type.NPCDatumType;
+import wintersteve25.rpgutils.common.data.loaded.npc.property.MapNPCProperty;
+import wintersteve25.rpgutils.common.data.loaded.npc.property.NPCProperty;
 import wintersteve25.rpgutils.common.data.loaded.npc.goal.ModGoals;
 import wintersteve25.rpgutils.common.entities.NPCType;
 import wintersteve25.rpgutils.common.utils.JsonRegistryMap;
@@ -44,7 +44,7 @@ public class NPCTypeLoader extends JsonDataLoader {
     protected void apply(Map<ResourceLocation, JsonElement> data) {
         RPGUtils.LOGGER.info("Loading NPC attributes");
 
-        NPCDatumType.register();
+        NPCProperty.register();
 
         typeMap.clear();
 
@@ -77,7 +77,7 @@ public class NPCTypeLoader extends JsonDataLoader {
     }
 
     public void setAttributes(MobEntity entity, String name) {
-        Map<Attribute, Double> attributeMap = typeMap.get(name).getDatum(MapNPCDatumType.ATTRIBUTES);
+        Map<Attribute, Double> attributeMap = (Map<Attribute, Double>) typeMap.get(name).getProperty(MapNPCProperty.ATTRIBUTES);
         for (Attribute attribute : ATTRIBUTES.objectSet()) {
             if (attributeMap.containsKey(attribute)) {
                 setAttribute(entity, attribute, attributeMap.get(attribute));
