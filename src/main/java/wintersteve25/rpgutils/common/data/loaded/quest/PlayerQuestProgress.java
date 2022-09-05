@@ -11,6 +11,7 @@ import wintersteve25.rpgutils.RPGUtils;
 import wintersteve25.rpgutils.common.data.capabilities.base.ICapabilityHolder;
 import wintersteve25.rpgutils.common.data.loaded.quest.objectives.AbstractTriggeredObjective;
 import wintersteve25.rpgutils.common.data.loaded.quest.objectives.IObjective;
+import wintersteve25.rpgutils.common.data.loaded.quest.rewards.IReward;
 import wintersteve25.rpgutils.common.network.ModNetworking;
 import wintersteve25.rpgutils.common.network.PacketCompletedQuestObjectives;
 import wintersteve25.rpgutils.common.network.PacketCurrentQuestStateChanged;
@@ -66,13 +67,25 @@ public class PlayerQuestProgress implements ICapabilityHolder {
     // do not call, used for networking syncs, use the overload instead
     public void completeCurrentQuest(PlayerEntity player, boolean updateOtherSide) {
         RPGUtils.LOGGER.info("Completed quest: {}", currentQuest.getResourceLocation());
+        
+        boolean isServer = false;
+        
+        if (player instanceof ServerPlayerEntity) {
+            for (IReward reward : currentQuest.getRewards()) {
+                reward.giveReward((ServerPlayerEntity) player);
+            }
+            
+            isServer = true;
+        }
+        
         completedQuests.add(currentQuest.getResourceLocation());
         currentQuest = null;
         currentQuestObjectives = null;
+        
         if (updateOtherSide) {
             PacketCurrentQuestStateChanged packet = new PacketCurrentQuestStateChanged();
             
-            if (player.getCommandSenderWorld().isClientSide()) {
+            if (!isServer) {
                 ModNetworking.sendToServer(packet);
             } else {
                 ModNetworking.sendToClient(packet, (ServerPlayerEntity) player);

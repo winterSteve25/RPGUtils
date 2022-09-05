@@ -1,5 +1,6 @@
 package wintersteve25.rpgutils.client.ui.quests.creator;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import dev.ftb.mods.ftblibrary.icon.Icon;
 import dev.ftb.mods.ftblibrary.ui.*;
 import dev.ftb.mods.ftblibrary.ui.input.MouseButton;
@@ -19,9 +20,9 @@ public class EditRewardsPanel extends Panel {
     private final PanelScrollbar scrollBar;
     private final List<RewardButton> buttons;
     private final Button add;
-    private final LazyValue<Quest.Builder> builder;
+    public LazyValue<Quest.Builder> builder;
     private final RewardDetailsPrompt rewardDetailsPanel;
-    
+
     private boolean loaded;
     
     public EditRewardsPanel(Panel panel, RewardDetailsPrompt rewardDetailsPanel, LazyValue<Quest.Builder> builder) {
@@ -60,7 +61,11 @@ public class EditRewardsPanel extends Panel {
 
                 int scrollHeight = this.align(new WidgetLayout.Vertical(0, 2, 0));
                 EditRewardsPanel.this.scrollBar.setMaxValue(scrollHeight);
-                EditRewardsPanel.this.scrollBar.setShouldDraw(scrollHeight >= height);
+            }
+
+            @Override
+            public void drawBackground(MatrixStack matrixStack, Theme theme, int x, int y, int w, int h) {
+                theme.drawPanelBackground(matrixStack, x, y, w, h);
             }
         };
         
@@ -80,7 +85,7 @@ public class EditRewardsPanel extends Panel {
                         buttons.add(b);
                         buttonsPanel.add(b);
                         buttonsPanel.alignWidgets();
-                        builder.get().addRewards(b.getReward());
+                        builder.get().addRewards(b);
                     });
                 }
             }
@@ -93,8 +98,24 @@ public class EditRewardsPanel extends Panel {
         scrollPanel.setSize(width, height - 30);
         add(add);
         add(scrollPanel);
-
+        
         if (loaded) return;
+        for (RewardButton button : refreshRewards()) {
+            builder.get().addRewards(button);
+        }
+        builder.get().clearRewards();
+        loaded = true;
+    }
+
+    @Override
+    public void alignWidgets() {
+        align(new WidgetLayout.Vertical(0, 8, 0));
+    }
+    
+    public List<RewardButton> refreshRewards() {
+        buttons.clear();
+        buttonsPanel.widgets.clear();
+        buttonsPanel.alignWidgets();
         
         for (IReward reward : builder.get().getRewards()) {
             RewardButton button = new RewardButton(buttonsPanel, new StringTextComponent("Reward"), Icon.EMPTY, rewardDetailsPanel, EditRewardsPanel.this);
@@ -104,14 +125,9 @@ public class EditRewardsPanel extends Panel {
             buttonsPanel.alignWidgets();
         }
         
-        loaded = true;
+        return buttons;
     }
 
-    @Override
-    public void alignWidgets() {
-        align(new WidgetLayout.Vertical(0, 8, 0));
-    }
-    
     public void remove(RewardButton rewardButton) {
         builder.get().removeRewards(rewardButton.getReward());
         buttons.remove(rewardButton);

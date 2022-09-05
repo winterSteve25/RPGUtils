@@ -5,10 +5,14 @@ import com.google.gson.JsonObject;
 import com.mojang.serialization.JsonOps;
 import dev.ftb.mods.ftblibrary.icon.Icon;
 import dev.ftb.mods.ftblibrary.icon.ItemIcon;
+import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.item.crafting.ShapedRecipe;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.common.crafting.CraftingHelper;
 import wintersteve25.rpgutils.common.utils.IDeserializer;
@@ -22,8 +26,19 @@ public class ItemReward implements IReward {
     }
 
     @Override
-    public void giveReward(PlayerEntity player) {
-        player.addItem(item);
+    public void giveReward(ServerPlayerEntity player) {
+        ItemStack itemStack = item.copy();
+        
+        if (player.addItem(itemStack)) {
+            player.level.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.ITEM_PICKUP, SoundCategory.PLAYERS, 0.2F, ((player.getRandom().nextFloat() - player.getRandom().nextFloat()) * 0.7F + 1.0F) * 2.0F);
+            player.inventoryMenu.broadcastChanges();
+        } else {
+            ItemEntity itementity = player.drop(itemStack, false);
+            if (itementity != null) {
+                itementity.setNoPickUpDelay();
+                itementity.setOwner(player.getUUID());
+            }
+        }
     }
 
     @Override

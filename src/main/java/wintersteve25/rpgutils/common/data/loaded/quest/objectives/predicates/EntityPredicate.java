@@ -154,7 +154,7 @@ public class EntityPredicate {
             String s = JSONUtils.getAsString(jsonobject, "team", (String)null);
             ResourceLocation resourcelocation = jsonobject.has("catType") ? new ResourceLocation(JSONUtils.getAsString(jsonobject, "catType")) : null;
             String npcID = JSONUtils.getAsString(jsonobject, "npcID", (String)null);
-            return (new EntityPredicate.Builder()).entityType(entitytypepredicate).distance(distancepredicate).located(locationpredicate).effects(mobeffectspredicate).nbt(nbtpredicate).flags(entityflagspredicate).equipment(entityequipmentpredicate).player(playerpredicate).fishingHook(fishingpredicate).team(s).vehicle(entitypredicate).targetedEntity(entitypredicate1).catType(resourcelocation).build();
+            return (new Builder()).entityType(entitytypepredicate).distance(distancepredicate).located(locationpredicate).effects(mobeffectspredicate).nbt(nbtpredicate).flags(entityflagspredicate).equipment(entityequipmentpredicate).player(playerpredicate).fishingHook(fishingpredicate).team(s).vehicle(entitypredicate).targetedEntity(entitypredicate1).catType(resourcelocation).npcID(npcID).build();
         } else {
             return ANY;
         }

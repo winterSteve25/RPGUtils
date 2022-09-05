@@ -134,7 +134,10 @@ public class RewardDetailsPrompt extends BaseScreen {
 
         public void setReward(IReward reward) {
             this.reward = reward;
-            if (reward == null) return;
+            if (reward == null) {
+                type.setIcon(Icon.EMPTY);
+                return;
+            }
             type.setIcon(reward.rewardIcon());
         }
     }
@@ -153,6 +156,7 @@ public class RewardDetailsPrompt extends BaseScreen {
                     if (mouseButton.isLeft()) {
                         playClickSound();
                         onSubmit.run();
+                        panel.rewardTypePanel.type.setIcon(Icon.EMPTY);
                     }
                 }
 

@@ -32,8 +32,9 @@ public class RewardButton extends NordButton {
     public void onClicked(MouseButton mouseButton) {
         if (mouseButton.isLeft()) {
             playClickSound();
-            prompt.enable(this, btn -> {});
-            parent.alignWidgets();
+            prompt.enable(this, btn -> {
+                parent.alignWidgets();
+            });
         } else if (mouseButton.isRight()) {
             openContextMenu(contextMenu);
         }

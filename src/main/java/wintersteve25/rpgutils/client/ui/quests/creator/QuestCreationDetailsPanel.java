@@ -32,16 +32,23 @@ public class QuestCreationDetailsPanel extends Panel {
 
     @Override
     public void addWidgets() {
-        left.setSize(165, getScreen().getScreenHeight());
+        if (!enabled) {
+            TextField titleText = new TextField(this);
+            titleText.setText("You haven't selected a quest to edit");
+            add(titleText);
+            return;
+        }
+        
+        left.setSize(185, getScreen().getScreenHeight());
         add(left);
         
-        right.setSize(165, getScreen().getScreenHeight());
+        right.setSize(200, getScreen().getScreenHeight());
         add(right);
     }
 
     @Override
     public void alignWidgets() {
-        align(new WidgetLayout.Horizontal(0, 8, 0));
+        align(new WidgetLayout.Horizontal(0, 30, 0));
     }
 
     public void enable(QuestBuilderButton button) {
@@ -50,6 +57,8 @@ public class QuestCreationDetailsPanel extends Panel {
         builder = button.builder;
         left.title.getWidget().setText(builder.getTitle());
         left.description.getWidget().setText(builder.getDescription());
+        left.rewardsPanel.builder = new LazyValue<>(() -> builder);
+        left.rewardsPanel.refreshRewards();
         left.refreshPrerequisitesTooltips();
         refreshWidgets();
     }
@@ -98,7 +107,7 @@ public class QuestCreationDetailsPanel extends Panel {
                         parent1.builder.setTitle(getText());
                     }
                 };
-                box.setSize(135, 20);
+                box.setSize(155, 20);
                 box.ghostText = "Title";
                 return box;
             }, new StringTextComponent("Title: "));
@@ -111,7 +120,7 @@ public class QuestCreationDetailsPanel extends Panel {
                         parent1.builder.setDescription(getText());
                     }
                 };
-                box.setSize(100, 20);
+                box.setSize(120, 20);
                 box.ghostText = "Description";
                 return box;
             }, new StringTextComponent("Description: "));
@@ -133,23 +142,16 @@ public class QuestCreationDetailsPanel extends Panel {
                     }
                 }
             };
-            selectPrerequisites.setSize(165, 20);
+            selectPrerequisites.setSize(185, 20);
 
             rewardsPanel = new EditRewardsPanel(this, ((QuestCreatorUI) parent1.parent).rewardDetailsPanel, new LazyValue<>(() -> parent1.builder));
-            rewardsPanel.setSize(165, 160);
+            rewardsPanel.setSize(185, 185);
         
             refreshPrerequisitesTooltips();
         }
 
         @Override
         public void addWidgets() {
-            if (!((QuestCreationDetailsPanel) parent).enabled) {
-                TextField titleText = new TextField(this);
-                titleText.setText("You haven't selected a quest to edit");
-                add(titleText);
-                return;
-            }
-
             TextField titleText = new TextField(this);
             titleText.setText(new StringTextComponent("Quest Details").withStyle(TextFormatting.ITALIC));
             titleText.setScale(1.4f);
@@ -193,7 +195,7 @@ public class QuestCreationDetailsPanel extends Panel {
     }
     
     private static class Right extends Panel {
-
+        
         public Right(Panel panel) {
             super(panel);
         }
@@ -205,7 +207,7 @@ public class QuestCreationDetailsPanel extends Panel {
 
         @Override
         public void alignWidgets() {
-
+            align(WidgetLayout.VERTICAL);
         }
     }
 }

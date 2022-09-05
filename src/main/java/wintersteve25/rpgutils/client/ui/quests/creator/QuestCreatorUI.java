@@ -88,7 +88,7 @@ public class QuestCreatorUI extends BaseScreen {
         add(questsPanel);
         questsPanel.setPosAndSize(10, 40, 160, getScreen().getGuiScaledHeight() - 40);
         add(detailsPanel);
-        detailsPanel.setPosAndSize(170, 15, getScreen().getScreenWidth() - 180, getScreen().getGuiScaledHeight() - 40);
+        detailsPanel.setPosAndSize(170, 15, getScreen().getScreenWidth() - 180, getScreen().getGuiScaledHeight() - 30);
         add(createQuestPrompt);
         createQuestPrompt.setSize(176, 100);
         add(renameQuestPrompt);

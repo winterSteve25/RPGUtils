@@ -1,7 +1,9 @@
 package wintersteve25.rpgutils.client.ui.quests.creator;
 
 import com.google.gson.JsonElement;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import dev.ftb.mods.ftblibrary.ui.Panel;
+import dev.ftb.mods.ftblibrary.ui.Theme;
 import dev.ftb.mods.ftblibrary.ui.Widget;
 import dev.ftb.mods.ftblibrary.ui.WidgetLayout;
 import net.minecraft.util.ResourceLocation;
@@ -41,7 +43,11 @@ public class AllQuestsPanel extends Panel {
 
                 int scrollHeight = this.align(new WidgetLayout.Vertical(0, 2, 0));
                 AllQuestsPanel.this.scrollBar.setMaxValue(scrollHeight);
-                AllQuestsPanel.this.scrollBar.setShouldDraw(scrollHeight >= height);
+            }
+
+            @Override
+            public void drawBackground(MatrixStack matrixStack, Theme theme, int x, int y, int w, int h) {
+                theme.drawPanelBackground(matrixStack, x, y, w, h);
             }
         };
         

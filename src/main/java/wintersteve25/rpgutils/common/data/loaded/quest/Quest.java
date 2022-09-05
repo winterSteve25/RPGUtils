@@ -9,6 +9,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Tuple;
 import net.minecraft.util.text.TranslationTextComponent;
+import wintersteve25.rpgutils.client.ui.quests.creator.RewardButton;
 import wintersteve25.rpgutils.common.data.loaded.quest.objectives.IObjective;
 import wintersteve25.rpgutils.common.data.loaded.quest.objectives.ObjectiveTypes;
 import wintersteve25.rpgutils.common.data.loaded.quest.rewards.IReward;
@@ -134,12 +135,15 @@ public class Quest {
         private String description;
         private Optional<Boolean> unlockable;
     
+        private final List<RewardButton> rewardButtons;
+        
         public Builder(ResourceLocation resourceLocation) {
             this.resourceLocation = resourceLocation;
             this.prerequisite = new ArrayList<>();
             this.rewards = new ArrayList<>();
             this.objectives = new ArrayList<>();
             this.unlockable = Optional.empty();
+            this.rewardButtons = new ArrayList<>();
         }
         
         public Builder(Quest quest) {
@@ -150,6 +154,7 @@ public class Quest {
             this.title = quest.getTitle().getKey();
             this.description = quest.getDescription().getKey();
             this.unlockable = Optional.of(quest.isUnlockable());
+            this.rewardButtons = new ArrayList<>();
         }
 
         public Builder setTitle(String title) {
@@ -172,6 +177,11 @@ public class Quest {
             return this;
         }
 
+        public Builder addRewards(RewardButton rewards) {
+            this.rewardButtons.add(rewards);
+            return this;
+        }
+
         public Builder addObjectives(IObjective objectives) {
             this.objectives.add(objectives);
             return this;
@@ -184,6 +194,11 @@ public class Quest {
 
         public Builder clearPrerequisite() {
             this.prerequisite.clear();
+            return this;
+        }
+
+        public Builder clearRewards() {
+            this.rewards.clear();
             return this;
         }
         
@@ -223,17 +238,28 @@ public class Quest {
             return prerequisite;
         }
 
-        public List<IReward> getRewards() {
-            return rewards;
+        public ImmutableList<IReward> getRewards() {
+            List<IReward> temp = new ArrayList<>(rewards);
+            for (RewardButton button : rewardButtons) {
+                temp.add(button.getReward());
+            }
+            return ImmutableList.copyOf(temp);
         }
 
         public Tuple<ResourceLocation, JsonElement> build() throws IllegalArgumentException {
+            
+            List<IReward> tempRewards = new ArrayList<>(rewards);
+            
+            for (RewardButton button : rewardButtons) {
+                tempRewards.add(button.getReward());
+            }
+            
             JsonObject jsonObject = new JsonObject();
 
-            if (!rewards.isEmpty()) {
+            if (!tempRewards.isEmpty()) {
                 JsonArray array = new JsonArray();
                 
-                for (IReward reward : rewards) {
+                for (IReward reward : tempRewards) {
                     array.add(reward.toJson());
                 }
                 
