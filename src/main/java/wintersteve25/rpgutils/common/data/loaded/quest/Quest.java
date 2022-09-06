@@ -207,6 +207,11 @@ public class Quest {
             return this;
         }
 
+        public Builder removeRewards(RewardButton rewards) {
+            this.rewardButtons.remove(rewards);
+            return this;
+        }
+
         public Builder removeObjectives(IObjective objectives) {
             this.objectives.remove(objectives);
             return this;

@@ -129,6 +129,7 @@ public class EditRewardsPanel extends Panel {
     }
 
     public void remove(RewardButton rewardButton) {
+        builder.get().removeRewards(rewardButton);
         builder.get().removeRewards(rewardButton.getReward());
         buttons.remove(rewardButton);
         buttonsPanel.widgets.remove(rewardButton);
