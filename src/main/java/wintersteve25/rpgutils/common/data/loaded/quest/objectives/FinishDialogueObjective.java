@@ -5,9 +5,11 @@ import com.google.gson.JsonObject;
 import dev.ftb.mods.ftblibrary.icon.Icon;
 import dev.ftb.mods.ftblibrary.icon.Icons;
 import dev.ftb.mods.ftblibrary.ui.IOpenableScreen;
+import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
+import wintersteve25.rpgutils.client.ui.dialogues.selections.dialogue_registry.SelectDialogue;
 import wintersteve25.rpgutils.common.data.loaded.quest.objectives.triggers.FinishDialogueTrigger;
 import wintersteve25.rpgutils.common.utils.IDeserializer;
 
@@ -49,8 +51,10 @@ public class FinishDialogueObjective extends TriggeredObjective<FinishDialogueTr
         }
 
         @Override
-        public IOpenableScreen configScreen(Consumer<FinishDialogueObjective> onSubmit) {
-            return null;
+        public void openConfigScreen(Consumer<FinishDialogueObjective> onSubmit) {
+            Minecraft.getInstance().setScreen(new SelectDialogue(false, selected -> {
+                onSubmit.accept(new FinishDialogueObjective(selected.get(0).getDialogue().getResourceLocation()));
+            }));
         }
 
         @Override

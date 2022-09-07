@@ -6,10 +6,8 @@ import dev.ftb.mods.ftblibrary.ui.ContextMenuItem;
 import dev.ftb.mods.ftblibrary.ui.NordButton;
 import dev.ftb.mods.ftblibrary.ui.Panel;
 import dev.ftb.mods.ftblibrary.ui.input.MouseButton;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
-import wintersteve25.rpgutils.common.data.loaded.quest.objectives.FinishDialogueObjective;
 import wintersteve25.rpgutils.common.data.loaded.quest.objectives.IObjective;
 
 import java.util.ArrayList;
@@ -39,7 +37,7 @@ public class ObjectiveButton extends NordButton {
     }
 
     public IObjective getObjective() {
-        return new FinishDialogueObjective(new ResourceLocation("hello"));
+        return objective;
     }
 
     public void setObjective(IObjective objective) {

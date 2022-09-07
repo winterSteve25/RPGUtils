@@ -48,8 +48,8 @@ public class InteractWithBlockObjective extends TriggeredObjective<InteractBlock
         }
 
         @Override
-        public IOpenableScreen configScreen(Consumer<InteractWithBlockObjective> onSubmit) {
-            return null;
+        public void openConfigScreen(Consumer<InteractWithBlockObjective> onSubmit) {
+            
         }
 
         @Override

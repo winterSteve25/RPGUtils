@@ -84,10 +84,10 @@ public class ObjectiveDetailPrompt extends BaseScreen {
                 TypeSelectorButton item = new TypeSelectorButton(Icon.EMPTY, type.name(), (btn, mouseButton) -> {
                     if (mouseButton.isLeft()) {
                         playClickSound();
-                        type.configScreen(obj -> {
+                        type.openConfigScreen(obj -> {
                             panel.parent.openGui();
                             setObjective(obj);
-                        }).openGui();
+                        });
                     }
                 });
                 options.add(item);

@@ -2,15 +2,12 @@ package wintersteve25.rpgutils.common.data.loaded.quest.objectives;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.sun.org.apache.xpath.internal.operations.String;
 import dev.ftb.mods.ftblibrary.icon.Icon;
 import dev.ftb.mods.ftblibrary.icon.Icons;
-import dev.ftb.mods.ftblibrary.ui.IOpenableScreen;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import wintersteve25.rpgutils.common.data.loaded.quest.objectives.predicates.EntityPredicate;
 import wintersteve25.rpgutils.common.data.loaded.quest.objectives.triggers.InteractEntityTrigger;
-import wintersteve25.rpgutils.common.utils.IDeserializer;
 
 import java.util.function.Consumer;
 
@@ -50,8 +47,7 @@ public class InteractWithEntityObjective extends TriggeredObjective<InteractEnti
         }
 
         @Override
-        public IOpenableScreen configScreen(Consumer<InteractWithEntityObjective> onSubmit) {
-            return null;
+        public void openConfigScreen(Consumer<InteractWithEntityObjective> onSubmit) {
         }
 
         @Override
