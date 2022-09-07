@@ -1,17 +1,15 @@
 package wintersteve25.rpgutils.common.data.loaded.quest.objectives;
 
-import wintersteve25.rpgutils.common.utils.IDeserializer;
-
 import java.util.HashMap;
 import java.util.Map;
 
 public class ObjectiveTypes {
-    public static final Map<String, IDeserializer<? extends IObjective>> DESERIALIZERS;
+    public static final Map<String, IObjectiveType<? extends IObjective>> TYPES;
 
     static {
-        DESERIALIZERS = new HashMap<>();
-        DESERIALIZERS.put("interactBlock", new InteractWithBlockObjective.Deserializer());
-        DESERIALIZERS.put("interactEntity", new InteractWithEntityObjective.Deserializer());
-        DESERIALIZERS.put("finishDialogue", new FinishDialogueObjective.Deserializer());
+        TYPES = new HashMap<>();
+        TYPES.put("interactBlock", new InteractWithBlockObjective.Type());
+        TYPES.put("finishDialogue", new FinishDialogueObjective.Type());
+        TYPES.put("interactEntity", new InteractWithEntityObjective.Type());
     }
 }

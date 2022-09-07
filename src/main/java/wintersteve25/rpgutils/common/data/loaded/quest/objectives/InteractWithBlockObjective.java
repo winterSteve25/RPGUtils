@@ -2,9 +2,15 @@ package wintersteve25.rpgutils.common.data.loaded.quest.objectives;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import dev.ftb.mods.ftblibrary.icon.Icon;
+import dev.ftb.mods.ftblibrary.icon.Icons;
+import dev.ftb.mods.ftblibrary.ui.IOpenableScreen;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import wintersteve25.rpgutils.common.data.loaded.quest.objectives.predicates.BlockPredicate;
 import wintersteve25.rpgutils.common.data.loaded.quest.objectives.triggers.InteractBlockTrigger;
-import wintersteve25.rpgutils.common.utils.IDeserializer;
+
+import java.util.function.Consumer;
 
 public class InteractWithBlockObjective extends TriggeredObjective<InteractBlockTrigger> {
     
@@ -25,10 +31,30 @@ public class InteractWithBlockObjective extends TriggeredObjective<InteractBlock
         return jsonObject;
     }
 
-    public static class Deserializer implements IDeserializer<InteractWithBlockObjective> {
+    @Override
+    public Icon objectiveIcon() {
+        return Icons.BEACON;
+    }
+
+    @Override
+    public ITextComponent objectiveTitle() {
+        return new StringTextComponent("Interact with block");
+    }
+
+    public static class Type implements IObjectiveType<InteractWithBlockObjective> {
         @Override
         public InteractWithBlockObjective fromJson(JsonObject jsonObject) {
             return new InteractWithBlockObjective(BlockPredicate.fromJson(jsonObject.get("predicate")));
+        }
+
+        @Override
+        public IOpenableScreen configScreen(Consumer<InteractWithBlockObjective> onSubmit) {
+            return null;
+        }
+
+        @Override
+        public ITextComponent name() {
+            return new StringTextComponent("Interact Block");
         }
     }
 }

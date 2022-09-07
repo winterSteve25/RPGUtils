@@ -17,9 +17,11 @@ public class QuestCreatorUI extends BaseScreen {
     private final TextInputPrompt createQuestPrompt;
     public final RenameQuestPrompt renameQuestPrompt;
     public final RewardDetailsPrompt rewardDetailsPanel;
+    public final ObjectiveDetailPrompt objectiveDetailPrompt;
     
     private QuestCreatorUI() {
         rewardDetailsPanel = new RewardDetailsPrompt(this);
+        objectiveDetailPrompt = new ObjectiveDetailPrompt(this);
         detailsPanel = new QuestCreationDetailsPanel(this);
         questsPanel = new AllQuestsPanel(this, detailsPanel);
         
@@ -34,7 +36,7 @@ public class QuestCreatorUI extends BaseScreen {
                 }
 
                 prompt.enterText.setText("");
-                QuestCreatorUI.this.addQuest(text.replace(" ", "_"));
+                QuestCreatorUI.this.addQuest(text.replace(" ", "_").toLowerCase());
                 prompt.disable();
                 playClickSound();
             }
@@ -88,12 +90,13 @@ public class QuestCreatorUI extends BaseScreen {
         add(questsPanel);
         questsPanel.setPosAndSize(10, 40, 160, getScreen().getGuiScaledHeight() - 40);
         add(detailsPanel);
-        detailsPanel.setPosAndSize(170, 15, getScreen().getScreenWidth() - 180, getScreen().getGuiScaledHeight() - 30);
+        detailsPanel.setPosAndSize(185, 15, getScreen().getScreenWidth() - 180, getScreen().getGuiScaledHeight() - 30);
         add(createQuestPrompt);
         createQuestPrompt.setSize(176, 100);
         add(renameQuestPrompt);
         renameQuestPrompt.setSize(176, 100);
         add(rewardDetailsPanel);
+        add(objectiveDetailPrompt);
         
         Button button = new SimpleTextButton(this, new StringTextComponent("New Quest"), Icon.EMPTY) {
             @Override
@@ -113,10 +116,14 @@ public class QuestCreatorUI extends BaseScreen {
             return true;
         }
 
+        if (objectiveDetailPrompt.shouldDraw()) {
+            return true;
+        }
+        
         if (createQuestPrompt.shouldDraw()) {
             return true;
         }
-
+        
         return renameQuestPrompt.shouldDraw();
     }
     

@@ -19,7 +19,7 @@ public class QuestCreationDetailsPanel extends Panel {
 
     public final Left left;
     private final Right right;
-    
+
     public QuestBuilderButton button;
     private Quest.Builder builder;
     private boolean enabled;
@@ -38,10 +38,10 @@ public class QuestCreationDetailsPanel extends Panel {
             add(titleText);
             return;
         }
-        
+
         left.setSize(185, getScreen().getScreenHeight());
         add(left);
-        
+
         right.setSize(200, getScreen().getScreenHeight());
         add(right);
     }
@@ -72,7 +72,7 @@ public class QuestCreationDetailsPanel extends Panel {
 
     @Override
     public void updateMouseOver(int mouseX, int mouseY) {
-        if (((QuestCreatorUI)parent).isPromptOpen()) {
+        if (((QuestCreatorUI) parent).isPromptOpen()) {
             return;
         }
         super.updateMouseOver(mouseX, mouseY);
@@ -80,7 +80,7 @@ public class QuestCreationDetailsPanel extends Panel {
 
     @Override
     public boolean mousePressed(MouseButton button) {
-        if (((QuestCreatorUI)parent).isPromptOpen()) {
+        if (((QuestCreatorUI) parent).isPromptOpen()) {
             return false;
         }
         return super.mousePressed(button);
@@ -146,7 +146,7 @@ public class QuestCreationDetailsPanel extends Panel {
 
             rewardsPanel = new EditRewardsPanel(this, ((QuestCreatorUI) parent1.parent).rewardDetailsPanel, new LazyValue<>(() -> parent1.builder));
             rewardsPanel.setSize(185, 185);
-        
+
             refreshPrerequisitesTooltips();
         }
 
@@ -193,21 +193,39 @@ public class QuestCreationDetailsPanel extends Panel {
             }
         }
     }
-    
+
     private static class Right extends Panel {
-        
+
+        private final Button newObjectiveButton;
+        private final EditObjectivesPanel editObjectivesPanel;
+
         public Right(Panel panel) {
             super(panel);
+
+            editObjectivesPanel = new EditObjectivesPanel(this, new LazyValue<>(() -> ((QuestCreationDetailsPanel) this.parent).builder));
+
+            newObjectiveButton = new SimpleTextButton(this, new StringTextComponent("Add Objective"), Icon.EMPTY) {
+                @Override
+                public void onClicked(MouseButton mouseButton) {
+                    ((QuestCreatorUI) panel.parent).objectiveDetailPrompt.enable(
+                            new ObjectiveButton(editObjectivesPanel.buttonsPanel, new StringTextComponent("Objective"), Icon.EMPTY, editObjectivesPanel),
+                            editObjectivesPanel::add
+                    );
+                }
+            };
         }
 
         @Override
         public void addWidgets() {
-            
+            newObjectiveButton.setSize(width, 20);
+            add(newObjectiveButton);
+            editObjectivesPanel.setSize(width, 305);
+            add(editObjectivesPanel);
         }
 
         @Override
         public void alignWidgets() {
-            align(WidgetLayout.VERTICAL);
+            align(new WidgetLayout.Vertical(0, 10, 0));
         }
     }
 }

@@ -12,10 +12,12 @@ public interface IReward {
      * This method will be called when a reward is claimed. It should give the player an appropriate reward. 
      */
     void giveReward(ServerPlayerEntity player);
-
+    
     JsonElement toJson();
 
     Icon rewardIcon();
 
     ITextComponent rewardTitle();
+
+    boolean isValidReward();
 }

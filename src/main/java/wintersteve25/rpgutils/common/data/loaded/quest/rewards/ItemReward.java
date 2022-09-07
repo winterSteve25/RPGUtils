@@ -61,6 +61,11 @@ public class ItemReward implements IReward {
         return item.getDisplayName().plainCopy().append(" x" + item.getCount());
     }
 
+    @Override
+    public boolean isValidReward() {
+        return !item.isEmpty();
+    }
+
     public ItemStack getItem() {
         return item;
     }

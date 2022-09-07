@@ -9,6 +9,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Tuple;
 import net.minecraft.util.text.TranslationTextComponent;
+import wintersteve25.rpgutils.client.ui.quests.creator.ObjectiveButton;
 import wintersteve25.rpgutils.client.ui.quests.creator.RewardButton;
 import wintersteve25.rpgutils.common.data.loaded.quest.objectives.IObjective;
 import wintersteve25.rpgutils.common.data.loaded.quest.objectives.ObjectiveTypes;
@@ -94,7 +95,7 @@ public class Quest {
         JsonArray objectivesJson = jsonObject.getAsJsonArray("objectives");
         for (JsonElement obj : objectivesJson) {
             JsonObject o = obj.getAsJsonObject();
-            objectives.add(ObjectiveTypes.DESERIALIZERS.get(o.get("type").getAsString()).fromJson(o));
+            objectives.add(ObjectiveTypes.TYPES.get(o.get("type").getAsString()).fromJson(o));
         }
         
         String title = JsonUtilities.getOrDefault(jsonObject, "title", defaultTitle(resourceLocation));
@@ -136,6 +137,7 @@ public class Quest {
         private Optional<Boolean> unlockable;
     
         private final List<RewardButton> rewardButtons;
+        private final List<ObjectiveButton> objectiveButtons;
         
         public Builder(ResourceLocation resourceLocation) {
             this.resourceLocation = resourceLocation;
@@ -144,6 +146,7 @@ public class Quest {
             this.objectives = new ArrayList<>();
             this.unlockable = Optional.empty();
             this.rewardButtons = new ArrayList<>();
+            this.objectiveButtons = new ArrayList<>();
         }
         
         public Builder(Quest quest) {
@@ -155,6 +158,7 @@ public class Quest {
             this.description = quest.getDescription().getKey();
             this.unlockable = Optional.of(quest.isUnlockable());
             this.rewardButtons = new ArrayList<>();
+            this.objectiveButtons = new ArrayList<>();
         }
 
         public Builder setTitle(String title) {
@@ -187,6 +191,11 @@ public class Quest {
             return this;
         }
 
+        public Builder addObjectives(ObjectiveButton objectives) {
+            this.objectiveButtons.add(objectives);
+            return this;
+        }
+
         public Builder removePrerequisite(ResourceLocation prerequisite) {
             this.prerequisite.remove(prerequisite);
             return this;
@@ -199,6 +208,11 @@ public class Quest {
 
         public Builder clearRewards() {
             this.rewards.clear();
+            return this;
+        }
+
+        public Builder clearObjectives() {
+            this.objectives.clear();
             return this;
         }
         
@@ -214,6 +228,11 @@ public class Quest {
 
         public Builder removeObjectives(IObjective objectives) {
             this.objectives.remove(objectives);
+            return this;
+        }
+
+        public Builder removeObjectives(ObjectiveButton objectives) {
+            this.objectiveButtons.remove(objectives);
             return this;
         }
 
@@ -250,13 +269,26 @@ public class Quest {
             }
             return ImmutableList.copyOf(temp);
         }
+        
+        public ImmutableList<IObjective> getObjectives() {
+            List<IObjective> temp = new ArrayList<>(objectives);
+            for (ObjectiveButton button : objectiveButtons) {
+                temp.add(button.getObjective());
+            }
+            return ImmutableList.copyOf(temp);
+        }
 
         public Tuple<ResourceLocation, JsonElement> build() throws IllegalArgumentException {
             
             List<IReward> tempRewards = new ArrayList<>(rewards);
+            List<IObjective> tempObjectives = new ArrayList<>(objectives);
             
             for (RewardButton button : rewardButtons) {
                 tempRewards.add(button.getReward());
+            }
+            
+            for (ObjectiveButton button : objectiveButtons) {
+                tempObjectives.add(button.getObjective());
             }
             
             JsonObject jsonObject = new JsonObject();
@@ -280,14 +312,10 @@ public class Quest {
                 
                 jsonObject.add("prerequisites", array);
             }
-            
-            if (objectives.isEmpty()) {
-//                throw new IllegalArgumentException("A quest can not have no objectives");
-            }
-            
+
             JsonArray objectives = new JsonArray();
             
-            for (IObjective objective : this.objectives) {
+            for (IObjective objective : tempObjectives) {
                 objectives.add(objective.toJson());
             }
             
