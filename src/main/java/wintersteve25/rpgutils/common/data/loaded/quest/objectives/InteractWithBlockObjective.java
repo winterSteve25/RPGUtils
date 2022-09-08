@@ -7,6 +7,7 @@ import dev.ftb.mods.ftblibrary.icon.Icons;
 import dev.ftb.mods.ftblibrary.ui.IOpenableScreen;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
+import wintersteve25.rpgutils.client.ui.quests.creator.BlockPredicateEditor;
 import wintersteve25.rpgutils.common.data.loaded.quest.objectives.predicates.BlockPredicate;
 import wintersteve25.rpgutils.common.data.loaded.quest.objectives.triggers.InteractBlockTrigger;
 
@@ -49,7 +50,8 @@ public class InteractWithBlockObjective extends TriggeredObjective<InteractBlock
 
         @Override
         public void openConfigScreen(Consumer<InteractWithBlockObjective> onSubmit) {
-            
+            new BlockPredicateEditor(predicate -> onSubmit.accept(new InteractWithBlockObjective(predicate)))
+                    .openGui();
         }
 
         @Override

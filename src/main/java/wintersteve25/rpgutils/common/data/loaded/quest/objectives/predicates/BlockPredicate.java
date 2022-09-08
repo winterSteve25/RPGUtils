@@ -125,4 +125,46 @@ public class BlockPredicate {
             return jsonobject;
         }
     }
+
+    public static class Builder {
+        @Nullable
+        private Block block;
+        @Nullable
+        private ITag<Block> blocks;
+        @Nullable
+        private BlockPos pos;
+        private StatePropertiesPredicate properties = StatePropertiesPredicate.ANY;
+        private NBTPredicate nbt = NBTPredicate.ANY;
+
+        private Builder() {
+        }
+
+        public static BlockPredicate.Builder block() {
+            return new BlockPredicate.Builder();
+        }
+
+        public BlockPredicate.Builder of(Block pBlock) {
+            this.block = pBlock;
+            return this;
+        }
+
+        public BlockPredicate.Builder of(ITag<Block> pTag) {
+            this.blocks = pTag;
+            return this;
+        }
+
+        public BlockPredicate.Builder setProperties(StatePropertiesPredicate pStatePredicate) {
+            this.properties = pStatePredicate;
+            return this;
+        }
+
+        public BlockPredicate.Builder setPos(@Nullable BlockPos pos) {
+            this.pos = pos;
+            return this;
+        }
+
+        public BlockPredicate build() {
+            return new BlockPredicate(this.blocks, this.block, this.pos, this.properties, this.nbt);
+        }
+    }
 }
