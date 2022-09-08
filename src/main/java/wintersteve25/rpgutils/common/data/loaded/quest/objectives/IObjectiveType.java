@@ -6,7 +6,7 @@ import wintersteve25.rpgutils.common.utils.IDeserializer;
 import java.util.function.Consumer;
 
 public interface IObjectiveType<T extends IObjective> extends IDeserializer<T> {
-    void openConfigScreen(Consumer<T> onSubmit);
+    void openConfigScreen(Consumer<T> onSubmit, Runnable onCancel);
     
     ITextComponent name();
 }

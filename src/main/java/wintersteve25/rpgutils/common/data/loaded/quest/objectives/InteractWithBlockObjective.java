@@ -49,8 +49,8 @@ public class InteractWithBlockObjective extends TriggeredObjective<InteractBlock
         }
 
         @Override
-        public void openConfigScreen(Consumer<InteractWithBlockObjective> onSubmit) {
-            new BlockPredicateEditor(predicate -> onSubmit.accept(new InteractWithBlockObjective(predicate)))
+        public void openConfigScreen(Consumer<InteractWithBlockObjective> onSubmit, Runnable onCancel) {
+            new BlockPredicateEditor(predicate -> onSubmit.accept(new InteractWithBlockObjective(predicate)), onCancel)
                     .openGui();
         }
 

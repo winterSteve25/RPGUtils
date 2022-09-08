@@ -47,7 +47,7 @@ public class InteractWithEntityObjective extends TriggeredObjective<InteractEnti
         }
 
         @Override
-        public void openConfigScreen(Consumer<InteractWithEntityObjective> onSubmit) {
+        public void openConfigScreen(Consumer<InteractWithEntityObjective> onSubmit, Runnable onCancel) {
             onSubmit.accept(new InteractWithEntityObjective(EntityPredicate.ANY));
         }
 

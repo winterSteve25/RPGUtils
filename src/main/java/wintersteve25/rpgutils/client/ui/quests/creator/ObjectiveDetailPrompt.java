@@ -87,12 +87,12 @@ public class ObjectiveDetailPrompt extends BaseScreen {
                         type.openConfigScreen(obj -> {
                             panel.parent.openGui();
                             setObjective(obj);
-                        });
+                        }, () -> panel.parent.openGui());
                     }
                 });
                 options.add(item);
             }
-            
+
             updateType();
         }
 

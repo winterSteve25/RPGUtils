@@ -1,5 +1,6 @@
 package wintersteve25.rpgutils.client.ui.quests.creator;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.IGuiEventListener;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ITag;
@@ -17,21 +18,20 @@ import java.util.function.Consumer;
 
 public class SelectTag<T> extends AbstractSelectionUI<SelectTag.SelectTagOption<T>> {
 
-    private final ITagCollection<T> allTags;
+    private static ITagCollection<?> allTags;
     
-    public SelectTag(boolean allowMultiple, ITagCollection<T> allTags, Consumer<List<SelectTagOption<T>>> onSubmit) {
+    private SelectTag(boolean allowMultiple, Consumer<List<SelectTagOption<T>>> onSubmit) {
         super(allowMultiple, onSubmit);
-        this.allTags = allTags;
     }
 
     @Override
     protected void populateOptions(List<SelectTagOption<T>> list) {
-        Map<ResourceLocation, ITag<T>> tags = allTags.getAllTags();
+        Map<ResourceLocation, ? extends ITag<?>> tags = allTags.getAllTags();
         
         int i = 0;
         
-        for (Map.Entry<ResourceLocation, ITag<T>> entry : tags.entrySet()) {
-            list.add(new SelectTagOption<>(this.x + 10, this.y + 40 + i * 12, entry.getKey(), entry.getValue(), this, i));
+        for (Map.Entry<ResourceLocation, ? extends ITag<?>> entry : tags.entrySet()) {
+            list.add(new SelectTagOption<>(this.x + 10, this.y + 40 + i * 12, entry.getKey(), (ITag<T>) entry.getValue(), this, i));
             i++;
         }
     }
@@ -46,6 +46,11 @@ public class SelectTag<T> extends AbstractSelectionUI<SelectTag.SelectTagOption<
         return listener instanceof SelectTagOption;
     }
 
+    public static <T> void open(boolean allowMultiple, ITagCollection<T> tagCollection, Consumer<List<SelectTagOption<T>>> onSubmit) {
+        allTags = tagCollection;
+        Minecraft.getInstance().setScreen(new SelectTag<>(allowMultiple, onSubmit));
+    }
+    
     public static class SelectTagOption<T> extends SelectionOption<SelectTag.SelectTagOption<T>> {
         private final ITag<T> tag;
 

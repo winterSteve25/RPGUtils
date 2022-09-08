@@ -51,7 +51,7 @@ public class FinishDialogueObjective extends TriggeredObjective<FinishDialogueTr
         }
 
         @Override
-        public void openConfigScreen(Consumer<FinishDialogueObjective> onSubmit) {
+        public void openConfigScreen(Consumer<FinishDialogueObjective> onSubmit, Runnable onCancel) {
             Minecraft.getInstance().setScreen(new SelectDialogue(false, selected -> {
                 onSubmit.accept(new FinishDialogueObjective(selected.get(0).getDialogue().getResourceLocation()));
             }));
