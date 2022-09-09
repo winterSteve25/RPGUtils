@@ -25,27 +25,33 @@ import java.util.Collections;
 import java.util.List;
 
 public class SelectBlockScreen extends SelectItemStackScreen {
+
+    private static List<ItemSearchMode> previous;
+    
     private SelectBlockScreen(ItemStackConfig c, ConfigCallback cb) {
         super(c, cb);
     }
-    
+
     public static void open(ItemStackConfig c, ConfigCallback cb) {
-        List<ItemSearchMode> previous = new ArrayList<>(modes);
-        // very janky way to do this, but everything is private
-        // TODO: fix concurrent modification crash
+        previous = new ArrayList<>(modes);
         modes.clear();
         modes.add(BlockSearchMode.INSTANCE);
         modes.add(BlockInventorySearchMode.INSTANCE);
         new SelectBlockScreen(c, cb).openGui();
+    }
+
+    @Override
+    public void onClosed() {
+        super.onClosed();
         modes.clear();
         modes.addAll(previous);
     }
-    
+
     private static class BlockSearchMode implements ItemSearchMode {
         public static final BlockSearchMode INSTANCE = new BlockSearchMode();
-        
-        private List<ItemStack> blockCache = null; 
-        
+
+        private List<ItemStack> blockCache = null;
+
         @Override
         public Icon getIcon() {
             return ItemIcon.getItemIcon(Items.GRASS_BLOCK);
@@ -58,23 +64,23 @@ public class SelectBlockScreen extends SelectItemStackScreen {
 
         @Override
         public Collection<ItemStack> getAllItems() {
-            
+
             if (blockCache == null) {
                 blockCache = new ArrayList<>();
-                
+
                 for (Block block : ForgeRegistries.BLOCKS.getValues()) {
                     blockCache.add(new ItemStack(block.asItem()));
                 }
             }
-            
+
             return blockCache;
         }
     }
-    
+
     private static class BlockInventorySearchMode implements ItemSearchMode {
 
         public static final BlockInventorySearchMode INSTANCE = new BlockInventorySearchMode();
-        
+
         @Override
         public Icon getIcon() {
             return ItemIcon.getItemIcon(Items.CHEST);
@@ -89,7 +95,7 @@ public class SelectBlockScreen extends SelectItemStackScreen {
         public Collection<ItemStack> getAllItems() {
             PlayerEntity player = Minecraft.getInstance().player;
 
-            if(player == null) {
+            if (player == null) {
                 return Collections.emptySet();
             }
 
@@ -104,7 +110,7 @@ public class SelectBlockScreen extends SelectItemStackScreen {
                     }
                 }
             }
-            
+
             return items;
         }
     }

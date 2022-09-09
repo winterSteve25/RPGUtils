@@ -37,8 +37,9 @@ public class BlockPredicateEditor extends BaseScreen {
             public void onClicked(MouseButton mouseButton) {
                 ItemStackConfig config = new ItemStackConfig(true, false);
                 SelectBlockScreen.open(config, selected -> {
+                    BlockPredicateEditor.this.openGui();
+
                     if (!selected) {
-                        BlockPredicateEditor.this.openGui();
                         return;
                     }
 
@@ -49,7 +50,7 @@ public class BlockPredicateEditor extends BaseScreen {
                         builder.of(block);
                         BlockPredicateEditor.this.blockInput.getWidget().setTitle(new StringTextComponent(block.getRegistryName().toString()));
                         BlockPredicateEditor.this.blockInput.getWidget().setIcon(ItemIcon.getItemIcon(item));
-                        BlockPredicateEditor.this.alignWidgets();
+                        BlockPredicateEditor.this.blockInput.refreshWidgets();
                     }
                 });
             }
