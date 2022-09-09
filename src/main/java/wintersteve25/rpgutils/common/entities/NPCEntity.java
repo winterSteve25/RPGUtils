@@ -9,13 +9,14 @@ import net.minecraft.entity.MobEntity;
 import net.minecraft.entity.ai.attributes.AttributeModifierMap;
 import net.minecraft.entity.ai.brain.Brain;
 import net.minecraft.entity.ai.brain.sensor.SensorType;
+import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Hand;
 import net.minecraft.util.SoundEvent;
-import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -31,11 +32,11 @@ import software.bernie.geckolib3.core.manager.AnimationFactory;
 import wintersteve25.rpgutils.RPGUtils;
 import wintersteve25.rpgutils.client.animation.IAnimatedEntity;
 import wintersteve25.rpgutils.common.data.loaded.npc.NPCTypeLoader;
+import wintersteve25.rpgutils.common.data.loaded.npc.goal.ModGoals;
 import wintersteve25.rpgutils.common.data.loaded.npc.property.FloatNPCProperty;
 import wintersteve25.rpgutils.common.data.loaded.npc.property.MapNPCProperty;
 import wintersteve25.rpgutils.common.data.loaded.npc.property.SoundEventNPCProperty;
 import wintersteve25.rpgutils.common.data.loaded.npc.property.StringNPCProperty;
-import wintersteve25.rpgutils.common.data.loaded.npc.goal.ModGoals;
 import wintersteve25.rpgutils.common.network.ModNetworking;
 import wintersteve25.rpgutils.common.network.PacketSetType;
 import wintersteve25.rpgutils.common.registry.ModMemoryModuleTypes;
@@ -43,7 +44,6 @@ import wintersteve25.rpgutils.common.registry.ModMemoryModuleTypes;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Map;
-import java.util.function.Function;
 
 public class NPCEntity extends MobEntity implements IAnimatedEntity<NPCEntity> {
 
@@ -52,15 +52,18 @@ public class NPCEntity extends MobEntity implements IAnimatedEntity<NPCEntity> {
      * Use caution when accessing directly - invoking getNPCType() instead will ensure initialisation from NBT if necessary.
      */
     private NPCType npcType = null;
+    private final Inventory inventory = new Inventory(27);
+    private int selectedStack = 0;
 
     public NPCEntity(EntityType<? extends MobEntity> entityType, World world) {
         super(entityType, world);
+        this.setCanPickUpLoot(true);
     }
 
     public static NPCEntity create(EntityType<? extends MobEntity> entityType, World world, String typeStr) {
         NPCEntity entity = new NPCEntity(entityType, world);
         entity.setNPCType(typeStr);
-        entity.setItemInHand(Hand.MAIN_HAND, new ItemStack(Items.NETHERITE_SWORD));
+        entity.setItemInHand(Hand.MAIN_HAND, entity.inventory.getItem(entity.selectedStack));
         entity.updateDimensions();
         return entity;
     }
@@ -92,6 +95,42 @@ public class NPCEntity extends MobEntity implements IAnimatedEntity<NPCEntity> {
     }
 
     @Override
+    protected void pickUpItem(ItemEntity itemEntity) {
+        ItemStack itemstack = itemEntity.getItem();
+        if (this.wantsToPickUp(itemstack)) {
+            boolean canAddItem = inventory.canAddItem(itemstack);
+            if (!canAddItem) {
+                return;
+            }
+            this.onItemPickup(itemEntity);
+            this.take(itemEntity, itemstack.getCount());
+            ItemStack leftover = addItem(itemstack);
+            if (leftover.isEmpty()) {
+                itemEntity.remove();
+            } else {
+                itemstack.setCount(leftover.getCount());
+            }
+        }
+    }
+
+    @Override
+    public void addAdditionalSaveData(CompoundNBT nbt) {
+        nbt.put("inventory", inventory.createTag());
+        nbt.putString(getTypeKey(), (String) npcType.getProperty(StringNPCProperty.NAME));
+    }
+
+    @Override
+    public void readAdditionalSaveData(CompoundNBT pCompound) {
+        inventory.fromTag(pCompound.getList("inventory", 10));
+        setNPCType(pCompound.getString(getTypeKey()));
+    }
+
+    @Override
+    public boolean wantsToPickUp(ItemStack pStack) {
+        return true;
+    }
+
+    @Override
     protected Brain<?> makeBrain(Dynamic<?> dynamic) {
         Brain<NPCEntity> brain = this.brainProvider().makeBrain(dynamic);
         brain.setMemory(ModMemoryModuleTypes.MOVEMENT_TARGET.get(), new BlockPos(0, 61, 0));
@@ -104,32 +143,26 @@ public class NPCEntity extends MobEntity implements IAnimatedEntity<NPCEntity> {
      */
     private void setNPCType(String type) {
         this.npcType = NPCTypeLoader.INSTANCE.getType(type);
-        this.getPersistentData().putString(getTypeKey(), (String) this.npcType.getProperty(StringNPCProperty.NAME));
         NPCTypeLoader.INSTANCE.setAttributes(this, (String) this.npcType.getProperty(StringNPCProperty.NAME));
         this.refreshDimensions();
         this.registerGoals();
     }
 
-    /**
-     * Null check should always be performed on result - alternatively, use getTypeOrElse()
-     * @return The type of the NPC
-     */
-    public NPCType getNPCType() {
-        if (npcType == null) {
-            String type = this.getPersistentData().getString(getTypeKey());
-            if (!type.equals("")) {
-                this.setNPCType(type);
-            } else npcType = null;
-        }
-        return npcType;
+    public ItemStack addItem(ItemStack stack) {
+        ItemStack leftover = inventory.addItem(stack);
+        this.setItemInHand(Hand.MAIN_HAND, inventory.getItem(selectedStack));
+        return leftover;
     }
 
-    private <T> T getTypeOrElse(Function<NPCType, T> ifValid, T ifNull) {
-        NPCType type = getNPCType();
-        if (type != null) {
-            return ifValid.apply(type);
-        }
-        return ifNull;
+    public void dropStack(int index) {
+        ItemStack stack = inventory.removeItem(index, 64);
+        ItemEntity itemEntity = new ItemEntity(level, getX(), getY(), getZ(), stack);
+        itemEntity.setDeltaMovement(this.getLookAngle());
+        this.level.addFreshEntity(itemEntity);
+    }
+
+    public NPCType getNPCType() {
+        return npcType;
     }
 
     /**
@@ -153,7 +186,7 @@ public class NPCEntity extends MobEntity implements IAnimatedEntity<NPCEntity> {
     }
 
     public String getTexturePath() {
-        return (String) getTypeOrElse(t -> t.getProperty(StringNPCProperty.TEXTURE), NPCType.DEFAULT_TEXTURE);
+        return (String) getNPCType().getProperty(StringNPCProperty.TEXTURE);
     }
 
     @Override
@@ -174,19 +207,19 @@ public class NPCEntity extends MobEntity implements IAnimatedEntity<NPCEntity> {
     @Nullable
     @Override
     protected SoundEvent getAmbientSound() {
-        return (SoundEvent) getTypeOrElse(t -> t.getProperty(SoundEventNPCProperty.AMBIENT_SOUND), SoundEvents.VILLAGER_AMBIENT);
+        return (SoundEvent) getNPCType().getProperty(SoundEventNPCProperty.AMBIENT_SOUND);
     }
 
     @Nullable
     @Override
     protected SoundEvent getHurtSound(@Nonnull DamageSource damageSource) {
-        return (SoundEvent) getTypeOrElse(t -> t.getProperty(SoundEventNPCProperty.HURT_SOUND), SoundEvents.VILLAGER_HURT);
+        return (SoundEvent) getNPCType().getProperty(SoundEventNPCProperty.HURT_SOUND);
     }
 
     @Nullable
     @Override
     protected SoundEvent getDeathSound() {
-        return (SoundEvent) getTypeOrElse(t -> t.getProperty(SoundEventNPCProperty.DEATH_SOUND), SoundEvents.VILLAGER_DEATH);
+        return (SoundEvent) getNPCType().getProperty(SoundEventNPCProperty.DEATH_SOUND);
     }
 
     @Override
@@ -203,7 +236,7 @@ public class NPCEntity extends MobEntity implements IAnimatedEntity<NPCEntity> {
 
     @Override
     public ITextComponent getName() {
-        String name = (String) getTypeOrElse(t -> t.getProperty(StringNPCProperty.NAME), "npc");
+        String name = (String) getNPCType().getProperty(StringNPCProperty.NAME);
         return new TranslationTextComponent("entity." + RPGUtils.MOD_ID + ".npc." + name);
     }
 }

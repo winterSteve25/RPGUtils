@@ -65,7 +65,6 @@
   "rpgutils.dialogues.predicate_types.and": "And",
   "rpgutils.dialogues.predicate_types.local_player_health": "Player Health",
 
-  "entity.rpgutils.npc.npc": "NPC",
   "entity.rpgutils.npc.boss": "Boss",
   "entity.rpgutils.npc.captain": "Captain Johnny"
 }
