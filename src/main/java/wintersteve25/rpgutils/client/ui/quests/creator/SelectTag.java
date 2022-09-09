@@ -46,6 +46,11 @@ public class SelectTag<T> extends AbstractSelectionUI<SelectTag.SelectTagOption<
         return listener instanceof SelectTagOption;
     }
 
+    @Override
+    protected boolean atLeastOne() {
+        return false;
+    }
+
     public static <T> void open(boolean allowMultiple, ITagCollection<T> tagCollection, Consumer<List<SelectTagOption<T>>> onSubmit) {
         allTags = tagCollection;
         Minecraft.getInstance().setScreen(new SelectTag<>(allowMultiple, onSubmit));
