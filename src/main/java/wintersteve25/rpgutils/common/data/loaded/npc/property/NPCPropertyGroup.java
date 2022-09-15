@@ -8,6 +8,7 @@ import java.util.*;
 public class NPCPropertyGroup extends NPCProperty<Map<String, Object>> {
 
     public static final NPCPropertyGroup DIMENSIONS = new NPCPropertyGroup("dimensions", null);
+    public static final NPCPropertyGroup HELD_ITEM = new NPCPropertyGroup("heldItem", null);
     public static final NPCPropertyGroup SOUNDS = new NPCPropertyGroup("sounds", null);
 
     private final List<NPCProperty<Object>> children = new ArrayList<>();

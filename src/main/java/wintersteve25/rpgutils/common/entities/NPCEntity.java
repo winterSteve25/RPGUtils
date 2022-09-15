@@ -68,6 +68,17 @@ public class NPCEntity extends MobEntity implements IAnimatedEntity<NPCEntity> {
         return entity;
     }
 
+    public void setSelectedStack(int index) {
+        selectedStack = index;
+        this.setItemInHand(Hand.MAIN_HAND, inventory.getItem(selectedStack));
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+        this.setTarget(level.getNearestPlayer(this, 20));
+    }
+
     private void updateDimensions() {
         NPCType type = getNPCType();
         ObfuscationReflectionHelper.setPrivateValue(Entity.class, this, new EntitySize(((float) type.getProperty(FloatNPCProperty.WIDTH)), (Float) type.getProperty(FloatNPCProperty.HEIGHT), true), "field_213325_aI"); // dimensions
@@ -114,15 +125,27 @@ public class NPCEntity extends MobEntity implements IAnimatedEntity<NPCEntity> {
     }
 
     @Override
+    public ItemStack getItemInHand(Hand pHand) {
+        return super.getItemInHand(pHand);
+    }
+
+    @Override
+    public ItemStack getMainHandItem() {
+        return super.getMainHandItem();
+    }
+
+    @Override
     public void addAdditionalSaveData(CompoundNBT nbt) {
         nbt.put("inventory", inventory.createTag());
+        nbt.putInt("selectedStack", selectedStack);
         nbt.putString(getTypeKey(), (String) npcType.getProperty(StringNPCProperty.NAME));
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundNBT pCompound) {
-        inventory.fromTag(pCompound.getList("inventory", 10));
-        setNPCType(pCompound.getString(getTypeKey()));
+    public void readAdditionalSaveData(CompoundNBT nbt) {
+        inventory.fromTag(nbt.getList("inventory", 10));
+        setSelectedStack(nbt.getInt("selectedStack"));
+        setNPCType(nbt.getString(getTypeKey()));
     }
 
     @Override
@@ -186,7 +209,11 @@ public class NPCEntity extends MobEntity implements IAnimatedEntity<NPCEntity> {
     }
 
     public String getTexturePath() {
-        return (String) getNPCType().getProperty(StringNPCProperty.TEXTURE);
+        NPCType type = getNPCType();
+        if (type == null) {
+            return "";
+        }
+        return (String) type.getProperty(StringNPCProperty.TEXTURE);
     }
 
     @Override

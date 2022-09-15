@@ -8,7 +8,7 @@ import java.util.function.Function;
 
 public class EnumNPCProperty<T extends Enum<T>> extends NPCProperty<T> {
 
-    public static final EnumNPCProperty<HeldItemRenderLayer.RenderType> ITEM_RENDER_TYPE = new EnumNPCProperty<>("itemRenderType", null, HeldItemRenderLayer.RenderType::valueOf, HeldItemRenderLayer.RenderType::toString);
+    public static final EnumNPCProperty<HeldItemRenderLayer.RenderType> HELD_ITEM_RENDER_TYPE = new EnumNPCProperty<>("heldItemRenderType", "heldItem", HeldItemRenderLayer.RenderType::valueOf, HeldItemRenderLayer.RenderType::toString);
 
     private final Function<String, T> enumDecoder;
     private final Function<T, String> enumEncoder;

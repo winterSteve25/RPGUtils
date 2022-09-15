@@ -60,11 +60,12 @@ public abstract class NPCProperty<T> {
     }
 
     /**
-     * Property groups must be registered first (see getGroup(String))
+     * Property groups must be registered first (see NPCProperty.getGroup())
      */
     public static void register() {
         register(NPCPropertyGroup.DIMENSIONS);
         register(NPCPropertyGroup.SOUNDS);
+        register(NPCPropertyGroup.HELD_ITEM);
 
         register(StringNPCProperty.NAME);
         register(StringNPCProperty.TEXTURE);
@@ -80,9 +81,10 @@ public abstract class NPCProperty<T> {
         register(FloatNPCProperty.WIDTH);
         register(FloatNPCProperty.HEIGHT);
         register(FloatNPCProperty.EYE_HEIGHT);
-        register(FloatNPCProperty.HELD_ITEM_OFFSET_X);
-        register(FloatNPCProperty.HELD_ITEM_OFFSET_Y);
 
-        register(EnumNPCProperty.ITEM_RENDER_TYPE);
+        register(EnumNPCProperty.HELD_ITEM_RENDER_TYPE);
+        register(FloatNPCProperty.HELD_ITEM_OFFSET_RIGHT);
+        register(FloatNPCProperty.HELD_ITEM_OFFSET_FORWARD);
+        register(FloatNPCProperty.HELD_ITEM_OFFSET_UP);
     }
 }

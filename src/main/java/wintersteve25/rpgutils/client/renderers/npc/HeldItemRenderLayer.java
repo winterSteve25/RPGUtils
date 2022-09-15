@@ -32,15 +32,19 @@ public class HeldItemRenderLayer extends GeoLayerRenderer<NPCEntity> {
             }
 
             private void renderArmWithItem(NPCEntity npcEntity, ItemStack stack, ItemCameraTransforms.TransformType transformType, HandSide handSide, MatrixStack matrixStack, IRenderTypeBuffer renderTypeBuffer, int i) {
+                // Matrix translations (from holder's perspective):
+                // x = positive right, negative left
+                // y = positive forward, negative backward
+                // z = positive up, negative down
                 if (!stack.isEmpty()) {
                     matrixStack.pushPose();
                     matrixStack.mulPose(Vector3f.XP.rotationDegrees(-90.0F));
-                    matrixStack.mulPose(Vector3f.YP.rotationDegrees(180.0F));
-                    boolean flag = handSide == HandSide.LEFT;
-                    float xOffset = (float) npcEntity.getNPCType().getProperty(FloatNPCProperty.HELD_ITEM_OFFSET_X);
-                    float yOffset = (float) npcEntity.getNPCType().getProperty(FloatNPCProperty.HELD_ITEM_OFFSET_Y);
-                    matrixStack.translate((flag ? xOffset : -xOffset) / 16.0F, yOffset, -0.625D);
-                    Minecraft.getInstance().getItemInHandRenderer().renderItem(npcEntity, stack, transformType, flag, matrixStack, renderTypeBuffer, i);
+                    boolean leftHanded = handSide == HandSide.LEFT;
+                    float xOffset = (float) npcEntity.getNPCType().getProperty(FloatNPCProperty.HELD_ITEM_OFFSET_RIGHT);
+                    float yOffset = (float) npcEntity.getNPCType().getProperty(FloatNPCProperty.HELD_ITEM_OFFSET_FORWARD);
+                    float zOffset = (float) npcEntity.getNPCType().getProperty(FloatNPCProperty.HELD_ITEM_OFFSET_UP);
+                    matrixStack.translate((leftHanded ? xOffset : -xOffset) / 16.0F, yOffset, zOffset);
+                    Minecraft.getInstance().getItemInHandRenderer().renderItem(npcEntity, stack, transformType, leftHanded, matrixStack, renderTypeBuffer, i);
                     matrixStack.popPose();
                 }
             }
@@ -65,7 +69,9 @@ public class HeldItemRenderLayer extends GeoLayerRenderer<NPCEntity> {
 
     @Override
     public void render(MatrixStack stack, IRenderTypeBuffer renderTypeBuffer, int light, NPCEntity npcEntity, float limbSwing, float limbSwingAmount, float partialTicks, float age, float headYaw, float headPitch) {
-        RenderType renderType = (RenderType) npcEntity.getNPCType().getProperty(EnumNPCProperty.ITEM_RENDER_TYPE);
-        renderType.render(stack, renderTypeBuffer, light, npcEntity, limbSwing, limbSwingAmount, partialTicks, age, headYaw, headPitch);
+        if (npcEntity.getNPCType() != null) {
+            RenderType renderType = (RenderType) npcEntity.getNPCType().getProperty(EnumNPCProperty.HELD_ITEM_RENDER_TYPE);
+            renderType.render(stack, renderTypeBuffer, light, npcEntity, limbSwing, limbSwingAmount, partialTicks, age, headYaw, headPitch);
+        }
     }
 }
