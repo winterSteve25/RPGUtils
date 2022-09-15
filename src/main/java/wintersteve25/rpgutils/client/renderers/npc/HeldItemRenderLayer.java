@@ -1,0 +1,77 @@
+package wintersteve25.rpgutils.client.renderers.npc;
+
+import com.mojang.blaze3d.matrix.MatrixStack;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.model.ItemCameraTransforms;
+import net.minecraft.inventory.EquipmentSlotType;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.HandSide;
+import net.minecraft.util.math.vector.Vector3f;
+import software.bernie.geckolib3.renderers.geo.GeoLayerRenderer;
+import software.bernie.geckolib3.renderers.geo.IGeoRenderer;
+import wintersteve25.rpgutils.common.data.loaded.npc.property.EnumNPCProperty;
+import wintersteve25.rpgutils.common.data.loaded.npc.property.FloatNPCProperty;
+import wintersteve25.rpgutils.common.entities.NPCEntity;
+
+public class HeldItemRenderLayer extends GeoLayerRenderer<NPCEntity> {
+
+    public enum RenderType {
+        PLAYER {
+            @Override
+            public void render(MatrixStack stack, IRenderTypeBuffer renderTypeBuffer, int light, NPCEntity npcEntity, float limbSwing, float limbSwingAmount, float partialTicks, float age, float headYaw, float headPitch) {
+                boolean flag = npcEntity.getMainArm() == HandSide.RIGHT;
+                ItemStack rightHand = flag ? npcEntity.getOffhandItem() : npcEntity.getMainHandItem();
+                ItemStack leftHand = flag ? npcEntity.getMainHandItem() : npcEntity.getOffhandItem();
+                if (!rightHand.isEmpty() || !leftHand.isEmpty()) {
+                    stack.pushPose();
+                    this.renderArmWithItem(npcEntity, leftHand, ItemCameraTransforms.TransformType.THIRD_PERSON_RIGHT_HAND, HandSide.RIGHT, stack, renderTypeBuffer, light);
+                    this.renderArmWithItem(npcEntity, rightHand, ItemCameraTransforms.TransformType.THIRD_PERSON_LEFT_HAND, HandSide.LEFT, stack, renderTypeBuffer, light);
+                    stack.popPose();
+                }
+            }
+
+            private void renderArmWithItem(NPCEntity npcEntity, ItemStack stack, ItemCameraTransforms.TransformType transformType, HandSide handSide, MatrixStack matrixStack, IRenderTypeBuffer renderTypeBuffer, int i) {
+                // Matrix translations (from holder's perspective):
+                // x = positive right, negative left
+                // y = positive forward, negative backward
+                // z = positive up, negative down
+                if (!stack.isEmpty()) {
+                    matrixStack.pushPose();
+                    matrixStack.mulPose(Vector3f.XP.rotationDegrees(-90.0F));
+                    boolean leftHanded = handSide == HandSide.LEFT;
+                    float xOffset = (float) npcEntity.getNPCType().getProperty(FloatNPCProperty.HELD_ITEM_OFFSET_RIGHT);
+                    float yOffset = (float) npcEntity.getNPCType().getProperty(FloatNPCProperty.HELD_ITEM_OFFSET_FORWARD);
+                    float zOffset = (float) npcEntity.getNPCType().getProperty(FloatNPCProperty.HELD_ITEM_OFFSET_UP);
+                    matrixStack.translate((leftHanded ? xOffset : -xOffset) / 16.0F, yOffset, zOffset);
+                    Minecraft.getInstance().getItemInHandRenderer().renderItem(npcEntity, stack, transformType, leftHanded, matrixStack, renderTypeBuffer, i);
+                    matrixStack.popPose();
+                }
+            }
+        },
+        VILLAGER {
+            @Override
+            public void render(MatrixStack stack, IRenderTypeBuffer renderTypeBuffer, int light, NPCEntity npcEntity, float limbSwing, float limbSwingAmount, float partialTicks, float age, float headYaw, float headPitch) {
+                stack.pushPose();
+                stack.translate(0.0D, npcEntity.getEyeHeight() * 0.5, -0.4F);
+                ItemStack itemStack = npcEntity.getItemBySlot(EquipmentSlotType.MAINHAND);
+                Minecraft.getInstance().getItemInHandRenderer().renderItem(npcEntity, itemStack, ItemCameraTransforms.TransformType.GROUND, false, stack, renderTypeBuffer, light);
+                stack.popPose();
+            }
+        };
+
+        public abstract void render(MatrixStack stack, IRenderTypeBuffer renderTypeBuffer, int light, NPCEntity npcEntity, float limbSwing, float limbSwingAmount, float partialTicks, float age, float headYaw, float headPitch);
+    }
+
+    public HeldItemRenderLayer(IGeoRenderer<NPCEntity> renderer) {
+        super(renderer);
+    }
+
+    @Override
+    public void render(MatrixStack stack, IRenderTypeBuffer renderTypeBuffer, int light, NPCEntity npcEntity, float limbSwing, float limbSwingAmount, float partialTicks, float age, float headYaw, float headPitch) {
+        if (npcEntity.getNPCType() != null) {
+            RenderType renderType = (RenderType) npcEntity.getNPCType().getProperty(EnumNPCProperty.HELD_ITEM_RENDER_TYPE);
+            renderType.render(stack, renderTypeBuffer, light, npcEntity, limbSwing, limbSwingAmount, partialTicks, age, headYaw, headPitch);
+        }
+    }
+}

@@ -27,7 +27,6 @@ public class JsonRegistryMap<T> {
                 }
             }
         }
-        map.entrySet().forEach(RPGUtils.LOGGER::info);
     }
 
     public String get(T key) {

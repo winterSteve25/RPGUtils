@@ -1,4 +1,4 @@
-package wintersteve25.rpgutils.common.data.loaded.npc.datum_type;
+package wintersteve25.rpgutils.common.data.loaded.npc.property;
 
 import com.google.gson.JsonElement;
 import net.minecraft.entity.ai.attributes.Attribute;
@@ -16,9 +16,9 @@ import java.util.Map;
  * @param <K2> The type of the map keys
  * @param <V2> The type of the map values
  */
-public abstract class MapNPCDatumType<V1, K2, V2> extends NPCDatumType<Map<K2, V2>> {
+public abstract class MapNPCProperty<V1, K2, V2> extends NPCProperty<Map<K2, V2>> {
 
-    public static final MapNPCDatumType<Double, Attribute, Double> ATTRIBUTES = new MapNPCDatumType<Double, Attribute, Double>("attributes") {
+    public static final MapNPCProperty<Double, Attribute, Double> ATTRIBUTES = new MapNPCProperty<Double, Attribute, Double>("attributes", null) {
         @Override
         protected Attribute fromJsonKey(String key) {
             return NPCTypeLoader.ATTRIBUTES.get(key);
@@ -50,7 +50,7 @@ public abstract class MapNPCDatumType<V1, K2, V2> extends NPCDatumType<Map<K2, V
         }
     };
 
-    public static final MapNPCDatumType<Double, ModGoals.GoalConstructor, Integer> GOALS = new MapNPCDatumType<Double, ModGoals.GoalConstructor, Integer>("goals") {
+    public static final MapNPCProperty<Double, ModGoals.GoalConstructor, Integer> GOALS = new MapNPCProperty<Double, ModGoals.GoalConstructor, Integer>("goals", null) {
         @Override
         protected ModGoals.GoalConstructor fromJsonKey(String key) {
             return NPCTypeLoader.MOD_GOALS.get(key);
@@ -82,8 +82,8 @@ public abstract class MapNPCDatumType<V1, K2, V2> extends NPCDatumType<Map<K2, V
         }
     };
 
-    protected MapNPCDatumType(String jsonName) {
-        super(jsonName);
+    protected MapNPCProperty(String jsonName, String group) {
+        super(jsonName, group);
     }
 
     @Override
@@ -115,9 +115,4 @@ public abstract class MapNPCDatumType<V1, K2, V2> extends NPCDatumType<Map<K2, V
     protected abstract void serialiseKey(K2 key, PacketBuffer buffer);
 
     protected abstract void serialiseValue(V2 value, PacketBuffer buffer);
-
-    public static void register() {
-        register(ATTRIBUTES);
-        register(GOALS);
-    }
 }
