@@ -5,13 +5,13 @@ import net.minecraft.network.PacketBuffer;
 
 public class StringNPCProperty extends NPCProperty<String> {
 
-    public static final StringNPCProperty NAME = new StringNPCProperty("name", null);
-    public static final StringNPCProperty TEXTURE = new StringNPCProperty("texture", null);
-    public static final StringNPCProperty MODEL = new StringNPCProperty("model", null);
-    public static final StringNPCProperty ANIMATIONS = new StringNPCProperty("animations", null);
+    public static final StringNPCProperty NAME = new StringNPCProperty("name", null, "NPC");
+    public static final StringNPCProperty TEXTURE = new StringNPCProperty("texture", null, "textures/entity/npc/npc.png");
+    public static final StringNPCProperty MODEL = new StringNPCProperty("model", null, "geo/npc.geo.json");
+    public static final StringNPCProperty ANIMATIONS = new StringNPCProperty("animations", null, "animations/npc.animation.json");
 
-    protected StringNPCProperty(String jsonName, String group) {
-        super(jsonName, group);
+    protected StringNPCProperty(String jsonName, String group, String defaultValue) {
+        super(jsonName, group, defaultValue);
     }
 
     @Override

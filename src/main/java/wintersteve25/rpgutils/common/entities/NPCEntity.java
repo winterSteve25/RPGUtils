@@ -185,6 +185,9 @@ public class NPCEntity extends MobEntity implements IAnimatedEntity<NPCEntity> {
     }
 
     public NPCType getNPCType() {
+        if (npcType == null) {
+            return NPCType.getDefault();
+        }
         return npcType;
     }
 
@@ -209,11 +212,7 @@ public class NPCEntity extends MobEntity implements IAnimatedEntity<NPCEntity> {
     }
 
     public String getTexturePath() {
-        NPCType type = getNPCType();
-        if (type == null) {
-            return "";
-        }
-        return (String) type.getProperty(StringNPCProperty.TEXTURE);
+        return (String) getNPCType().getProperty(StringNPCProperty.TEXTURE);
     }
 
     @Override

@@ -11,9 +11,11 @@ import java.util.Map;
 
 public class NPCType {
 
-    public static final String DEFAULT_TEXTURE = "textures/entity/npc/npc.png";
-
     private final Map<NPCProperty<?>, Object> data;
+
+    private NPCType(Map<NPCProperty<?>, Object> data) {
+        this.data = data;
+    }
 
     public NPCType(PacketBuffer buffer) {
         data = new HashMap<>();
@@ -44,5 +46,13 @@ public class NPCType {
             return ((HashMap<?, ?>) data.get(group)).get(key.jsonName);
         }
         return data.get(key);
+    }
+
+    public static NPCType getDefault() {
+        Map<NPCProperty<?>, Object> data = new HashMap<>();
+        for (NPCProperty<?> property : NPCProperty.getProperties()) {
+            data.put(property, property.getDefault());
+        }
+        return new NPCType(data);
     }
 }
