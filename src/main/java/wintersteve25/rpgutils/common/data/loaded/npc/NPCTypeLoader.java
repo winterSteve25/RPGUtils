@@ -30,6 +30,7 @@ public class NPCTypeLoader extends JsonDataLoader {
     public static final NPCTypeLoader INSTANCE = new NPCTypeLoader();
 
     // JSON registry maps
+    // TODO: Replace with registry.getKey/getValue
     public static final JsonRegistryMap<Attribute> ATTRIBUTES = new JsonRegistryMap<>(Attributes.class, Attribute.class);
     public static final JsonRegistryMap<ModGoals.GoalConstructor> MOD_GOALS = new JsonRegistryMap<>(ModGoals.class, ModGoals.GoalConstructor.class);
     public static final JsonRegistryMap<SoundEvent> SOUND_EVENTS = new JsonRegistryMap<>(SoundEvents.class, SoundEvent.class);

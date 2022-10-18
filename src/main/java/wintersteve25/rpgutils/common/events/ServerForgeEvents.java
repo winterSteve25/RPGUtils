@@ -10,6 +10,7 @@ import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.util.FakePlayer;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
+import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -18,6 +19,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.server.FMLServerAboutToStartEvent;
 import wintersteve25.rpgutils.RPGUtils;
 import wintersteve25.rpgutils.common.data.capabilities.base.CapabilityProvider;
+import wintersteve25.rpgutils.common.data.loaded.boss_room.BossRoomDataLoader;
 import wintersteve25.rpgutils.common.data.loaded.npc.property.FloatNPCProperty;
 import wintersteve25.rpgutils.common.data.loaded.quest.PlayerQuestProgress;
 import wintersteve25.rpgutils.common.data.loaded.quest.objectives.triggers.InteractBlockTrigger;
@@ -32,6 +34,11 @@ import wintersteve25.rpgutils.common.registry.ModEntities;
 
 @Mod.EventBusSubscriber(modid = RPGUtils.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class ServerForgeEvents {
+
+    @SubscribeEvent
+    public static void onServerTick(TickEvent.ServerTickEvent event) {
+        BossRoomDataLoader.tick();
+    }
 
     @SubscribeEvent
     public static void registerCommands(RegisterCommandsEvent event) {

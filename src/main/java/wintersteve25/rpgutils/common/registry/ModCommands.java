@@ -81,7 +81,7 @@ public class ModCommands {
 
     private static int summonNpc(CommandContext<CommandSource> source) {
         ServerWorld world = source.getSource().getLevel();
-        NPCEntity entity = NPCEntity.create(ModEntities.NPC_ENTITY.get(), world, source.getArgument("type", String.class));
+        NPCEntity entity = NPCEntity.create(world, source.getArgument("type", String.class));
         BlockPos pos = source.getArgument("position", LocationInput.class).getBlockPos(source.getSource());
         entity.setPos(pos.getX(), pos.getY(), pos.getZ());
         world.addFreshEntity(entity);

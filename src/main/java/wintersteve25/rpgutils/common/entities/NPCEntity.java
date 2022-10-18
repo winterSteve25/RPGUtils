@@ -39,6 +39,7 @@ import wintersteve25.rpgutils.common.data.loaded.npc.property.SoundEventNPCPrope
 import wintersteve25.rpgutils.common.data.loaded.npc.property.StringNPCProperty;
 import wintersteve25.rpgutils.common.network.ModNetworking;
 import wintersteve25.rpgutils.common.network.PacketSetType;
+import wintersteve25.rpgutils.common.registry.ModEntities;
 import wintersteve25.rpgutils.common.registry.ModMemoryModuleTypes;
 
 import javax.annotation.Nonnull;
@@ -60,8 +61,8 @@ public class NPCEntity extends MobEntity implements IAnimatedEntity<NPCEntity> {
         this.setCanPickUpLoot(true);
     }
 
-    public static NPCEntity create(EntityType<? extends MobEntity> entityType, World world, String typeStr) {
-        NPCEntity entity = new NPCEntity(entityType, world);
+    public static NPCEntity create(World world, String typeStr) {
+        NPCEntity entity = new NPCEntity(ModEntities.NPC_ENTITY.get(), world);
         entity.setNPCType(typeStr);
         entity.setItemInHand(Hand.MAIN_HAND, entity.inventory.getItem(entity.selectedStack));
         entity.updateDimensions();
@@ -127,11 +128,6 @@ public class NPCEntity extends MobEntity implements IAnimatedEntity<NPCEntity> {
     @Override
     public ItemStack getItemInHand(Hand pHand) {
         return super.getItemInHand(pHand);
-    }
-
-    @Override
-    public ItemStack getMainHandItem() {
-        return super.getMainHandItem();
     }
 
     @Override
