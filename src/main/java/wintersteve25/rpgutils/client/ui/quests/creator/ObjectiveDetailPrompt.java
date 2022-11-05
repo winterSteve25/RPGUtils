@@ -5,15 +5,15 @@ import dev.ftb.mods.ftblibrary.ui.BaseScreen;
 import dev.ftb.mods.ftblibrary.ui.Panel;
 import dev.ftb.mods.ftblibrary.ui.TextField;
 import wintersteve25.rpgutils.client.ui.components.CenterLayout;
+import wintersteve25.rpgutils.client.ui.components.SelectTypePanel;
+import wintersteve25.rpgutils.client.ui.components.SelectableType;
 import wintersteve25.rpgutils.client.ui.components.SubmitOrCancel;
-import wintersteve25.rpgutils.client.ui.components.TypeSelector;
-import wintersteve25.rpgutils.client.ui.components.TypeSelectorButton;
 import wintersteve25.rpgutils.common.data.loaded.quest.objectives.IObjective;
 import wintersteve25.rpgutils.common.data.loaded.quest.objectives.IObjectiveType;
 import wintersteve25.rpgutils.common.data.loaded.quest.objectives.ObjectiveTypes;
 
-import java.util.ArrayList;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 public class ObjectiveDetailPrompt extends BaseScreen {
 
@@ -26,7 +26,7 @@ public class ObjectiveDetailPrompt extends BaseScreen {
 
     public ObjectiveDetailPrompt(Panel panel) {
         parent = panel;
-        setSize(176, 100);
+        setSize(240, 200);
         objectiveTypePanel = new ObjectiveTypePanel(this);
         submitOrCancel = new SubmitOrCancel(this, () -> {
             if (objectiveTypePanel.objective == null) return;
@@ -49,6 +49,7 @@ public class ObjectiveDetailPrompt extends BaseScreen {
 
     @Override
     public void alignWidgets() {
+        objectiveTypePanel.initGui();
         align(new CenterLayout(10));
     }
 
@@ -67,33 +68,26 @@ public class ObjectiveDetailPrompt extends BaseScreen {
         enabled = true;
         this.objectiveButton = objectiveButton;
         this.onSubmit = onSubmit;
-        objectiveTypePanel.setSelectedIndex(0);
         objectiveTypePanel.setObjective(objectiveButton.getObjective());
         initGui();
     }
 
-    private static class ObjectiveTypePanel extends TypeSelector {
+    private static class ObjectiveTypePanel extends SelectTypePanel<IObjectiveType<?>> {
         
         private IObjective objective;
         
         public ObjectiveTypePanel(Panel panel) {
-            super(panel, new ArrayList<>());
-            setSize(110, 20);
+            super(panel);
             
-            for (IObjectiveType<?> type : ObjectiveTypes.TYPES.values()) {
-                TypeSelectorButton item = new TypeSelectorButton(Icon.EMPTY, type.name(), (btn, mouseButton) -> {
-                    if (mouseButton.isLeft()) {
-                        playClickSound();
-                        type.openConfigScreen(obj -> {
-                            panel.parent.openGui();
-                            setObjective(obj);
-                        }, () -> panel.parent.openGui());
-                    }
-                });
-                options.add(item);
-            }
-
-            updateType();
+            setSelectableTypes(ObjectiveTypes.TYPES.values().stream().sorted((a, b) -> a.name().getContents().compareToIgnoreCase(b.name().getContents())).map(objType -> new SelectableType<IObjectiveType<?>>(Icon.EMPTY, objType.name(), (btn, mouse) -> {
+                if (mouse.isLeft()) {
+                    playClickSound();
+                    objType.openConfigScreen(obj -> {
+                        panel.parent.openGui();
+                        objective = obj;
+                    }, () -> panel.parent.openGui());
+                }
+            }, objType)).collect(Collectors.toList()));
         }
 
         public void setObjective(IObjective objective) {

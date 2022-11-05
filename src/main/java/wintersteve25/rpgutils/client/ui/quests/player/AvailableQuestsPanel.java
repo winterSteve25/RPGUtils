@@ -37,4 +37,6 @@ public class AvailableQuestsPanel extends ButtonListBaseScreen {
     public int getY() {
         return posY;
     }
+
+    
 }

@@ -7,16 +7,15 @@ import net.minecraft.util.text.StringTextComponent;
 
 import java.util.List;
 
-public class TypeSelector extends Panel {
-
+public class CycledTypeSelector<T> extends Panel {
     private final SimpleButton left;
     private final SimpleButton right;
     public final Button type;
-    
-    protected final List<TypeSelectorButton> options;
+
+    protected final List<SelectableType<T>> options;
     protected int selectedIndex;
-    
-    public TypeSelector(Panel panel, List<TypeSelectorButton> options) {
+
+    public CycledTypeSelector(Panel panel, List<SelectableType<T>> options) {
         super(panel);
         this.options = options;
         this.selectedIndex = 0;
@@ -47,8 +46,8 @@ public class TypeSelector extends Panel {
         });
         right.setSize(20, 20);
 
-        TypeSelectorButton template = getCurrent();
-        
+        SelectableType<T> template = getCurrent();
+
         type = new SimpleTextButton(this, template.getTitle(), template.getIcon()) {
             @Override
             public void onClicked(MouseButton mouseButton) {
@@ -74,16 +73,16 @@ public class TypeSelector extends Panel {
     public void alignWidgets() {
         align(new WidgetLayout.Horizontal(0, 5, 0));
     }
-    
+
     protected void updateType() {
-        TypeSelectorButton template = getCurrent();
+        SelectableType<T> template = getCurrent();
         type.setIcon(template.getIcon());
         type.setTitle(template.getTitle());
         type.setSize(width - 50, 20);
     }
 
-    protected TypeSelectorButton getCurrent() {
-        return options.isEmpty() ? TypeSelectorButton.DEFAULT : options.get(selectedIndex);
+    protected SelectableType<T> getCurrent() {
+        return options.isEmpty() ? new SelectableType<>(null) : options.get(selectedIndex);
     }
 
     public void setSelectedIndex(int selectedIndex) {

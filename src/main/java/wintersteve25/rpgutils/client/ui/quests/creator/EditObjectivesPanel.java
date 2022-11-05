@@ -11,7 +11,6 @@ import wintersteve25.rpgutils.common.data.loaded.quest.objectives.IObjective;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
 
 public class EditObjectivesPanel extends Panel {
 

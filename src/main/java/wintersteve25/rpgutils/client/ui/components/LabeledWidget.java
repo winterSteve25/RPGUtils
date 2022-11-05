@@ -22,7 +22,6 @@ public class LabeledWidget<T extends Widget> extends Panel {
 
     @Override
     public void addWidgets() {
-        widget.setSize(width - label.width - 2, height);
         add(label);
         add(widget);
     }
@@ -30,11 +29,7 @@ public class LabeledWidget<T extends Widget> extends Panel {
     @Override
     public void alignWidgets() {
         label.setY((widget.height - label.height) / 2);
-        
-        if (widget instanceof Panel) {
-            ((Panel)widget).alignWidgets();
-        }
-        
+        widget.setSize(width - label.width - 2, height);
         align(new WidgetLayout.Horizontal(0, 2, 0));
     }
 

@@ -5,11 +5,9 @@ import dev.ftb.mods.ftblibrary.ui.*;
 import dev.ftb.mods.ftblibrary.ui.input.MouseButton;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
 import wintersteve25.rpgutils.client.ui.components.CenterLayout;
 
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 
 public class TextInputPrompt extends BaseScreen {
 
@@ -19,7 +17,7 @@ public class TextInputPrompt extends BaseScreen {
     public final TextBox enterText;
     public final Panel buttons;
     
-    public TextInputPrompt(QuestCreatorUI panel, ITextComponent title, String hintText, BiConsumer<TextInputPrompt, MouseButton> onConfirmed, BiConsumer<TextInputPrompt, MouseButton> onDenied) {
+    public TextInputPrompt(Panel panel, ITextComponent title, String hintText, BiConsumer<TextInputPrompt, MouseButton> onConfirmed, BiConsumer<TextInputPrompt, MouseButton> onDenied) {
         this.parent = panel;
         this.title = new TextField(this);
         this.title.setSize(100, 20);

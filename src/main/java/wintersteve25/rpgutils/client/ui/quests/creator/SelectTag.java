@@ -2,15 +2,11 @@ package wintersteve25.rpgutils.client.ui.quests.creator;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.IGuiEventListener;
-import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.ITag;
 import net.minecraft.tags.ITagCollection;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.Tags;
-import net.minecraftforge.registries.ForgeRegistries;
 import wintersteve25.rpgutils.client.ui.dialogues.components.selection.AbstractSelectionUI;
 import wintersteve25.rpgutils.client.ui.dialogues.components.selection.SelectionOption;
-import wintersteve25.rpgutils.common.data.loaded.quest.Quest;
 
 import java.util.List;
 import java.util.Map;
@@ -56,15 +52,15 @@ public class SelectTag<T> extends AbstractSelectionUI<SelectTag.SelectTagOption<
         Minecraft.getInstance().setScreen(new SelectTag<>(allowMultiple, onSubmit));
     }
     
-    public static class SelectTagOption<T> extends SelectionOption<SelectTag.SelectTagOption<T>> {
+    public static class SelectTagOption<T> extends SelectionOption<SelectTagOption<T>> {
         private final ITag<T> tag;
 
-        public SelectTagOption(int x, int y, ResourceLocation resourceLocation, ITag<T> tag, AbstractSelectionUI<SelectTag.SelectTagOption<T>> parent, int index) {
+        public SelectTagOption(int x, int y, ResourceLocation resourceLocation, ITag<T> tag, AbstractSelectionUI<SelectTagOption<T>> parent, int index) {
             super(x, y, resourceLocation.toString(), parent, index);
             this.tag = tag;
         }
 
-        public SelectTagOption(SelectTag.SelectTagOption<T> copyFrom) {
+        public SelectTagOption(SelectTagOption<T> copyFrom) {
             super(copyFrom);
             this.tag = copyFrom.tag;
         }

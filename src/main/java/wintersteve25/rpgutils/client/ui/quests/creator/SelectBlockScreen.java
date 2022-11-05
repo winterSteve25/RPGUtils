@@ -1,6 +1,5 @@
 package wintersteve25.rpgutils.client.ui.quests.creator;
 
-import com.google.common.collect.ImmutableList;
 import dev.ftb.mods.ftblibrary.config.ConfigCallback;
 import dev.ftb.mods.ftblibrary.config.ItemStackConfig;
 import dev.ftb.mods.ftblibrary.config.ui.ItemSearchMode;
@@ -11,10 +10,8 @@ import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.registries.ForgeRegistries;

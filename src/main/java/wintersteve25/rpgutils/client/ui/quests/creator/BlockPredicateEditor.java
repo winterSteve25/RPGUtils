@@ -11,9 +11,7 @@ import net.minecraft.block.Block;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.StringTextComponent;
-import wintersteve25.rpgutils.client.ui.components.BlockPosField;
 import wintersteve25.rpgutils.client.ui.components.CenterLayout;
 import wintersteve25.rpgutils.client.ui.components.LabeledWidget;
 import wintersteve25.rpgutils.client.ui.components.SubmitOrCancel;
@@ -23,14 +21,15 @@ import java.util.function.Consumer;
 
 public class BlockPredicateEditor extends BaseScreen {
     
+    private final Consumer<BlockPredicate> onSubmit;
     private final BlockPredicate.Builder builder;
     
     private final LabeledWidget<SimpleTextButton> blockInput;
     private final LabeledWidget<SimpleTextButton> tagInput;
-    private final LabeledWidget<BlockPosField> posInput;
     private final SubmitOrCancel submitOrCancel;
     
     public BlockPredicateEditor(Consumer<BlockPredicate> onSubmit, Runnable onCancel) {
+        this.onSubmit = onSubmit;
         this.builder = BlockPredicate.Builder.block();
         
         blockInput = new LabeledWidget<>(this, p -> new SimpleTextButton(p, new StringTextComponent("None"), Icon.EMPTY) {
@@ -78,16 +77,7 @@ public class BlockPredicateEditor extends BaseScreen {
         }, new StringTextComponent("Block Tag: "));
         tagInput.setSize(140, 20);
         
-        posInput = new LabeledWidget<>(this, BlockPosField::new, new StringTextComponent("Pos: "));
-        posInput.setSize(140, 20);
-        
         submitOrCancel = new SubmitOrCancel(this, () -> {
-            BlockPos pos = posInput.getWidget().get();
-            
-            if (pos != null) {
-                builder.setPos(pos);    
-            }
-            
             onSubmit.accept(builder.build());
         }, onCancel);
         submitOrCancel.setSize(140, 20);
@@ -100,15 +90,12 @@ public class BlockPredicateEditor extends BaseScreen {
         add(textField);
         add(blockInput);
         add(tagInput);
-        add(posInput);
         add(submitOrCancel);
     }
 
     @Override
     public void alignWidgets() {
-        blockInput.alignWidgets();
         tagInput.alignWidgets();
-        posInput.alignWidgets();
         align(new CenterLayout(10));
     }
 }

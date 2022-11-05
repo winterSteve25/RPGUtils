@@ -7,8 +7,8 @@ import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Tuple;
 import net.minecraft.util.text.TranslationTextComponent;
-import wintersteve25.rpgutils.client.ui.dialogues.components.prompt.ConfirmationUI;
 import wintersteve25.rpgutils.client.ui.dialogues.components.list.EditableListUI;
+import wintersteve25.rpgutils.client.ui.dialogues.components.prompt.ConfirmationUI;
 import wintersteve25.rpgutils.client.ui.dialogues.dialogue_creator.entries.DialoguePoolEntryGui;
 import wintersteve25.rpgutils.common.data.loaded.dialogue.dialogue_pool.DialoguePoolManager;
 import wintersteve25.rpgutils.common.data.loaded.dialogue.dialogue_pool.DialogueRule;
@@ -16,7 +16,6 @@ import wintersteve25.rpgutils.common.data.loaded.storage.ClientOnlyLoadedData;
 import wintersteve25.rpgutils.common.utils.JsonUtilities;
 import wintersteve25.rpgutils.common.utils.RLHelper;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 

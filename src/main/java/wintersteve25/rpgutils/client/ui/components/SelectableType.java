@@ -8,20 +8,22 @@ import net.minecraft.util.text.StringTextComponent;
 
 import java.util.function.BiConsumer;
 
-public class TypeSelectorButton {
-    public static final TypeSelectorButton DEFAULT = new TypeSelectorButton();
+public class SelectableType<T> {
     
-    private Icon icon = Icon.EMPTY;
-    private ITextComponent title = StringTextComponent.EMPTY;
-    private BiConsumer<Button, MouseButton> onClicked = (btn, mb) -> {};
-
-    public TypeSelectorButton(Icon icon, ITextComponent title, BiConsumer<Button, MouseButton> onClicked) {
+    private final Icon icon;
+    private final ITextComponent title;
+    private final BiConsumer<Button, MouseButton> onClicked;
+    private final T type;
+    
+    public SelectableType(Icon icon, ITextComponent title, BiConsumer<Button, MouseButton> onClicked, T type) {
         this.icon = icon;
         this.title = title;
         this.onClicked = onClicked;
+        this.type = type;
     }
     
-    public TypeSelectorButton() {
+    public SelectableType(T type) {
+        this(Icon.EMPTY, StringTextComponent.EMPTY, (b, m) -> {}, type);
     }
 
     public Icon getIcon() {
@@ -34,5 +36,9 @@ public class TypeSelectorButton {
 
     public BiConsumer<Button, MouseButton> getOnClicked() {
         return onClicked;
+    }
+
+    public T getType() {
+        return type;
     }
 }
