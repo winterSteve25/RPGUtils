@@ -4,6 +4,7 @@ import com.google.gson.JsonElement;
 import net.minecraft.network.PacketBuffer;
 
 import java.util.*;
+import java.util.function.Supplier;
 
 public class NPCPropertyGroup extends NPCProperty<Map<String, Object>> {
 
@@ -14,7 +15,16 @@ public class NPCPropertyGroup extends NPCProperty<Map<String, Object>> {
     private final List<NPCProperty<Object>> children = new ArrayList<>();
 
     protected NPCPropertyGroup(String jsonName, String group) {
-        super(jsonName, group);
+        super(jsonName, group, null);
+    }
+
+    @Override
+    public Map<String, Object> getDefault() {
+        Map<String, Object> map = new HashMap<>();
+        for (NPCProperty<Object> child : children) {
+            map.put(child.jsonName, child.getDefault());
+        }
+        return map;
     }
 
     protected void addChild(NPCProperty<?> child) {

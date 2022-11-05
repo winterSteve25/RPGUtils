@@ -3,16 +3,17 @@ package wintersteve25.rpgutils.common.data.loaded.npc.property;
 import com.google.gson.JsonElement;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.SoundEvent;
+import net.minecraft.util.SoundEvents;
 import wintersteve25.rpgutils.common.data.loaded.npc.NPCTypeLoader;
 
 public class SoundEventNPCProperty extends NPCProperty<SoundEvent> {
 
-    public static final SoundEventNPCProperty AMBIENT_SOUND = new SoundEventNPCProperty("ambientSound", "sounds");
-    public static final SoundEventNPCProperty HURT_SOUND = new SoundEventNPCProperty("hurtSound", "sounds");
-    public static final SoundEventNPCProperty DEATH_SOUND = new SoundEventNPCProperty("deathSound", "sounds");
+    public static final SoundEventNPCProperty AMBIENT_SOUND = new SoundEventNPCProperty("ambientSound", "sounds", SoundEvents.VILLAGER_AMBIENT);
+    public static final SoundEventNPCProperty HURT_SOUND = new SoundEventNPCProperty("hurtSound", "sounds", SoundEvents.VILLAGER_HURT);
+    public static final SoundEventNPCProperty DEATH_SOUND = new SoundEventNPCProperty("deathSound", "sounds", SoundEvents.VILLAGER_DEATH);
 
-    protected SoundEventNPCProperty(String jsonName, String group) {
-        super(jsonName, group);
+    protected SoundEventNPCProperty(String jsonName, String group, SoundEvent defaultValue) {
+        super(jsonName, group, defaultValue);
     }
 
     @Override

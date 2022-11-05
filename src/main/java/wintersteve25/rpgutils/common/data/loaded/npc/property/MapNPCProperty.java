@@ -83,7 +83,7 @@ public abstract class MapNPCProperty<V1, K2, V2> extends NPCProperty<Map<K2, V2>
     };
 
     protected MapNPCProperty(String jsonName, String group) {
-        super(jsonName, group);
+        super(jsonName, group, new HashMap<>());
     }
 
     @Override

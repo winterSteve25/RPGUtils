@@ -6,6 +6,7 @@ import net.minecraft.network.PacketBuffer;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * Static instances of this class should be created in their subclass to avoid class-loading deadlock
@@ -18,10 +19,16 @@ public abstract class NPCProperty<T> {
     public final String jsonName;
     @Nullable
     public final String group;
+    protected final T defaultValue;
 
-    protected NPCProperty(String jsonName, @Nullable String group) {
+    protected NPCProperty(String jsonName, @Nullable String group, T defaultValue) {
         this.jsonName = jsonName;
         this.group = group;
+        this.defaultValue = defaultValue;
+    }
+
+    public T getDefault() {
+        return defaultValue;
     }
 
     public abstract T deserialiseJson(JsonElement json);
