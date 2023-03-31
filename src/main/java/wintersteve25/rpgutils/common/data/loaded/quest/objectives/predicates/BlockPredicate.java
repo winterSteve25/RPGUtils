@@ -126,6 +126,25 @@ public class BlockPredicate {
         }
     }
 
+    @Override
+    public String toString() {
+        StringBuilder stringBuilder = new StringBuilder();
+        
+        if (block != null) {
+            stringBuilder.append("Block: " + this.block.getRegistryName().toString());
+        }
+        
+        if (tag != null) {
+            stringBuilder.append("Tag:" + TagCollectionManager.getInstance().getBlocks().getIdOrThrow(this.tag));
+        }
+        
+        if (pos != null) {
+            stringBuilder.append("Pos: " + pos);
+        }
+        
+        return stringBuilder.toString();
+    }
+
     public static class Builder {
         @Nullable
         private Block block;
@@ -139,8 +158,20 @@ public class BlockPredicate {
         private Builder() {
         }
 
+        private Builder(BlockPredicate blockPredicate) {
+            this.block = blockPredicate.block;
+            this.blocks = blockPredicate.tag;
+            this.pos = blockPredicate.pos;
+            this.properties = blockPredicate.properties;
+            this.nbt = blockPredicate.nbt;
+        }
+
         public static BlockPredicate.Builder block() {
             return new BlockPredicate.Builder();
+        }
+        
+        public static BlockPredicate.Builder fromPredicate(BlockPredicate predicate) {
+            return new BlockPredicate.Builder(predicate);
         }
 
         public BlockPredicate.Builder of(Block pBlock) {
@@ -165,6 +196,29 @@ public class BlockPredicate {
 
         public BlockPredicate build() {
             return new BlockPredicate(this.blocks, this.block, this.pos, this.properties, this.nbt);
+        }
+
+        @Nullable
+        public Block getBlock() {
+            return block;
+        }
+
+        @Nullable
+        public ITag<Block> getBlocks() {
+            return blocks;
+        }
+
+        @Nullable
+        public BlockPos getPos() {
+            return pos;
+        }
+
+        public StatePropertiesPredicate getProperties() {
+            return properties;
+        }
+
+        public NBTPredicate getNbt() {
+            return nbt;
         }
     }
 }

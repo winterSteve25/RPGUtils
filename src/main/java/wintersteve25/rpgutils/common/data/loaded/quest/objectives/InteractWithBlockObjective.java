@@ -4,13 +4,13 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import dev.ftb.mods.ftblibrary.icon.Icon;
 import dev.ftb.mods.ftblibrary.icon.Icons;
-import dev.ftb.mods.ftblibrary.ui.IOpenableScreen;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import wintersteve25.rpgutils.client.ui.quests.creator.BlockPredicateEditor;
 import wintersteve25.rpgutils.common.data.loaded.quest.objectives.predicates.BlockPredicate;
 import wintersteve25.rpgutils.common.data.loaded.quest.objectives.triggers.InteractBlockTrigger;
 
+import java.util.Map;
 import java.util.function.Consumer;
 
 public class InteractWithBlockObjective extends TriggeredObjective<InteractBlockTrigger> {
@@ -40,6 +40,12 @@ public class InteractWithBlockObjective extends TriggeredObjective<InteractBlock
     @Override
     public ITextComponent objectiveTitle() {
         return new StringTextComponent("Interact with block");
+    }
+
+    @Override
+    public void openEditObjectiveMenu(Consumer<IObjective> newObjective, Runnable onCancel) {
+        new BlockPredicateEditor(predicate, predicate -> newObjective.accept(new InteractWithBlockObjective(predicate)), onCancel)
+                .openGui();
     }
 
     public static class Type implements IObjectiveType<InteractWithBlockObjective> {

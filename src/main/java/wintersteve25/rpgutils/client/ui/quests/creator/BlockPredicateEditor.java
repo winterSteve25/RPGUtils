@@ -11,6 +11,7 @@ import net.minecraft.block.Block;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.TagCollectionManager;
 import net.minecraft.util.text.StringTextComponent;
 import wintersteve25.rpgutils.client.ui.components.CenterLayout;
 import wintersteve25.rpgutils.client.ui.components.LabeledWidget;
@@ -20,8 +21,7 @@ import wintersteve25.rpgutils.common.data.loaded.quest.objectives.predicates.Blo
 import java.util.function.Consumer;
 
 public class BlockPredicateEditor extends BaseScreen {
-    
-    private final Consumer<BlockPredicate> onSubmit;
+
     private final BlockPredicate.Builder builder;
     
     private final LabeledWidget<SimpleTextButton> blockInput;
@@ -29,8 +29,11 @@ public class BlockPredicateEditor extends BaseScreen {
     private final SubmitOrCancel submitOrCancel;
     
     public BlockPredicateEditor(Consumer<BlockPredicate> onSubmit, Runnable onCancel) {
-        this.onSubmit = onSubmit;
-        this.builder = BlockPredicate.Builder.block();
+        this(null, onSubmit, onCancel);
+    }
+    
+    public BlockPredicateEditor(BlockPredicate initialPredicate, Consumer<BlockPredicate> onSubmit, Runnable onCancel) {
+        this.builder = initialPredicate == null ? BlockPredicate.Builder.block() : BlockPredicate.Builder.fromPredicate(initialPredicate);
         
         blockInput = new LabeledWidget<>(this, p -> new SimpleTextButton(p, new StringTextComponent("None"), Icon.EMPTY) {
             @Override
@@ -48,9 +51,8 @@ public class BlockPredicateEditor extends BaseScreen {
                     if (item instanceof BlockItem) {
                         Block block = ((BlockItem) item).getBlock();
                         builder.of(block);
-                        BlockPredicateEditor.this.blockInput.getWidget().setTitle(new StringTextComponent(block.getRegistryName().toString()));
-                        BlockPredicateEditor.this.blockInput.getWidget().setIcon(ItemIcon.getItemIcon(item));
                         BlockPredicateEditor.this.blockInput.refreshWidgets();
+                        BlockPredicateEditor.this.alignWidgets();
                     }
                 });
             }
@@ -70,7 +72,6 @@ public class BlockPredicateEditor extends BaseScreen {
                     SelectTag.SelectTagOption<Block> tag = selected.get(0);
                     builder.of(tag.getTag());
                     BlockPredicateEditor.this.openGui();
-                    BlockPredicateEditor.this.tagInput.getWidget().setTitle(new StringTextComponent(tag.getText()));
                     BlockPredicateEditor.this.alignWidgets();
                 });
             }
@@ -82,7 +83,7 @@ public class BlockPredicateEditor extends BaseScreen {
         }, onCancel);
         submitOrCancel.setSize(140, 20);
     }
-
+    
     @Override
     public void addWidgets() {
         TextField textField = new TextField(this);
@@ -97,5 +98,14 @@ public class BlockPredicateEditor extends BaseScreen {
     public void alignWidgets() {
         tagInput.alignWidgets();
         align(new CenterLayout(10));
+
+        if (builder.getBlock() != null) {
+            blockInput.getWidget().setTitle(new StringTextComponent(builder.getBlock().getRegistryName().toString()));
+            blockInput.getWidget().setIcon(ItemIcon.getItemIcon(builder.getBlock().asItem()));
+        }
+        
+        if (builder.getBlocks() != null) {
+            tagInput.getWidget().setTitle(new StringTextComponent(TagCollectionManager.getInstance().getBlocks().getIdOrThrow(builder.getBlocks()).toString()));
+        }
     }
 }

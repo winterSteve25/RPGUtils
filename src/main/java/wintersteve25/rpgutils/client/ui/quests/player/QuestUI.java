@@ -1,6 +1,7 @@
 package wintersteve25.rpgutils.client.ui.quests.player;
 
 import dev.ftb.mods.ftblibrary.ui.BaseScreen;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
 
 public class QuestUI extends BaseScreen {
@@ -20,7 +21,7 @@ public class QuestUI extends BaseScreen {
 
     @Override
     public void alignWidgets() {
-        availableQuestsPanel.initGui();
+        availableQuestsPanel.alignWidgets();
         availableQuestsPanel.setPosAndSize(0, 0, 100, getScreen().getGuiScaledHeight());
     }
 
@@ -44,7 +45,7 @@ public class QuestUI extends BaseScreen {
         return player;
     }
 
-    public static void open(PlayerEntity player) {
-        new QuestUI(player).openGui();
+    public static void open() {
+        new QuestUI(Minecraft.getInstance().player).openGui();
     }
 }

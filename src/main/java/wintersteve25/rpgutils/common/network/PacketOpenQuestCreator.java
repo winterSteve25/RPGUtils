@@ -1,10 +1,8 @@
 package wintersteve25.rpgutils.common.network;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent;
 import wintersteve25.rpgutils.client.ui.quests.creator.QuestCreatorUI;
-import wintersteve25.rpgutils.client.ui.quests.player.QuestUI;
 
 import java.util.function.Supplier;
 

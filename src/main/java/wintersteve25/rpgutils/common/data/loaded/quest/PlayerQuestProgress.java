@@ -56,8 +56,11 @@ public class PlayerQuestProgress implements ICapabilityHolder {
 
     public void setCurrentQuest(Quest quest) {
         this.currentQuest = quest;
-        this.currentQuestObjectives = new ArrayList<>(quest.getObjectives());
-        RPGUtils.LOGGER.info("Started quest: {}", currentQuest.getResourceLocation());
+        this.currentQuestObjectives = quest == null ? null : new ArrayList<>(quest.getObjectives());
+     
+        if (quest != null) {
+            RPGUtils.LOGGER.info("Started quest: {}", currentQuest.getResourceLocation());
+        }
     }
 
     public void completeCurrentQuest(PlayerEntity player) {

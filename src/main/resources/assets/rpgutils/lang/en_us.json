@@ -1,6 +1,7 @@
 {
   "rpgutils.keys.category.npc": "RPGUtils: NPCs",
   "rpgutils.keys.skip_dialogue": "Skip Dialogue Line",
+  "rpgutils.keys.open_quest": "Open Quests Menu",
   
   "rpgutils.gui.select_entity.search": "Search with name",
   "rpgutils.gui.select_entity.confirm": "Confirm",
