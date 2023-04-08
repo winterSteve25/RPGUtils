@@ -1,9 +1,7 @@
 package wintersteve25.rpgutils.common.data.loaded;
 
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.loading.FMLPaths;
 import org.apache.commons.io.FileUtils;
-import wintersteve25.rpgutils.RPGUtils;
 import wintersteve25.rpgutils.common.utils.JsonUtilities;
 
 import java.io.File;
@@ -29,7 +27,7 @@ public abstract class DataLoader<T> {
 
     public final void read() {
         Collection<File> files = FileUtils.listFiles(directory.toFile(), new String[] {fileExtension}, true);
-        Map<ResourceLocation, T> data = new HashMap<>();
+        Map<String, T> data = new HashMap<>();
         
         if (!files.isEmpty()) {
             for (File file : files) {
@@ -45,9 +43,8 @@ public abstract class DataLoader<T> {
 
                     String s = file.getPath();
                     int i = s.indexOf(subdirectory) + subdirectory.length() + 1;
-                    ResourceLocation rl = new ResourceLocation(RPGUtils.MOD_ID, s.substring(i, s.length() - (fileExtension.length() + 1)));
 
-                    data.put(rl, map(contentBuilder.toString()));
+                    data.put(s.substring(i, s.length() - (fileExtension.length() + 1)), map(contentBuilder.toString()));
                 } catch (IOException ignore) {
                 }
             }
@@ -56,7 +53,7 @@ public abstract class DataLoader<T> {
         apply(data);
     }
     
-    protected abstract void apply(Map<ResourceLocation, T> data);
+    protected abstract void apply(Map<String, T> data);
     
     protected abstract T map(String stringContent);
 }

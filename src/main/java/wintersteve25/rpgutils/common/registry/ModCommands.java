@@ -89,8 +89,8 @@ public class ModCommands {
         return 1;
     }
 
-    private static int playDialogue(CommandContext<CommandSource> source) {
-        DialogueSystem.play(new ResourceLocation(RPGUtils.MOD_ID, source.getArgument("dialogue", String.class)));
+    private static int playDialogue(CommandContext<CommandSource> source) throws CommandSyntaxException {
+        DialogueSystem.playFromServer(source.getArgument("dialogue", String.class), source.getSource().getPlayerOrException());
         return 1;
     }
     

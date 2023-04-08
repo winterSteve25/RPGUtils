@@ -5,12 +5,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Tuple;
 import net.minecraft.util.text.TranslationTextComponent;
-import wintersteve25.rpgutils.client.ui.quests.creator.ObjectiveButton;
-import wintersteve25.rpgutils.client.ui.quests.creator.RewardButton;
 import wintersteve25.rpgutils.common.data.loaded.quest.objectives.IObjective;
 import wintersteve25.rpgutils.common.data.loaded.quest.objectives.ObjectiveTypes;
 import wintersteve25.rpgutils.common.data.loaded.quest.rewards.IReward;
@@ -19,30 +14,29 @@ import wintersteve25.rpgutils.common.utils.JsonUtilities;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 public class Quest {
     
-    private final ResourceLocation resourceLocation;
+    private final String id;
     private final TranslationTextComponent title;
     private final TranslationTextComponent description;
-    private final ImmutableList<ResourceLocation> prerequisite;
+    private final ImmutableList<String> prerequisite;
     private final ImmutableList<IReward> rewards;
     private final ImmutableList<IObjective> objectives;
-    private final boolean unlockable;
+    private final boolean lockedByDefault;
     
-    public Quest(ResourceLocation resourceLocation, TranslationTextComponent title, TranslationTextComponent description, ImmutableList<ResourceLocation> prerequisite, ImmutableList<IReward> rewards, ImmutableList<IObjective> objectives, boolean unlockable) {
-        this.resourceLocation = resourceLocation;
+    public Quest(String id, TranslationTextComponent title, TranslationTextComponent description, ImmutableList<String> prerequisite, ImmutableList<IReward> rewards, ImmutableList<IObjective> objectives, boolean lockedByDefault) {
+        this.id = id;
         this.title = title;
         this.description = description;
         this.prerequisite = prerequisite;
         this.rewards = rewards;
         this.objectives = objectives;
-        this.unlockable = unlockable;
+        this.lockedByDefault = lockedByDefault;
     }
 
-    public ResourceLocation getResourceLocation() {
-        return resourceLocation;
+    public String getId() {
+        return id;
     }
 
     public TranslationTextComponent getTitle() {
@@ -53,7 +47,7 @@ public class Quest {
         return description;
     }
 
-    public ImmutableList<ResourceLocation> getPrerequisite() {
+    public ImmutableList<String> getPrerequisite() {
         return prerequisite;
     }
 
@@ -65,11 +59,11 @@ public class Quest {
         return objectives;
     }
 
-    public boolean isUnlockable() {
-        return unlockable;
+    public boolean lockedByDefault() {
+        return lockedByDefault;
     }
 
-    public static Quest fromJson(ResourceLocation resourceLocation, JsonObject jsonObject) {
+    public static Quest fromJson(String id, JsonObject jsonObject) {
         List<IReward> rewards = new ArrayList<>();
 
         if (jsonObject.has("rewards")) {
@@ -80,11 +74,11 @@ public class Quest {
             }
         }
 
-        List<ResourceLocation> prerequisites = new ArrayList<>();
+        List<String> prerequisites = new ArrayList<>();
         if (jsonObject.has("prerequisites")) {
             JsonArray prerequisitesJson = jsonObject.getAsJsonArray("prerequisites");
-            for (JsonElement dep : prerequisitesJson) {
-                prerequisites.add(new ResourceLocation(dep.getAsString()));
+            for (JsonElement pre : prerequisitesJson) {
+                prerequisites.add(pre.getAsString());
             }
         }
 
@@ -92,246 +86,37 @@ public class Quest {
         if (!jsonObject.has("objectives")) {
             throw new JsonParseException("A quest can not have no objectives!");
         }
+        
         JsonArray objectivesJson = jsonObject.getAsJsonArray("objectives");
         for (JsonElement obj : objectivesJson) {
             JsonObject o = obj.getAsJsonObject();
             objectives.add(ObjectiveTypes.TYPES.get(o.get("type").getAsString()).fromJson(o));
         }
         
-        String title = JsonUtilities.getOrDefault(jsonObject, "title", defaultTitle(resourceLocation));
-        String description = JsonUtilities.getOrDefault(jsonObject, "description", defaultDescription(resourceLocation));
-        boolean unlockable = JsonUtilities.getOrDefault(jsonObject, "unlockable", false);
+        String title = JsonUtilities.getOrDefault(jsonObject, "title", defaultTitle(id));
+        String description = JsonUtilities.getOrDefault(jsonObject, "description", defaultDescription(id));
+        boolean lockedByDefault = JsonUtilities.getOrDefault(jsonObject, "lockedByDefault", false);
         
         return new Quest(
-                resourceLocation, 
+                id, 
                 new TranslationTextComponent(title),
                 new TranslationTextComponent(description),
                 ImmutableList.copyOf(prerequisites),
                 ImmutableList.copyOf(rewards),
                 ImmutableList.copyOf(objectives),
-                unlockable);
+                lockedByDefault
+        );
     }
     
-    private static String defaultTitle(ResourceLocation resourceLocation) {
-        return getID(resourceLocation) + ".title";
+    private static String defaultTitle(String id) {
+        return getID(id) + ".title";
     }
 
-    private static String defaultDescription(ResourceLocation resourceLocation) {
-        return getID(resourceLocation) + ".description";
+    private static String defaultDescription(String id) {
+        return getID(id) + ".description";
     }
     
-    private static String getID(ResourceLocation resourceLocation) {
-        String modid = resourceLocation.getNamespace();
-        String path = resourceLocation.getPath();
-        return modid + ".quest." + path;
-    }
-    
-    public static class Builder {
-        private final List<ResourceLocation> prerequisite;
-        private final List<IReward> rewards;
-        private final List<IObjective> objectives;
-
-        private ResourceLocation resourceLocation;
-        private String title;
-        private String description;
-        private Optional<Boolean> unlockable;
-    
-        private final List<RewardButton> rewardButtons;
-        private final List<ObjectiveButton> objectiveButtons;
-        
-        public Builder(ResourceLocation resourceLocation) {
-            this.resourceLocation = resourceLocation;
-            this.prerequisite = new ArrayList<>();
-            this.rewards = new ArrayList<>();
-            this.objectives = new ArrayList<>();
-            this.unlockable = Optional.empty();
-            this.rewardButtons = new ArrayList<>();
-            this.objectiveButtons = new ArrayList<>();
-        }
-        
-        public Builder(Quest quest) {
-            this.resourceLocation = quest.getResourceLocation();
-            this.prerequisite = new ArrayList<>(quest.getPrerequisite());
-            this.rewards = new ArrayList<>(quest.getRewards());
-            this.objectives = new ArrayList<>(quest.getObjectives());
-            this.title = quest.getTitle().getKey();
-            this.description = quest.getDescription().getKey();
-            this.unlockable = Optional.of(quest.isUnlockable());
-            this.rewardButtons = new ArrayList<>();
-            this.objectiveButtons = new ArrayList<>();
-        }
-
-        public Builder setTitle(String title) {
-            this.title = title;
-            return this;
-        }
-
-        public Builder setDescription(String description) {
-            this.description = description;
-            return this;
-        }
-
-        public Builder addPrerequisite(ResourceLocation prerequisite) {
-            this.prerequisite.add(prerequisite);
-            return this;
-        }
-
-        public Builder addRewards(IReward rewards) {
-            this.rewards.add(rewards);
-            return this;
-        }
-
-        public Builder addRewards(RewardButton rewards) {
-            this.rewardButtons.add(rewards);
-            return this;
-        }
-
-        public Builder addObjectives(IObjective objectives) {
-            this.objectives.add(objectives);
-            return this;
-        }
-
-        public Builder addObjectives(ObjectiveButton objectives) {
-            this.objectiveButtons.add(objectives);
-            return this;
-        }
-
-        public Builder removePrerequisite(ResourceLocation prerequisite) {
-            this.prerequisite.remove(prerequisite);
-            return this;
-        }
-
-        public Builder clearPrerequisite() {
-            this.prerequisite.clear();
-            return this;
-        }
-
-        public Builder clearRewards() {
-            this.rewards.clear();
-            return this;
-        }
-
-        public Builder clearObjectives() {
-            this.objectives.clear();
-            return this;
-        }
-        
-        public Builder removeRewards(IReward rewards) {
-            this.rewards.remove(rewards);
-            return this;
-        }
-
-        public Builder removeRewards(RewardButton rewards) {
-            this.rewardButtons.remove(rewards);
-            return this;
-        }
-
-        public Builder removeObjectives(IObjective objectives) {
-            this.objectives.remove(objectives);
-            return this;
-        }
-
-        public Builder removeObjectives(ObjectiveButton objectives) {
-            this.objectiveButtons.remove(objectives);
-            return this;
-        }
-
-        public Builder setUnlockable(boolean unlockable) {
-            this.unlockable = Optional.of(unlockable);
-            return this;
-        }
-
-        public Builder rename(ResourceLocation resourceLocation) {
-            this.resourceLocation = resourceLocation;
-            return this;
-        }
-        
-        public String getTitle() {
-            return title == null ? defaultTitle(resourceLocation) : I18n.get(title);
-        }
-        
-        public String getDescription() {
-            return description == null ? defaultDescription(resourceLocation) : I18n.get(description);
-        }
-
-        public ResourceLocation getResourceLocation() {
-            return resourceLocation;
-        }
-
-        public List<ResourceLocation> getPrerequisite() {
-            return prerequisite;
-        }
-
-        public ImmutableList<IReward> getRewards() {
-            List<IReward> temp = new ArrayList<>(rewards);
-            for (RewardButton button : rewardButtons) {
-                temp.add(button.getReward());
-            }
-            return ImmutableList.copyOf(temp);
-        }
-        
-        public ImmutableList<IObjective> getObjectives() {
-            List<IObjective> temp = new ArrayList<>(objectives);
-            for (ObjectiveButton button : objectiveButtons) {
-                temp.add(button.getObjective());
-            }
-            return ImmutableList.copyOf(temp);
-        }
-
-        public Tuple<ResourceLocation, JsonElement> build() throws IllegalArgumentException {
-            
-            List<IReward> tempRewards = new ArrayList<>(rewards);
-            List<IObjective> tempObjectives = new ArrayList<>(objectives);
-            
-            for (RewardButton button : rewardButtons) {
-                tempRewards.add(button.getReward());
-            }
-            
-            for (ObjectiveButton button : objectiveButtons) {
-                tempObjectives.add(button.getObjective());
-            }
-            
-            JsonObject jsonObject = new JsonObject();
-
-            if (!tempRewards.isEmpty()) {
-                JsonArray array = new JsonArray();
-                
-                for (IReward reward : tempRewards) {
-                    array.add(reward.toJson());
-                }
-                
-                jsonObject.add("rewards", array);
-            }
-
-            if (!prerequisite.isEmpty()) {
-                JsonArray array = new JsonArray();
-
-                for (ResourceLocation r : prerequisite) {
-                    array.add(r.toString());
-                }
-                
-                jsonObject.add("prerequisites", array);
-            }
-
-            JsonArray objectives = new JsonArray();
-            
-            for (IObjective objective : tempObjectives) {
-                objectives.add(objective.toJson());
-            }
-            
-            jsonObject.add("objectives", objectives);
-
-            if (title != null) {
-                jsonObject.addProperty("title", title);
-            }
-            
-            if (description != null) {
-                jsonObject.addProperty("description", description);
-            }
-            
-            unlockable.ifPresent(aBoolean -> jsonObject.addProperty("unlockable", aBoolean));
-            
-            return new Tuple<>(resourceLocation, jsonObject);
-        }
+    private static String getID(String id) {
+        return "quest." + id;
     }
 }

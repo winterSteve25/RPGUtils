@@ -1,180 +1,66 @@
 package wintersteve25.rpgutils.client.ui.dialogues;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.command.arguments.EntityAnchorArgument;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
+import com.github.wintersteve25.tau.components.*;
+import com.github.wintersteve25.tau.components.base.DynamicUIComponent;
+import com.github.wintersteve25.tau.components.base.UIComponent;
+import com.github.wintersteve25.tau.layout.Layout;
+import com.github.wintersteve25.tau.layout.LayoutSetting;
+import com.github.wintersteve25.tau.utils.Size;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.INameable;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Tuple;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.world.World;
-import wintersteve25.rpgutils.client.animation.IAnimatedEntity;
 import wintersteve25.rpgutils.common.data.loaded.dialogue.dialogue.Dialogue;
-import wintersteve25.rpgutils.common.data.loaded.dialogue.dialogue.DynamicUUID;
-import wintersteve25.rpgutils.common.data.loaded.dialogue.dialogue.actions.base.IDialogueAction;
-import wintersteve25.rpgutils.common.network.ModNetworking;
-import wintersteve25.rpgutils.common.network.PacketFinishedDialogue;
+import wintersteve25.rpgutils.client.ui.dialogues.runtime.RuntimeDialogueAction;
+import wintersteve25.rpgutils.common.systems.DialogueSystem;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Queue;
 
-public class DialogueUI extends Screen {
+public class DialogueUI extends DynamicUIComponent {
+
+    private final Queue<RuntimeDialogueAction> lines;
+    private RuntimeDialogueAction current;
     
-    public static final DialogueUI INSTANCE = new DialogueUI();
-    
-    private final Minecraft minecraft;
-
-    private List<Tuple<DynamicUUID, IDialogueAction>> entries;
-    private int currentIndex;
-    private boolean active;
-    private boolean interruptable;
-
-    private boolean requireInitialization;
-    private IDialogueAction currentAction;
-    private ResourceLocation currentDialogue;
-    
-    public String displayingDialogueText;
-    private PlayerEntity player;
-
-    public DialogueUI() {
-        super(StringTextComponent.EMPTY);
-        this.minecraft = Minecraft.getInstance();
-    }
-    
-    private void setDialogue(Dialogue dialogue, PlayerEntity player) {
-        this.entries = dialogue.getLines();
-        this.currentDialogue = dialogue.getResourceLocation();
-        this.currentIndex = 0;
-        this.requireInitialization = true;
-        this.currentAction = null;
-        this.displayingDialogueText = "";
-        this.player = player;
+    public DialogueUI(Dialogue dialogue, PlayerEntity player) {
+        this.lines = dialogue.getLines(new DialogueContext(player));
+        if (lines.isEmpty()) return;
+        this.current = lines.remove();
     }
 
     @Override
-    public void render(MatrixStack pMatrixStack, int pMouseX, int pMouseY, float pPartialTicks) {
-        super.render(pMatrixStack, pMouseX, pMouseY, pPartialTicks);
-
-        if (player == null) return;
+    public UIComponent build(Layout layout) {
+        if (!(current instanceof UIComponent)) {
+            return new Container.Builder()
+                .noColor();
+        }
         
-        pMatrixStack.pushPose();
+        return new Align.Builder()
+            .withHorizontal(LayoutSetting.CENTER)
+            .withVertical((maxLength, componentLength) -> maxLength - (int) (componentLength * 1.1f))
+            .build(new Sized(
+                Size.percentage(0.7f, 0.3f),
+                (UIComponent) current
+            ));
+    }
 
-        Tuple<DynamicUUID, IDialogueAction> entry = entries.get(currentIndex);
-        DynamicUUID speaker = entry.getA();
-        speaker.setup();
-        World world = player.level;
-        BlockPos posStart = player.blockPosition().offset(-16, -16, -16);
-        BlockPos posEnd = player.blockPosition().offset(16, 16, 16);
-
-        IAnimatedEntity<?> speakerEntity;
-
-        List<Entity> matchingEntities = world.getEntities(null, new AxisAlignedBB(posStart, posEnd)).stream().filter(entity -> entity.getUUID().equals(speaker.getUuid())).collect(Collectors.toList());
-
-        if (matchingEntities.isEmpty()) {
-            pMatrixStack.popPose();
+    public void tick() {
+        if (current == null) {
             return;
         }
-
-        Entity entity = matchingEntities.get(0);
-
-        if (!(entity instanceof LivingEntity)) {
-            pMatrixStack.popPose();
-            return;
-        }
-
-        speakerEntity = IAnimatedEntity.getOrCreate((LivingEntity) entity);
         
-        if (!(entity instanceof PlayerEntity)) {
-            entity.lookAt(EntityAnchorArgument.Type.EYES, player.position());
-            player.lookAt(EntityAnchorArgument.Type.EYES, entity.position());
+        if (current.tick(this, 1)) {
+            rebuild();
         }
         
-        currentAction = entry.getB();
-
-        if (requireInitialization) {
-            currentAction.initialize(speakerEntity, this, minecraft);
-            requireInitialization = false;
-        }
-
-        ITextComponent speakerName = speakerEntity.getSelf().getName();
-        FontRenderer fontRenderer = minecraft.font;
-
-        int width = minecraft.getWindow().getGuiScaledWidth();
-        int height = minecraft.getWindow().getGuiScaledHeight();
-        int speakerNameWidth = fontRenderer.width(speakerName);
-        int speakerX = (width-speakerNameWidth)/2;
-        int speakerY = height - 200;
-        int dialogueTextWidth = fontRenderer.width(displayingDialogueText);
-
-        drawString(pMatrixStack, fontRenderer, speakerName, speakerX, speakerY, TextFormatting.WHITE.getColor());
-        drawString(pMatrixStack, minecraft.font, displayingDialogueText, (width - dialogueTextWidth) / 2, speakerY + 10, TextFormatting.WHITE.getColor());
-        
-        currentAction.render(speakerEntity, this, pMatrixStack, minecraft, width, height, speakerX, speakerY, pMouseX, pMouseY);
-
-        if (!minecraft.isPaused()) {
-            if (currentAction.act(speakerEntity, this, minecraft, pMouseX, pMouseY)) {
-                currentIndex++;
-                requireInitialization = true;
-                currentAction = null;
-
-                if (currentIndex >= entries.size()) {
-                    ModNetworking.sendToServer(new PacketFinishedDialogue(currentDialogue));
-                    pMatrixStack.popPose();
-                    disable();
-                    return;
-                }
+        if (current.isComplete(this)) {
+            current.complete(this);            
+            
+            if (!lines.isEmpty()) {
+                current = lines.remove();
+                current.execute(this);
+            } else {
+                current = null;
+                DialogueSystem.stopDialogue();
             }
+
+            rebuild();
         }
-
-        pMatrixStack.popPose();
-    }
-
-    public boolean isActive() {
-        return active;
-    }
-
-    public void skip() {
-        if (!interruptable) return;
-        if (currentAction == null) return;
-        currentAction.skip();
-    }
-
-    @Override
-    public boolean shouldCloseOnEsc() {
-        return false;
-    }
-
-    @Override
-    public boolean isPauseScreen() {
-        return false;
-    }
-
-    public static void show(PlayerEntity player, Dialogue dialogue, boolean interruptable) {
-        INSTANCE.setDialogue(dialogue, player);
-        INSTANCE.interruptable = interruptable;
-        INSTANCE.active = true;
-        Minecraft.getInstance().setScreen(null);
-        Minecraft.getInstance().setScreen(INSTANCE);
-    }
-    
-    public static void disable() {
-        INSTANCE.currentDialogue = null;
-        INSTANCE.currentAction = null;
-        INSTANCE.player = null;
-        INSTANCE.active = false;
-        Minecraft.getInstance().setScreen(null);
-    }
-
-    public INameable getPlayer() {
-        return player;
     }
 }

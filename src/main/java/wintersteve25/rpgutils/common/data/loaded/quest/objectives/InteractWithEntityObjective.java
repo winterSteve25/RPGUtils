@@ -2,10 +2,6 @@ package wintersteve25.rpgutils.common.data.loaded.quest.objectives;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import dev.ftb.mods.ftblibrary.icon.Icon;
-import dev.ftb.mods.ftblibrary.icon.Icons;
-import dev.ftb.mods.ftblibrary.icon.ItemIcon;
-import dev.ftb.mods.ftblibrary.util.TooltipList;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import wintersteve25.rpgutils.common.data.loaded.quest.objectives.predicates.EntityPredicate;
@@ -30,11 +26,6 @@ public class InteractWithEntityObjective extends TriggeredObjective<InteractEnti
         object.add("predicate", predicate.serializeToJson());
 
         return object;
-    }
-
-    @Override
-    public Icon objectiveIcon() {
-        return Icons.PLAYER_GRAY;
     }
 
     @Override

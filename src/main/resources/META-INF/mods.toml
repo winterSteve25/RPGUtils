@@ -28,8 +28,8 @@ description='''
     ordering="NONE"
     side="BOTH"
 [[dependencies.rpgutils]]
-    modId="ftblibrary"
+    modId="tau"
     mandatory=true
-    versionRange="[1605.3.4-build.90,)"
+    versionRange="[1.1.0,)"
     ordering="NONE"
     side="BOTH"

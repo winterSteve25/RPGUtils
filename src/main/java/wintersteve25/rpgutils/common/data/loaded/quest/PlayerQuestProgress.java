@@ -6,7 +6,6 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.nbt.StringNBT;
-import net.minecraft.util.ResourceLocation;
 import wintersteve25.rpgutils.RPGUtils;
 import wintersteve25.rpgutils.common.data.capabilities.base.ICapabilityHolder;
 import wintersteve25.rpgutils.common.data.loaded.quest.objectives.AbstractTriggeredObjective;
@@ -24,8 +23,8 @@ import java.util.List;
 
 public class PlayerQuestProgress implements ICapabilityHolder {
     
-    private final List<ResourceLocation> completedQuests;
-    private final List<ResourceLocation> unlockedQuests;
+    private final List<String> completedQuests;
+    private final List<String> unlockedQuests;
     private final List<Quest> availableQuests;
     
     private Quest currentQuest;
@@ -38,11 +37,11 @@ public class PlayerQuestProgress implements ICapabilityHolder {
         refreshAvailableQuests();
     }
 
-    public List<ResourceLocation> getCompletedQuests() {
+    public List<String> getCompletedQuests() {
         return completedQuests;
     }
 
-    public List<ResourceLocation> getUnlockedQuests() {
+    public List<String> getUnlockedQuests() {
         return unlockedQuests;
     }
 
@@ -59,7 +58,7 @@ public class PlayerQuestProgress implements ICapabilityHolder {
         this.currentQuestObjectives = quest == null ? null : new ArrayList<>(quest.getObjectives());
      
         if (quest != null) {
-            RPGUtils.LOGGER.info("Started quest: {}", currentQuest.getResourceLocation());
+            RPGUtils.LOGGER.info("Started quest: {}", currentQuest.getId());
         }
     }
 
@@ -69,7 +68,7 @@ public class PlayerQuestProgress implements ICapabilityHolder {
 
     // do not call, used for networking syncs, use the overload instead
     public void completeCurrentQuest(PlayerEntity player, boolean updateOtherSide) {
-        RPGUtils.LOGGER.info("Completed quest: {}", currentQuest.getResourceLocation());
+        RPGUtils.LOGGER.info("Completed quest: {}", currentQuest.getId());
         
         boolean isServer = false;
         
@@ -81,7 +80,7 @@ public class PlayerQuestProgress implements ICapabilityHolder {
             isServer = true;
         }
         
-        completedQuests.add(currentQuest.getResourceLocation());
+        completedQuests.add(currentQuest.getId());
         currentQuest = null;
         currentQuestObjectives = null;
         
@@ -153,9 +152,17 @@ public class PlayerQuestProgress implements ICapabilityHolder {
     }
     
     public boolean canAcceptQuest(Quest quest) {
+        if (!quest.lockedByDefault()) {
+            return true;
+        }
+        
+        if (getUnlockedQuests().contains(quest.getId())) {
+            return true;
+        }
+        
         // if it has prerequisites all prerequisites must be completed
         // if it is unlockable it has to be unlocked
-        return (!quest.getPrerequisite().isEmpty() && !new HashSet<>(getCompletedQuests()).containsAll(quest.getPrerequisite())) || !quest.isUnlockable() || getUnlockedQuests().contains(quest.getResourceLocation());
+        return (!quest.getPrerequisite().isEmpty() && !new HashSet<>(getCompletedQuests()).containsAll(quest.getPrerequisite()));
     }
     
     @Override
@@ -163,18 +170,18 @@ public class PlayerQuestProgress implements ICapabilityHolder {
         ListNBT completed = new ListNBT();
         ListNBT unlocked = new ListNBT();
 
-        for (ResourceLocation c : this.completedQuests) {
-            completed.add(StringNBT.valueOf(c.toString()));
+        for (String c : this.completedQuests) {
+            completed.add(StringNBT.valueOf(c));
         }
         
-        for (ResourceLocation u : this.unlockedQuests) {
-            unlocked.add(StringNBT.valueOf(u.toString()));
+        for (String u : this.unlockedQuests) {
+            unlocked.add(StringNBT.valueOf(u));
         }
         
         CompoundNBT nbt = new CompoundNBT();
         nbt.put("completed", completed);
         nbt.put("unlocked", unlocked);
-        nbt.putString("active", currentQuest == null ? "" : currentQuest.getResourceLocation().toString());
+        nbt.putString("active", currentQuest == null ? "" : currentQuest.getId());
         
         return nbt;
     }
@@ -186,7 +193,7 @@ public class PlayerQuestProgress implements ICapabilityHolder {
             ListNBT completed = (ListNBT) c;
 
             for (INBT inbt : completed) {
-                this.completedQuests.add(new ResourceLocation(inbt.getAsString()));
+                this.completedQuests.add(inbt.getAsString());
             }
         }
 
@@ -195,7 +202,7 @@ public class PlayerQuestProgress implements ICapabilityHolder {
             ListNBT unlocked = (ListNBT) u;
             
             for (INBT inbt : unlocked) {
-                this.unlockedQuests.add(new ResourceLocation(inbt.getAsString()));
+                this.unlockedQuests.add(inbt.getAsString());
             }
         }
         
@@ -203,7 +210,8 @@ public class PlayerQuestProgress implements ICapabilityHolder {
         
         String value = nbt.getString("active");
         if (value.isEmpty()) return;
-        setCurrentQuest(QuestsManager.INSTANCE.getQuests().get(new ResourceLocation(value)));
+        
+        setCurrentQuest(QuestsManager.INSTANCE.getQuests().get(value));
     }
     
     public static void refreshClient(ServerPlayerEntity player) {

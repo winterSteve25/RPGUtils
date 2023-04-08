@@ -13,32 +13,33 @@ import java.util.Map;
 public class QuestsManager extends JsonDataLoader {
     public static final QuestsManager INSTANCE = new QuestsManager();
     
-    private final Map<ResourceLocation, Quest> quests = new HashMap<>();
+    private final Map<String, Quest> quests = new HashMap<>();
     
     public QuestsManager() {
         super("quests");
     }
     
     @Override
-    protected void apply(Map<ResourceLocation, JsonElement> data) {
+    protected void apply(Map<String, JsonElement> data) {
         RPGUtils.LOGGER.info("Loading quests");
         
         quests.clear();
 
-        for (Map.Entry<ResourceLocation, JsonElement> entry : data.entrySet()) {
-            ResourceLocation resourcelocation = entry.getKey();
-            if (resourcelocation.getPath().startsWith("_"))
+        for (Map.Entry<String, JsonElement> entry : data.entrySet()) {
+            String id = entry.getKey();
+            
+            if (id.startsWith("_"))
                 continue; //Forge: filter anything beginning with "_" as it's used for metadata.
             try {
-                Quest quest = Quest.fromJson(resourcelocation, JSONUtils.convertToJsonObject(entry.getValue(), "top element"));
-                quests.put(resourcelocation, quest);
+                Quest quest = Quest.fromJson(id, JSONUtils.convertToJsonObject(entry.getValue(), "top element"));
+                quests.put(id, quest);
             } catch (IllegalArgumentException | JsonParseException jsonparseexception) {
-                RPGUtils.LOGGER.error("Parsing error loading quest {}", resourcelocation, jsonparseexception);
+                RPGUtils.LOGGER.error("Parsing error loading quest {}", id, jsonparseexception);
             }
         }
     }
 
-    public Map<ResourceLocation, Quest> getQuests() {
+    public Map<String, Quest> getQuests() {
         return quests;
     }
 }

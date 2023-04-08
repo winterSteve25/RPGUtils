@@ -1,43 +1,41 @@
 package wintersteve25.rpgutils.common.data.loaded.dialogue.dialogue;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParseException;
-import net.minecraft.util.ResourceLocation;
 import wintersteve25.rpgutils.RPGUtils;
-import wintersteve25.rpgutils.common.data.loaded.JsonDataLoader;
+import wintersteve25.rpgutils.common.data.loaded.DataLoader;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class DialogueManager extends JsonDataLoader {
+public class DialogueManager extends DataLoader<Dialogue> {
     public static final DialogueManager INSTANCE = new DialogueManager();
-
-    private final Map<ResourceLocation, Dialogue> dialogues = new HashMap<>();
+    private static final DialogueParser PARSER = new DialogueParser();
+    
+    private final Map<String, Dialogue> dialogues = new HashMap<>();
 
     public DialogueManager() {
-        super("dialogues");
+        super("dialogues", "dg");
     }
 
-    public Map<ResourceLocation, Dialogue> getDialogues() {
+    public Map<String, Dialogue> getDialogues() {
         return dialogues;
     }
     
     @Override
-    protected void apply(Map<ResourceLocation, JsonElement> pObject) {
+    protected void apply(Map<String, Dialogue> data) {
         RPGUtils.LOGGER.info("Loading dialogues");
-        
+
         dialogues.clear();
-        
-        for (Map.Entry<ResourceLocation, JsonElement> entry : pObject.entrySet()) {
-            ResourceLocation resourcelocation = entry.getKey();
-            if (resourcelocation.getPath().startsWith("_"))
+
+        for (Map.Entry<String, Dialogue> entry : data.entrySet()) {
+            String id = entry.getKey();
+            if (id.startsWith("_"))
                 continue; //Forge: filter anything beginning with "_" as it's used for metadata.
-            try {
-                Dialogue dialogue = Dialogue.fromJson(resourcelocation, entry.getValue());
-                dialogues.put(resourcelocation, dialogue);
-            } catch (IllegalArgumentException | JsonParseException jsonparseexception) {
-                RPGUtils.LOGGER.error("Parsing error loading recipe {}", resourcelocation, jsonparseexception);
-            }
+            dialogues.put(id, entry.getValue());
         }
+    }
+
+    @Override
+    protected Dialogue map(String stringContent) {
+        return PARSER.parse(stringContent);
     }
 }

@@ -41,25 +41,25 @@ public class NPCTypeLoader extends JsonDataLoader {
     }
 
     @Override
-    protected void apply(Map<ResourceLocation, JsonElement> data) {
+    protected void apply(Map<String, JsonElement> data) {
         RPGUtils.LOGGER.info("Loading NPC attributes");
 
         NPCProperty.register();
 
         typeMap.clear();
 
-        for (Map.Entry<ResourceLocation, JsonElement> entry : data.entrySet()) {
-            ResourceLocation resourcelocation = entry.getKey();
-            String path = resourcelocation.getPath();
-            if (path.startsWith("_")) {
+        for (Map.Entry<String, JsonElement> entry : data.entrySet()) {
+            String id = entry.getKey();
+            
+            if (id.startsWith("_")) {
                 continue; // Forge: filter anything beginning with "_" as it's used for metadata.
             }
             try {
                 JsonObject root = entry.getValue().getAsJsonObject();
                 NPCType type = new NPCType(root);
-                typeMap.put(path, type);
+                typeMap.put(id, type);
             } catch (IllegalArgumentException | JsonParseException e) {
-                RPGUtils.LOGGER.error("Parsing error loading NPC attribute set {}", resourcelocation, e);
+                RPGUtils.LOGGER.error("Parsing error loading NPC attribute set {}", id, e);
             }
         }
     }

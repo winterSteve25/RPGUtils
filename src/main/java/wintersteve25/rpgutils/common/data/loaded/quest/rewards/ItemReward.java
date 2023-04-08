@@ -3,18 +3,12 @@ package wintersteve25.rpgutils.common.data.loaded.quest.rewards;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.mojang.serialization.JsonOps;
-import dev.ftb.mods.ftblibrary.icon.Icon;
-import dev.ftb.mods.ftblibrary.icon.ItemIcon;
 import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.item.crafting.ShapedRecipe;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraftforge.common.crafting.CraftingHelper;
 import wintersteve25.rpgutils.common.utils.IDeserializer;
 
 public class ItemReward implements IReward {
@@ -49,11 +43,6 @@ public class ItemReward implements IReward {
         jsonObject.add("item", ItemStack.CODEC.encodeStart(JsonOps.INSTANCE, item).result().get());
         
         return jsonObject;
-    }
-
-    @Override
-    public Icon rewardIcon() {
-        return ItemIcon.getItemIcon(item);
     }
 
     @Override

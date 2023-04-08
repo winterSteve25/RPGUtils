@@ -15,25 +15,26 @@ import java.util.Map;
 public class DialoguePoolManager extends JsonDataLoader {
     public static final DialoguePoolManager INSTANCE = new DialoguePoolManager();
 
-    private final Map<ResourceLocation, List<DialogueRule>> pools = new HashMap<>();
+    private final Map<String, List<DialogueRule>> pools = new HashMap<>();
 
     public DialoguePoolManager() {
         super("dialogue_pools");
     }
 
-    public Map<ResourceLocation, List<DialogueRule>> getPools() {
+    public Map<String, List<DialogueRule>> getPools() {
         return pools;
     }
 
     @Override
-    protected void apply(Map<ResourceLocation, JsonElement> pObject) {
+    protected void apply(Map<String, JsonElement> pObject) {
         RPGUtils.LOGGER.info("Loading dialogue pools");
 
         pools.clear();
         
-        for (Map.Entry<ResourceLocation, JsonElement> entry : pObject.entrySet()) {
-            ResourceLocation resourcelocation = entry.getKey();
-            if (resourcelocation.getPath().startsWith("_"))
+        for (Map.Entry<String, JsonElement> entry : pObject.entrySet()) {
+            String id = entry.getKey();
+
+            if (id.startsWith("_"))
                 continue; //Forge: filter anything beginning with "_" as it's used for metadata.
             try {
                 List<DialogueRule> rules = new ArrayList<>();
@@ -43,9 +44,9 @@ public class DialoguePoolManager extends JsonDataLoader {
                     rules.add(DialogueRule.fromJson(element.getAsJsonObject()));
                 }
                 
-                pools.put(resourcelocation, rules);
+                pools.put(id, rules);
             } catch (IllegalArgumentException | JsonParseException jsonparseexception) {
-                RPGUtils.LOGGER.error("Parsing error loading dialogue pool {}", resourcelocation, jsonparseexception);
+                RPGUtils.LOGGER.error("Parsing error loading dialogue pool {}", id, jsonparseexception);
             }
         }
     }

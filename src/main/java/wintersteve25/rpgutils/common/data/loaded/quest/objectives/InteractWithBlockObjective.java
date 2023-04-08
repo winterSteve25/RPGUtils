@@ -2,11 +2,8 @@ package wintersteve25.rpgutils.common.data.loaded.quest.objectives;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import dev.ftb.mods.ftblibrary.icon.Icon;
-import dev.ftb.mods.ftblibrary.icon.Icons;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
-import wintersteve25.rpgutils.client.ui.quests.creator.BlockPredicateEditor;
 import wintersteve25.rpgutils.common.data.loaded.quest.objectives.predicates.BlockPredicate;
 import wintersteve25.rpgutils.common.data.loaded.quest.objectives.triggers.InteractBlockTrigger;
 
@@ -31,12 +28,7 @@ public class InteractWithBlockObjective extends TriggeredObjective<InteractBlock
         
         return jsonObject;
     }
-
-    @Override
-    public Icon objectiveIcon() {
-        return Icons.BEACON;
-    }
-
+    
     @Override
     public ITextComponent objectiveTitle() {
         return new StringTextComponent("Interact with block");
@@ -44,8 +36,6 @@ public class InteractWithBlockObjective extends TriggeredObjective<InteractBlock
 
     @Override
     public void openEditObjectiveMenu(Consumer<IObjective> newObjective, Runnable onCancel) {
-        new BlockPredicateEditor(predicate, predicate -> newObjective.accept(new InteractWithBlockObjective(predicate)), onCancel)
-                .openGui();
     }
 
     public static class Type implements IObjectiveType<InteractWithBlockObjective> {
@@ -56,8 +46,7 @@ public class InteractWithBlockObjective extends TriggeredObjective<InteractBlock
 
         @Override
         public void openConfigScreen(Consumer<InteractWithBlockObjective> onSubmit, Runnable onCancel) {
-            new BlockPredicateEditor(predicate -> onSubmit.accept(new InteractWithBlockObjective(predicate)), onCancel)
-                    .openGui();
+            
         }
 
         @Override

@@ -58,7 +58,11 @@ public class PacketSpawnEntity implements ModPacket {
                 return;
             }
             entity.setPos(position.getX(), position.getY(), position.getZ());
-            NpcIDMapping.get(world).addMapping(npcID, entity.getUUID(), world);
+            
+            if (!npcID.isEmpty()) {
+                NpcIDMapping.get(world).addMapping(npcID, entity.getUUID(), world);
+            }
+            
             world.addFreshEntity(entity);
         });
         ctx.get().setPacketHandled(true);

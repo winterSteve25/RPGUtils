@@ -1,65 +1,27 @@
 package wintersteve25.rpgutils.common.data.loaded.dialogue.dialogue;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Tuple;
-import wintersteve25.rpgutils.common.data.loaded.dialogue.dialogue.actions.base.DialogueActionTypes;
-import wintersteve25.rpgutils.common.data.loaded.dialogue.dialogue.actions.base.IDialogueAction;
-import wintersteve25.rpgutils.common.data.loaded.dialogue.dialogue.predicate.DialoguePredicate;
+import wintersteve25.rpgutils.client.ui.dialogues.DialogueContext;
+import wintersteve25.rpgutils.common.data.loaded.dialogue.dialogue.actions.base.ParsedDialogueLine;
+import wintersteve25.rpgutils.client.ui.dialogues.runtime.RuntimeDialogueAction;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
+import java.util.stream.Collectors;
 
 public class Dialogue {
-    private final List<Tuple<DynamicUUID, IDialogueAction>> lines;
-    private final ResourceLocation resourceLocation;
-    private final DialoguePredicate predicate;
-    
-    public Dialogue(ResourceLocation resourceLocation, List<Tuple<DynamicUUID, IDialogueAction>> lines, DialoguePredicate predicate) {
-        this.lines = lines;
-        this.resourceLocation = resourceLocation;
-        this.predicate = predicate;
+    private final List<ParsedDialogueLine> lines;
+
+    public Dialogue() {
+        lines = new ArrayList<>();
     }
 
-    public List<Tuple<DynamicUUID, IDialogueAction>> getLines() {
-        return lines;
+    public void add(ParsedDialogueLine line) {
+        this.lines.add(line);
     }
 
-    public DialoguePredicate getPredicate() {
-        return predicate;
-    }
-
-    public ResourceLocation getResourceLocation() {
-        return resourceLocation;
-    }
-
-    public boolean isValid() {
-        return predicate == null || predicate.test();
-    }
-
-    public static Dialogue fromJson(ResourceLocation resourceLocation, JsonElement jsonObject) {
-        List<Tuple<DynamicUUID, IDialogueAction>> lines = new ArrayList<>();
-
-        JsonObject object = jsonObject.getAsJsonObject();
-        
-        JsonArray array = object.get("lines").getAsJsonArray();
-        for (JsonElement l : array) {
-            JsonObject line = l.getAsJsonObject();
-            JsonObject action = line.get("action").getAsJsonObject();
-            DynamicUUID uuid = DynamicUUID.fromJson(line.getAsJsonObject("speaker"));
-            
-            lines.add(new Tuple<>(uuid, DialogueActionTypes.DESERIALIZERS.get(action.get("type").getAsString()).fromJson(action)));
-        }
-
-        DialoguePredicate predicate = null;
-        
-        if (object.has("predicate")) {
-            JsonObject predicateJson = object.getAsJsonObject("predicate");
-            String predicateName = predicateJson.get("name").getAsString();
-            predicate = DialoguePredicate.create(predicateName, predicateJson);
-        }
-        
-        return new Dialogue(resourceLocation, lines, predicate);
+    public Queue<RuntimeDialogueAction> getLines(DialogueContext context) {
+        return lines.stream().map(a -> a.createRuntime(context)).collect(Collectors.toCollection(LinkedList::new));
     }
 }

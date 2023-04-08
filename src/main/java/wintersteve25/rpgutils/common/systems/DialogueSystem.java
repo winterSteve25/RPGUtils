@@ -1,12 +1,13 @@
 package wintersteve25.rpgutils.common.systems;
 
+import com.github.wintersteve25.tau.renderer.ScreenUIRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import wintersteve25.rpgutils.RPGUtils;
+import wintersteve25.rpgutils.client.ui.dialogues.DialogueRenderer;
 import wintersteve25.rpgutils.client.ui.dialogues.DialogueUI;
 import wintersteve25.rpgutils.common.data.loaded.dialogue.dialogue.Dialogue;
 import wintersteve25.rpgutils.common.data.loaded.dialogue.dialogue.DialogueManager;
@@ -19,11 +20,14 @@ import wintersteve25.rpgutils.common.utils.RandomCollection;
 import java.util.List;
 
 public class DialogueSystem {
+    
+    private static boolean isPlaying = false;
+    
     @OnlyIn(Dist.CLIENT)
-    public static void play(PlayerEntity player, ResourceLocation dialoguePool) {
-        RPGUtils.LOGGER.info("Attempting to play dialogue pool: {}", dialoguePool);
+    public static void play(PlayerEntity player, String dialoguePoolId) {
+        RPGUtils.LOGGER.info("Attempting to play dialogue pool: {}", dialoguePoolId);
         
-        List<DialogueRule> pool = DialoguePoolManager.INSTANCE.getPools().get(dialoguePool);
+        List<DialogueRule> pool = DialoguePoolManager.INSTANCE.getPools().get(dialoguePoolId);
         
         if (pool == null) {
             RPGUtils.LOGGER.error("Given pool name is not found");
@@ -36,30 +40,52 @@ public class DialogueSystem {
         }
         
         RandomCollection<DialogueRule> rules = new RandomCollection<>();
+        boolean any = false;
+        
         for (DialogueRule rule : pool) {
-            if (DialogueManager.INSTANCE.getDialogues().get(rule.getDialogue()).isValid()) {
+            if (rule.isValid()) {
                 rules.add(rule.getWeight(), rule);
+                any = true;
             }
         }
         
-        DialogueRule randomRule = rules.next();
-        ResourceLocation dialogueRL = randomRule.getDialogue();
-        Dialogue dialogue = DialogueManager.INSTANCE.getDialogues().get(dialogueRL); 
-        
-        if (dialogue == null) {
-            RPGUtils.LOGGER.error("Specified dialogue: {} was not found", dialogueRL);
+        if (!any) {
+            RPGUtils.LOGGER.warn("No dialogues are available for pool: {}", dialoguePoolId);
             return;
         }
         
-        DialogueUI.show(player, dialogue, randomRule.isInterruptable());
+        DialogueRule randomRule = rules.next();
+        String dialogueId = randomRule.getDialogueId(Minecraft.getInstance().getLanguageManager().getSelected().getJavaLocale());
+        Dialogue dialogue = DialogueManager.INSTANCE.getDialogues().get(dialogueId); 
+        
+        if (dialogue == null) {
+            RPGUtils.LOGGER.error("Specified dialogue: {} was not found", dialogueId);
+            return;
+        }
+
+        setDialogue(dialogue, player);
+    }
+
+    public static void stopDialogue() {
+        if (isPlaying) setDialogue(null, null);
+    }
+    
+    private static void setDialogue(Dialogue dialogue, PlayerEntity player) {
+        if (dialogue == null) {
+            Minecraft.getInstance().setScreen(null);
+            return;
+        }
+
+        isPlaying = true;
+        Minecraft.getInstance().setScreen(new DialogueRenderer(new DialogueUI(dialogue, player)));
     }
     
     @OnlyIn(Dist.CLIENT)
-    public static void play(ResourceLocation dialoguePool) {
+    public static void play(String dialoguePool) {
         play(Minecraft.getInstance().player, dialoguePool);
     }
     
-    public static void playFromServer(ResourceLocation dialoguePool, ServerPlayerEntity player) {
-        ModNetworking.sendToClient(new PacketPlayDialogue(dialoguePool, player), player);
+    public static void playFromServer(String dialoguePoolId, ServerPlayerEntity player) {
+        ModNetworking.sendToClient(new PacketPlayDialogue(dialoguePoolId, player), player);
     }
 }

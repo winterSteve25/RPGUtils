@@ -1,3 +1,5 @@
+import sun.text.resources.en.FormatData_en_GB
+
 buildscript {
     repositories {
         maven { url = 'https://maven.minecraftforge.net' }
@@ -118,11 +120,10 @@ dependencies {
 
     // geckolib
     implementation fg.deobf("software.bernie.geckolib:geckolib-forge-${geckolib_version}")
-    
-    // ftb lib
-    implementation fg.deobf("dev.ftb.mods:ftb-library-forge:${ftblib_version}")
-    implementation fg.deobf("me.shedaniel:architectury-forge:${architectury_version}")
 
+    // tau
+    implementation fg.deobf("com.github.wintersteve25.tau:Tau:1.1.0")
+    
     annotationProcessor ("org.spongepowered:mixin:0.8.5:processor")
 }
 
