@@ -13,22 +13,22 @@ import wintersteve25.rpgutils.common.registry.ModCapabilities;
 import java.util.HashSet;
 
 public class QuestSystem {
-    public static void attemptStartQuest(PlayerEntity player, ResourceLocation resourceLocation) {
+    public static void attemptStartQuest(PlayerEntity player, String questId) {
         player.getCapability(ModCapabilities.PLAYER_QUEST).ifPresent(cap -> {
-            Quest quest = QuestsManager.INSTANCE.getQuests().get(resourceLocation);
+            Quest quest = QuestsManager.INSTANCE.getQuests().get(questId);
             
             if (quest == null) {
-                RPGUtils.LOGGER.error("Attempted to start quest {}, but it does not exist", resourceLocation);
+                RPGUtils.LOGGER.error("Attempted to start quest {}, but it does not exist", questId);
                 return;
             }
             
             if (!cap.canAcceptQuest(quest)) {
-                RPGUtils.LOGGER.info("Attempted to start quest {}, but player does not have the needed prerequisite(s)", resourceLocation);
+                RPGUtils.LOGGER.info("Attempted to start quest {}, but player does not have the needed prerequisite(s)", questId);
                 return;
             }
             
             cap.setCurrentQuest(quest);
-            PacketCurrentQuestStateChanged packet = new PacketCurrentQuestStateChanged(resourceLocation);
+            PacketCurrentQuestStateChanged packet = new PacketCurrentQuestStateChanged(questId);
         
             if (player.getCommandSenderWorld().isClientSide()) {
                 ModNetworking.sendToServer(packet);

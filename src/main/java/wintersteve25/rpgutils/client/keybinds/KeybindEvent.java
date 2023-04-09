@@ -1,6 +1,7 @@
 package wintersteve25.rpgutils.client.keybinds;
 
 
+import net.minecraft.client.Minecraft;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -17,7 +18,8 @@ public class KeybindEvent {
     
     @SubscribeEvent
     public static void onKeyDown(InputEvent.KeyInputEvent event) {
-        List<Keybind> matching = KEYBINDS.stream().filter(keybind -> keybind.getKeybind().matches(event.getKey(), event.getScanCode())).collect(Collectors.toList());
+        if (Minecraft.getInstance().level == null) return;
+        List<Keybind> matching = KEYBINDS.stream().filter(keybind -> keybind.getKeybind().isDown()).collect(Collectors.toList());
         if (matching.isEmpty()) return;
         matching.get(0).press();
     }

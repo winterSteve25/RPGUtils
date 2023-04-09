@@ -11,9 +11,9 @@ import java.util.function.Consumer;
 
 public class FinishDialogueObjective extends TriggeredObjective<FinishDialogueTrigger> {
 
-    private final ResourceLocation dialogue;
+    private final String dialogue;
 
-    public FinishDialogueObjective(ResourceLocation dialogue) {
+    public FinishDialogueObjective(String dialogue) {
         super(FinishDialogueTrigger.class, trigger -> dialogue.equals(trigger.getDialogue()));
         this.dialogue = dialogue;
     }
@@ -23,14 +23,14 @@ public class FinishDialogueObjective extends TriggeredObjective<FinishDialogueTr
         JsonObject jsonObject = new JsonObject();
 
         jsonObject.addProperty("type", "finishDialogue");
-        jsonObject.addProperty("dialogue", dialogue.toString());
+        jsonObject.addProperty("dialogue", dialogue);
 
         return jsonObject;
     }
     
     @Override
     public ITextComponent objectiveTitle() {
-        return new StringTextComponent("Finish dialogue: " + dialogue.toString());
+        return new StringTextComponent("Finish dialogue: " + dialogue);
     }
 
     @Override
@@ -42,7 +42,7 @@ public class FinishDialogueObjective extends TriggeredObjective<FinishDialogueTr
     public static class Type implements IObjectiveType<FinishDialogueObjective> {
         @Override
         public FinishDialogueObjective fromJson(JsonObject jsonObject) {
-            return new FinishDialogueObjective(new ResourceLocation(jsonObject.get("dialogue").getAsString()));
+            return new FinishDialogueObjective(jsonObject.get("dialogue").getAsString());
         }
 
         @Override

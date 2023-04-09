@@ -16,10 +16,7 @@ import wintersteve25.rpgutils.RPGUtils;
 import wintersteve25.rpgutils.common.data.loaded.quest.PlayerQuestProgress;
 import wintersteve25.rpgutils.common.data.loaded.storage.ServerOnlyLoadedData;
 import wintersteve25.rpgutils.common.entities.NPCEntity;
-import wintersteve25.rpgutils.common.network.ModNetworking;
-import wintersteve25.rpgutils.common.network.PacketLoadData;
-import wintersteve25.rpgutils.common.network.PacketOpenDialogueCreator;
-import wintersteve25.rpgutils.common.network.PacketOpenQuestCreator;
+import wintersteve25.rpgutils.common.network.*;
 import wintersteve25.rpgutils.common.systems.DialogueSystem;
 import wintersteve25.rpgutils.common.systems.QuestSystem;
 
@@ -90,13 +87,14 @@ public class ModCommands {
     }
 
     private static int playDialogue(CommandContext<CommandSource> source) throws CommandSyntaxException {
-        DialogueSystem.playFromServer(source.getArgument("dialogue", String.class), source.getSource().getPlayerOrException());
+        ServerPlayerEntity player = source.getSource().getPlayerOrException();
+        ModNetworking.sendToClient(new PacketPlayDialogue(source.getArgument("dialogue", String.class), player), player);
         return 1;
     }
     
     private static int startQuest(CommandContext<CommandSource> source) {
         try {
-            QuestSystem.attemptStartQuest(source.getSource().getPlayerOrException(), new ResourceLocation(RPGUtils.MOD_ID, source.getArgument("quest", String.class)));
+            QuestSystem.attemptStartQuest(source.getSource().getPlayerOrException(), source.getArgument("quest", String.class));
         } catch (CommandSyntaxException e) {
             e.printStackTrace();
             return 0;

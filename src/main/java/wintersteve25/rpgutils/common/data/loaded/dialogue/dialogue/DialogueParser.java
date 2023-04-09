@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 public class DialogueParser {
 
     private static final Pattern WHITE_SPACES = Pattern.compile("^\\s*");
-    private static final Pattern EMBEDDED_ACTIONS = Pattern.compile("\\[.+:.+]");
+    private static final Pattern EMBEDDED_ACTIONS = Pattern.compile("\\[.+:.+]\\s?");
 
     private final Stack<ParsedDialogueAction> constructingAction;
     private List<String> lines;
@@ -106,7 +106,7 @@ public class DialogueParser {
                 throw new DialogueParseException("Extended dialogue actions are not supported as embeds, please specify a parameter after the `:`");
             }
 
-            actions.put(matcher.start(), action);
+            actions.put(matcher.start() - 1, action);
         }
 
         characterLine = matcher.replaceAll("").trim();

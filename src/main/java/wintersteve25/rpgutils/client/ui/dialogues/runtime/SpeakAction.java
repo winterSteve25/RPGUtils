@@ -14,6 +14,7 @@ import wintersteve25.rpgutils.client.ui.dialogues.DialogueContext;
 import wintersteve25.rpgutils.client.ui.dialogues.DialogueUI;
 import wintersteve25.rpgutils.common.data.loaded.dialogue.dialogue.DialogueSpeaker;
 
+import java.util.Collections;
 import java.util.Map;
 
 public class SpeakAction implements UIComponent, RuntimeDialogueAction, IGuiEventListener, RenderProvider {
@@ -21,7 +22,6 @@ public class SpeakAction implements UIComponent, RuntimeDialogueAction, IGuiEven
     private final DialogueSpeaker speaker;
     private final Map<Integer, RuntimeDialogueAction> embeds;
     private final String line;
-    private final int typeInterval;
     private final DialogueContext context;
     
     private int tick;
@@ -29,11 +29,12 @@ public class SpeakAction implements UIComponent, RuntimeDialogueAction, IGuiEven
     private String text;
     private boolean skipped;
     
-    public SpeakAction(DialogueSpeaker speaker, String line, Map<Integer, RuntimeDialogueAction> embeds, int typeInterval, DialogueContext context) {
+    private RuntimeDialogueAction embedAction;
+    
+    public SpeakAction(DialogueSpeaker speaker, String line, Map<Integer, RuntimeDialogueAction> embeds, DialogueContext context) {
         this.speaker = speaker;
         this.embeds = embeds;
         this.line = line;
-        this.typeInterval = typeInterval;
         this.context = context;
 
         this.tick = 0;
@@ -53,10 +54,28 @@ public class SpeakAction implements UIComponent, RuntimeDialogueAction, IGuiEven
             return false;
         }
 
+        if (embedAction != null) {
+            if (embedAction.isComplete(ui)) {
+                embedAction.complete(ui);
+                embedAction = null;
+            } else {
+                return embedAction.tick(ui, progress);
+            }
+        }
+        
         tick++;
-        if (tick % typeInterval == 0) {
+        if (tick % context.typeInterval == 0) {
+            
+            if (embeds.containsKey(index)) {
+                embedAction = embeds.get(index);
+                embedAction.execute(ui);
+                embeds.remove(index);
+                return false;
+            }
+
             tick = 0;
             text += line.charAt(index);
+
             index++;
         }
         
@@ -65,11 +84,20 @@ public class SpeakAction implements UIComponent, RuntimeDialogueAction, IGuiEven
 
     @Override
     public boolean mouseClicked(double pMouseX, double pMouseY, int pButton) {
+        if (embedAction != null) {
+            return false;
+        }
+        
         if (index == line.length()) {
             skipped = true;
         } else {
-            text = line;
-            index = line.length();
+            if (embeds.isEmpty()) {
+                text = line;
+                index = line.length();
+            } else {
+                index = Collections.min(embeds.keySet());
+                text = line.substring(0, index);
+            }
         }
         
         return true;

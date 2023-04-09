@@ -62,19 +62,19 @@ public class PlayerQuestProgress implements ICapabilityHolder {
         }
     }
 
-    public void completeCurrentQuest(PlayerEntity player) {
-        completeCurrentQuest(player, true);
+    public void completeCurrentQuest(ServerPlayerEntity serverPlayer) {
+        completeCurrentQuest(serverPlayer, true);
     }
 
     // do not call, used for networking syncs, use the overload instead
-    public void completeCurrentQuest(PlayerEntity player, boolean updateOtherSide) {
+    public void completeCurrentQuest(ServerPlayerEntity serverPlayer, boolean updateOtherSide) {
         RPGUtils.LOGGER.info("Completed quest: {}", currentQuest.getId());
         
         boolean isServer = false;
         
-        if (player instanceof ServerPlayerEntity) {
+        if (serverPlayer != null) {
             for (IReward reward : currentQuest.getRewards()) {
-                reward.giveReward((ServerPlayerEntity) player);
+                reward.giveReward(serverPlayer);
             }
             
             isServer = true;
@@ -90,7 +90,7 @@ public class PlayerQuestProgress implements ICapabilityHolder {
             if (!isServer) {
                 ModNetworking.sendToServer(packet);
             } else {
-                ModNetworking.sendToClient(packet, (ServerPlayerEntity) player);
+                ModNetworking.sendToClient(packet, serverPlayer);
             }
         }
     }
@@ -107,7 +107,7 @@ public class PlayerQuestProgress implements ICapabilityHolder {
         checkComplete(player);
     }
     
-    private void checkComplete(PlayerEntity player) {
+    private void checkComplete(ServerPlayerEntity player) {
         List<IObjective> copy = new ArrayList<>(currentQuestObjectives);
         currentQuestObjectives.removeIf(obj -> obj.isCompleted(player));
         
@@ -123,7 +123,7 @@ public class PlayerQuestProgress implements ICapabilityHolder {
             if (player.getCommandSenderWorld().isClientSide()) {
                 ModNetworking.sendToServer(packet);
             } else {
-                ModNetworking.sendToClient(packet, (ServerPlayerEntity) player);
+                ModNetworking.sendToClient(packet, player);
             }
         }
     }

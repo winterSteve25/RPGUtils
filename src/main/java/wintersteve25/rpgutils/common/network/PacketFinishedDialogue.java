@@ -2,7 +2,6 @@ package wintersteve25.rpgutils.common.network;
 
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.network.NetworkEvent;
 import wintersteve25.rpgutils.common.data.loaded.quest.objectives.triggers.FinishDialogueTrigger;
 import wintersteve25.rpgutils.common.registry.ModCapabilities;
@@ -11,19 +10,19 @@ import java.util.function.Supplier;
 
 public class PacketFinishedDialogue implements ModPacket {
     
-    private final ResourceLocation dialogue;
+    private final String dialogue;
 
-    public PacketFinishedDialogue(ResourceLocation dialogue) {
+    public PacketFinishedDialogue(String dialogue) {
         this.dialogue = dialogue;
     }
 
     public PacketFinishedDialogue(PacketBuffer buffer) {
-        this.dialogue = buffer.readResourceLocation();
+        this.dialogue = buffer.readUtf();
     }
 
     @Override
     public void encode(PacketBuffer buffer) {
-        buffer.writeResourceLocation(dialogue);
+        buffer.writeUtf(dialogue);
     }
 
     @Override

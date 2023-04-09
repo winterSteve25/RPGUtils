@@ -11,13 +11,14 @@ public class ModKeybinds {
     public static final Keybind OPEN_QUESTS;
 
     static {
-        OPEN_QUESTS = new Keybind(
-                new KeyBinding("rpgutils.keys.open_quests", KeyConflictContext.IN_GAME, InputMappings.Type.KEYSYM, GLFW.GLFW_KEY_H, "rpgutils.keys.category.npc"),
-                QuestUI::open
-        );
+        OPEN_QUESTS = new Keybind(create("open_quests", GLFW.GLFW_KEY_H, KeyConflictContext.IN_GAME), QuestUI::open);
     }
 
     public static void register() {
         OPEN_QUESTS.register();
+    }
+    
+    private static KeyBinding create(String name, int key, KeyConflictContext keyConflictContext) {
+        return new KeyBinding("rpgutils.keys." + name, keyConflictContext, InputMappings.Type.KEYSYM, key, "rpgutils.keys.category");
     }
 }

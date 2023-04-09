@@ -7,6 +7,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import wintersteve25.rpgutils.RPGUtils;
 import wintersteve25.rpgutils.client.renderers.npc.NPCRenderer;
+import wintersteve25.rpgutils.common.data.loaded.camera_paths.CameraPathManager;
 import wintersteve25.rpgutils.common.data.loaded.storage.ClientOnlyLoadedData;
 import wintersteve25.rpgutils.common.registry.ModEntities;
 import wintersteve25.rpgutils.common.registry.ModKeybinds;
@@ -18,6 +19,7 @@ public class ClientModEvents {
     public static void clientSetup(FMLClientSetupEvent event) {
         RenderingRegistry.registerEntityRenderingHandler(ModEntities.NPC_ENTITY.get(), NPCRenderer::new);
         ModKeybinds.register();
+        CameraPathManager.INSTANCE.load();
         ClientOnlyLoadedData.reloadAll();
     }
 }

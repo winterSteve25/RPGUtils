@@ -14,7 +14,6 @@ public class CharacterLineParsed implements ParsedDialogueLine {
     private final DialogueSpeaker speaker;
     private final String line;
     private final Map<Integer, ParsedDialogueAction> parseTime;
-    private Map<Integer, RuntimeDialogueAction> embeddedActions;
 
     public CharacterLineParsed(String speaker, String line, Map<Integer, ParsedDialogueAction> embeddedActions) {
         this.speaker = new DialogueSpeaker(speaker);
@@ -24,14 +23,12 @@ public class CharacterLineParsed implements ParsedDialogueLine {
 
     @Override
     public RuntimeDialogueAction createRuntime(DialogueContext context) {
-        if (embeddedActions == null) {
-            embeddedActions = new HashMap<>();
+        Map<Integer, RuntimeDialogueAction> embeddedActions = new HashMap<>();
             
-            for (Map.Entry<Integer, ParsedDialogueAction> embed : parseTime.entrySet()) {
-                this.embeddedActions.put(embed.getKey(), embed.getValue().createRuntime(context));
-            }
+        for (Map.Entry<Integer, ParsedDialogueAction> embed : parseTime.entrySet()) {
+            embeddedActions.put(embed.getKey(), embed.getValue().createRuntime(context));
         }
         
-        return new SpeakAction(speaker, line, embeddedActions, 1, context);
+        return new SpeakAction(speaker, line, embeddedActions, context);
     }
 }

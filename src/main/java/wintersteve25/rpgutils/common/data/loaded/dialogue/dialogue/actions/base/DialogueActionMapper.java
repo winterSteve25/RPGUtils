@@ -15,6 +15,7 @@ public class DialogueActionMapper {
         MAPPER.put("trigger", TriggerActionParsed::new);
         MAPPER.put("camera", CameraActionParsed::new);
         MAPPER.put("jump", JumpActionParsed::new);
+        MAPPER.put("speed", TypeIntervalActionParsed::new);
     }
 
     public static ParsedDialogueAction create(String name) {

@@ -1,9 +1,10 @@
 package wintersteve25.rpgutils.common.network;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.fml.LogicalSide;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.network.NetworkEvent;
 import wintersteve25.rpgutils.common.registry.ModCapabilities;
 
@@ -33,17 +34,20 @@ public class PacketCompletedQuestObjectives implements ModPacket {
     public void handle(Supplier<NetworkEvent.Context> contextSupplier) {
         NetworkEvent.Context ctx = contextSupplier.get();
         ctx.enqueueWork(() -> {
-            PlayerEntity player;
-
-            if (ctx.getDirection().getReceptionSide() == LogicalSide.SERVER) {
-                player = ctx.getSender();
-            } else {
-                player = Minecraft.getInstance().player;
-            }
+            ServerPlayerEntity serverPlayer = ctx.getSender();
             
-            player.getCapability(ModCapabilities.PLAYER_QUEST).ifPresent(cap -> {
-                cap.completeObjectives(Arrays.stream(indicesToKeep).boxed().collect(Collectors.toList()));
-            });
+            if (serverPlayer != null) {
+                serverPlayer.getCapability(ModCapabilities.PLAYER_QUEST).ifPresent(cap -> {
+                    cap.completeObjectives(Arrays.stream(indicesToKeep).boxed().collect(Collectors.toList()));
+                });
+            } else {
+                DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
+                    if (Minecraft.getInstance().player == null) return;
+                    Minecraft.getInstance().player.getCapability(ModCapabilities.PLAYER_QUEST).ifPresent(cap -> {
+                        cap.completeObjectives(Arrays.stream(indicesToKeep).boxed().collect(Collectors.toList()));
+                    });
+                });
+            }
         });
         ctx.setPacketHandled(true);
     }

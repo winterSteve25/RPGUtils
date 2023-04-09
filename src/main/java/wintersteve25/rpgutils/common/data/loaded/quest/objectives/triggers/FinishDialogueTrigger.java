@@ -1,15 +1,13 @@
 package wintersteve25.rpgutils.common.data.loaded.quest.objectives.triggers;
 
-import net.minecraft.util.ResourceLocation;
-
 public class FinishDialogueTrigger {
-    private final ResourceLocation dialogue;
+    private final String dialogue;
 
-    public FinishDialogueTrigger(ResourceLocation dialogue) {
+    public FinishDialogueTrigger(String dialogue) {
         this.dialogue = dialogue;
     }
 
-    public ResourceLocation getDialogue() {
+    public String getDialogue() {
         return dialogue;
     }
 }

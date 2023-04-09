@@ -4,10 +4,7 @@ import wintersteve25.rpgutils.client.ui.dialogues.DialogueContext;
 import wintersteve25.rpgutils.common.data.loaded.dialogue.dialogue.actions.base.ParsedDialogueLine;
 import wintersteve25.rpgutils.client.ui.dialogues.runtime.RuntimeDialogueAction;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Dialogue {
@@ -22,6 +19,8 @@ public class Dialogue {
     }
 
     public Queue<RuntimeDialogueAction> getLines(DialogueContext context) {
-        return lines.stream().map(a -> a.createRuntime(context)).collect(Collectors.toCollection(LinkedList::new));
+        return lines.stream()
+                .map(a -> a.createRuntime(context))
+                .collect(Collectors.toCollection(LinkedList::new));
     }
 }

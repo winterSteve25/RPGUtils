@@ -19,7 +19,7 @@ public class DialogueUI extends DynamicUIComponent {
     private RuntimeDialogueAction current;
     
     public DialogueUI(Dialogue dialogue, PlayerEntity player) {
-        this.lines = dialogue.getLines(new DialogueContext(player));
+        this.lines = dialogue.getLines(new DialogueContext(player, 1));
         if (lines.isEmpty()) return;
         this.current = lines.remove();
     }

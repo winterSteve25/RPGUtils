@@ -1,6 +1,5 @@
 package wintersteve25.rpgutils.common.systems;
 
-import com.github.wintersteve25.tau.renderer.ScreenUIRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -83,9 +82,5 @@ public class DialogueSystem {
     @OnlyIn(Dist.CLIENT)
     public static void play(String dialoguePool) {
         play(Minecraft.getInstance().player, dialoguePool);
-    }
-    
-    public static void playFromServer(String dialoguePoolId, ServerPlayerEntity player) {
-        ModNetworking.sendToClient(new PacketPlayDialogue(dialoguePoolId, player), player);
     }
 }
